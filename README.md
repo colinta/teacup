@@ -46,4 +46,7 @@ Requirements:
 5. there should be a consistent "styling" language, preferably in a separate
    file, something that could be handed to a designer.  this is the BIG item!
 
+6. Ideally, there should be some way to "inherit" styles in this language. So you
+   can define a basic layout for all platforms and then tweak.
+
 [iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
