@@ -1,4 +1,4 @@
- teacup
+ Teacup
 --------
 
 A community-driven DSL for creating user interfaces on the iphone.
@@ -10,7 +10,7 @@ delegators, and datasources.
 The goal is not to simply rename CocoaTouch method names, but to offer a
 rubyesque (well, actually a rubymotion-esque) way to create an interface.
 
- development
+ Development
 -------------
 
 *Current version*: v0.0.0
@@ -26,7 +26,7 @@ decided.
 We are currently open to ideas for the DSL syntax.  Please fork, add a proposal,
 and we will pick one in the #rubymotion channel on irc.freenode.net.
 
- proposals
+ Proposals
 -----------
 
 Requirements:
