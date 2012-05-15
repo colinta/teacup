@@ -26,28 +26,26 @@ decided.
 We are currently open to ideas for the DSL syntax.  Please fork, add a proposal,
 and we will pick one in the #rubymotion channel on irc.freenode.net.
 
- Proposals
+ ideas that proposals should keep in mind
 -----------
 
-Requirements:
-
-1. must conform, unless explicitly *disabled* to the [iOS HIG][]
+1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
 2. should provide a few useful layouts:
-   - basic: vertically arranged "things", or
-   - form: label/input combinations arranged in a table
-   - navbar: with ability to customize the buttons that get placed at the top
-   - tabbar: similar, but with the tabs at the bottom instead of nav at the top
+
+     * basic: vertically arranged "things", or
+     * form: label/input combinations arranged in a table
+     * navbar: with ability to customize the buttons that get placed at the top
+     * tabbar: similar, but with the tabs at the bottom instead of nav at the top
+
 3. layouts should have ways of placing things relative to edges, so placing a
    label or nav at the "bottom" that spans the entire width should be *easy*.
-
    (This means we'll need to check for ipad or iphone.)
 4. actions are either blocks, defined inline, or target/action combos (e.g.
    `target: self, action: :my_method`)
 5. there should be a consistent "styling" language, preferably in a separate
    file, something that could be handed to a designer.  this is the BIG item!
 6. teacup should take a little `config` block for easy configuration
-
-6. Ideally, there should be some way to "inherit" styles in this language. So you
+7. Ideally, there should be some way to "inherit" styles in this language. So you
    can define a basic layout for all platforms and then tweak.
 
  actual proposals
