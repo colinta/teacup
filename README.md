@@ -50,4 +50,14 @@ Requirements:
 6. Ideally, there should be some way to "inherit" styles in this language. So you
    can define a basic layout for all platforms and then tweak.
 
+ actual proposals
+------------------
+
+1. [stylesheet][Commune], by [ConradIrwin][]
+2. [Sass/scss-like][sass_by_colinta], by [colinta][]
+
 [iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
+[Commune]: https://github.com/rubymotion/teacup/blob/master/proposals/stylesheet_by_conradirwin.rb
+[sass_by_colinta]: https://github.com/rubymotion/teacup/blob/master/proposals/sass_by_colinta.rb
+[ConradIrwin]: https://github.com/ConradIrwin
+[colinta]: https://github.com/colinta
