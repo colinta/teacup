@@ -45,5 +45,6 @@ Requirements:
    `target: self, action: :my_method`)
 5. there should be a consistent "styling" language, preferably in a separate
    file, something that could be handed to a designer.  this is the BIG item!
+6. teacup should take a little `config` block for easy configuration
 
 [iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
