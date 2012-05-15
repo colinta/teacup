@@ -13,7 +13,7 @@ rubyesque (well, actually a rubymotion-esque) way to create an interface.
  Development
 -------------
 
-*Current version*: v0.0.0
+*Current version*: v0.0.0 (or see `lib/teacup/version.rb`)
 
 *Last milestone*: Pick a name
 
