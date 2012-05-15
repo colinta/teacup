@@ -16,6 +16,7 @@ rubyesque (well, actually a rubymotion-esque) way to create an interface.
 *Current version*: v0.0.0
 
 *Last milestone*: Pick a name
+
 *Next milestone*: Pick a DSL
 
 teacup, being a community project, moves in "spurts" of decision making and
