@@ -52,10 +52,10 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 ------------------
 
 1. [stylesheet][Commune], by [ConradIrwin][]
-2. [Sass/scss-like][sass_by_colinta], by [colinta][]
+2. [teacup][teacup], by [colinta][]
 
 [iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
 [Commune]: https://github.com/colinta/teacup/blob/master/proposals/stylesheet_by_conradirwin.rb
-[sass_by_colinta]: https://github.com/colinta/teacup/blob/master/proposals/sass_by_colinta.rb
+[teacup]: https://github.com/colinta/teacup/blob/master/proposals/teacup_by_colinta.rb
 [ConradIrwin]: https://github.com/ConradIrwin
 [colinta]: https://github.com/colinta
