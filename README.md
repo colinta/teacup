@@ -30,7 +30,7 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 -----------
 
 1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
-2. should provide a few useful layouts:
+2. should provide a few useful layouts (see layouts/README):
 
      * basic: vertically arranged "things", or
      * form: label/input combinations arranged in a table
