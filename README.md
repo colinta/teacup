@@ -33,7 +33,6 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 
 1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
 2. should provide a few useful layouts (see [readme for layout proposals](teacup/tree/master/proposals/layout)):
-
      * basic: vertically arranged "things", or
      * form: label/input combinations arranged in a table
      * navbar: with ability to customize the buttons that get placed at the top
@@ -50,7 +49,58 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 6. teacup should take a little `config` block for easy configuration
 7. Ideally, there should be some way to "inherit" styles in this language. So you can define a basic layout for all platforms and then tweak (see [readme for style proposals](teacup/tree/master/proposals/styles))
 
-Actual proposals
+ Use cases
+-----------
+
+Try and "solve" these problems using your proposed syntax.
+
+1. TableViewCell:
+
+        **************************************
+        * |======| Title Goes here, bold     *
+        * | icon |                           *
+        * |======| mm/dd/YYYY     more info  *  <= smaller, gray captions
+        **************************************
+
+2. iPhone address book entry:
+
+        ************************
+        * <back=  Joey  [save] * <= navigation controller
+        *----------------------*
+        * |==|  [ Joey       ] *
+        * |:)|  [ Joe        ] * <= icon, and names in text fields
+        * |==|  [ McBobby    ] *
+        *                      *
+        * Address [ 123 St.  ] * <= labels and text fields
+        * Phone   [ 123-4567 ] *
+        *                      *
+        * Notes                *
+        * /------------------\ *
+        * | What a great     | *
+        * | guy!             | *
+        * \------------------/ *
+        *                      *
+        * ( + add field      ) *
+        * ( ! delete !       ) * <= red!
+        ************************
+
+3. iPad drawing program layout!
+
+                  V split view
+        ************************************
+        * Drawings |  [+]  [x]  [>]        * <= toolbar, add, trash, send/forward
+        *==========|-----------------------*
+        * Square > |                       *
+        * Box    > |                       *
+        *.Circle.>.|     O                 *
+        *          |                       *
+        *          |-----------------------*
+        *          | [/] [#] [O] [T]       * <= toolbar, black. pen, box, circle, text
+        ************************************
+
+Good luck!
+
+ Actual proposals
 ------------------
 
 1. [stylesheet][Commune], by [ConradIrwin][]
