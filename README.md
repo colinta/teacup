@@ -30,7 +30,7 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 -----------
 
 1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
-2. should provide a few useful layouts (see proposals/layout/README.md):
+2. should provide a few useful layouts (see [readme for layout proposals](teacup/tree/master/proposals/layout)):
 
      * basic: vertically arranged "things", or
      * form: label/input combinations arranged in a table
@@ -45,7 +45,7 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 5. there should be a consistent "styling" language, preferably in a separate
    file, something that could be handed to a designer.  this is the BIG item!
 6. teacup should take a little `config` block for easy configuration
-7. Ideally, there should be some way to "inherit" styles in this language. So you can define a basic layout for all platforms and then tweak (see proposals/styles/README.md)
+7. Ideally, there should be some way to "inherit" styles in this language. So you can define a basic layout for all platforms and then tweak (see [readme for style proposals](teacup/tree/master/proposals/styles))
 
  actual proposals
 ------------------
