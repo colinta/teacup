@@ -26,8 +26,8 @@ decided.
 We are currently open to ideas for the DSL syntax.  Please fork, add a proposal,
 and we will pick one in the #rubymotion channel on irc.freenode.net.
 
- ideas that proposals should keep in mind
------------
+  Ideas that proposals should keep in mind
+--------------------------------------------
 
 1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
 2. should provide a few useful layouts (see [readme for layout proposals](teacup/tree/master/proposals/layout)):
@@ -47,7 +47,7 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 6. teacup should take a little `config` block for easy configuration
 7. Ideally, there should be some way to "inherit" styles in this language. So you can define a basic layout for all platforms and then tweak (see [readme for style proposals](teacup/tree/master/proposals/styles))
 
- actual proposals
+Actual proposals
 ------------------
 
 1. [stylesheet][Commune], by [ConradIrwin][]
