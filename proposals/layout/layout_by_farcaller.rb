@@ -72,7 +72,7 @@ class MyCell < UITableViewCell
     # use the method l that is provided by Layout to access subviews by aliases.
     l.episode_image.image = episode.image
     l.title.text = episode.title
-    l.length = episode.length.to_mm_ss
-    l.timestamp = episode.timestamp.to_dfs(:medium)
+    l.length.text = episode.length.to_mm_ss
+    l.timestamp.text = episode.timestamp.to_dfs(:medium)
   end
 end
