@@ -33,7 +33,8 @@ class MyCell < UITableViewCell
       # *XXXX*           *
       # ******************
       #
-      l.layout :top, UILabel, :title, offsets: {left: 7, right: 7} do |i|
+      l.layout :top, UILabel, :title do |i|
+        i.offsets left: 7, right: 7
         i.font = UIFont.boldSystemFontOfSize(14)
       end
       
@@ -44,8 +45,9 @@ class MyCell < UITableViewCell
         # *XXXX* TTTTTTTTT *
         # *XXXX* LL        *
         # ******************
-        l.layout :left, UILabel, :length, offsets: {left: 7, top: 10} do |i|
+        l.layout :left, UILabel, :length do |i|
           i.width = 52
+          i.offsets left: 7, top: 10
           # override the default autoresize rules for :left
           i.autoresize = flexible(:top_margin, :right_margin)
           i.text_color = :dark_gray # use the common aliases from IB / UIColor
@@ -55,8 +57,9 @@ class MyCell < UITableViewCell
         # *XXXX* TTTTTTTTT *
         # *XXXX* LL   DDDD *
         # ******************
-        l.layout :right, UILabel, :timestamp, offsets: {right: 7, top: 10} do |i|
+        l.layout :right, UILabel, :timestamp do |i|
           i.width = 78
+          i.offsets right: 7, top: 10
           # override the default autoresize rules for :right
           i.autoresize = flexible(:top_margin, :left_margin)
           i.text_color = :dark_gray
@@ -76,3 +79,4 @@ class MyCell < UITableViewCell
     l.timestamp.text = episode.timestamp.to_dfs(:medium)
   end
 end
+
