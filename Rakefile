@@ -1,4 +1,8 @@
+require 'rspec/core/rake_task'
 require File.expand_path '../lib/teacup/version.rb', __FILE__
+
+# Default task
+task :default => :spec # Run spec
 
 # - - - - - - - - - - - - - - - - - - -
 # Tasks
@@ -6,6 +10,9 @@ require File.expand_path '../lib/teacup/version.rb', __FILE__
 
 desc 'display Teacup\'s current version'
 task(:version) { version }
+
+desc 'run RSpec tests'
+RSpec::Core::RakeTask.new
 
 # - - - - - - - - - - - - - - - - - - -
 # Helpers
