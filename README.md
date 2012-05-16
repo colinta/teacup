@@ -10,7 +10,9 @@ delegators, and datasources.
 The goal is not to simply rename CocoaTouch method names, but to offer a
 rubyesque (well, actually a rubymotion-esque) way to create an interface.
 
-Using stylesheets and layouts, it makes coding an iOS app like designing a website with HTML and CSS.
+Using stylesheets and layouts, it makes coding an iOS app like designing a website with HTML and CSS. 
+
+The idea of using mostly css classes in HTML5 as used by [twitter-bootstrap](http://twitter.github.com/bootstrap/) can  serve as a model/approach of how to bind view logic to style definitions.
 
  Development
 -------------
