@@ -37,7 +37,7 @@ class MyCell < UITableViewCell
       # *XXXX*           *
       # ******************
       l.layout_top, UILabel, :title do |i|
-        i.offsets left: 7, right: 7
+        i.offsets = { left: 7, right: 7 }
         
         i.style do |s|
           s.font = UIFont.boldSystemFontOfSize(14)
@@ -51,7 +51,7 @@ class MyCell < UITableViewCell
         # ******************
         l.layout_left, UILabel, :length do |i|
           i.width = 52
-          i.offsets left: 7, top: 10
+          i.offsets = { left: 7, top: 10 }
           i.autoresize = flexible(:top_margin, :right_margin) # override the default autoresize rules for layout_left
           
           # you either define the style in a block
@@ -66,11 +66,11 @@ class MyCell < UITableViewCell
         # ******************
         l.layout_right, UILabel, :timestamp do |i|
           i.width = 78
-          i.offsets right: 7, top: 10
+          i.offsets = { right: 7, top: 10 }
           i.autoresize = flexible(:top_margin, :left_margin) # override the default autoresize rules for layout_right
           
           # or set the styling class
-          i.style = InfoLabelStyle
+          i.include_style InfoLabelStyle
         end
       end
     end
