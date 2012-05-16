@@ -10,6 +10,8 @@ delegators, and datasources.
 The goal is not to simply rename CocoaTouch method names, but to offer a
 rubyesque (well, actually a rubymotion-esque) way to create an interface.
 
+Using stylesheets and layouts, it makes coding an iOS app like designing a website with HTML and CSS.
+
  Development
 -------------
 
