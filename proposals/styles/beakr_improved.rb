@@ -1,4 +1,4 @@
-class Mystyle < ImageCaption
+module Mystyle < ImageCaption
   include Teacup::Stylesheet
 
   layout do
