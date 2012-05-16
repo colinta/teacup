@@ -36,6 +36,7 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
      * form: label/input combinations arranged in a table
      * navbar: with ability to customize the buttons that get placed at the top
      * tabbar: similar, but with the tabs at the bottom instead of nav at the top
+     * splitview: A splitview controller (for iPad Apps) with sane navigation defaults, nice loading webviews and JSON to populate the items in the popover menu
 
 3. layouts should have ways of placing things relative to edges, so placing a
    label or nav at the "bottom" that spans the entire width should be *easy*.
