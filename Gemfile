@@ -1,3 +1,4 @@
 source :rubygems
 
-gem 'rake' # Almost everyone has it, but heck
+gem 'rake' # almost everyone has it, but heck
+gem 'rspec' # testing
