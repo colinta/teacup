@@ -45,13 +45,13 @@ class SomeController < UIViewController
   @field.height = 50
   @field.width  = 200
   view.addSubview(@field)
-  
+
   @search = UITextField.new
   @search.height = 50
   @search.width  = 200
   @search.placeholder = 'Find something...'
   view.addSubview(@search)
-  
+
   true
  end
 end
@@ -63,26 +63,26 @@ Teacup
 # Stylesheet
 
 Teacup::StyleSheet.new(:IPhone) do
- 
+
  style :field,
   height: 50,
   width:  200
-  
+
  style :search, extends: :field,
   placeholder: 'Foo...'
- 
+
 end
 
 # Controller
 
 class SomeController < UIViewController
- 
+
  def viewDidLoad
   view.addSubview(Teacup.style(:field, UITextField.new))
   view.addSubview(Teacup.style(:search))
   true
  end
- 
+
 end
 ```
 
@@ -129,6 +129,57 @@ Bugs
 ----
 
 Please, do *not* hesitate to report any bugs you find with our source at the [Issues](https://github.com/rubymotion/teacup/issues) page.
+
+Use cases
+---------
+
+Try and "solve" these problems using your proposed syntax.
+
+1. TableViewCell:
+
+        **************************************
+        * |======| Title Goes here, bold     *
+        * | icon |                           *
+        * |======| mm/dd/YYYY     more info  *  <= smaller, gray captions
+        **************************************
+
+2. iPhone address book entry:
+
+        ************************
+        * <back=  Joey  [save] * <= navigation controller
+        *----------------------*
+        * |==|  [ Joey       ] *
+        * |:)|  [ Joe        ] * <= icon, and names in text fields
+        * |==|  [ McBobby    ] *
+        *                      *
+        * Address [ 123 St.  ] * <= labels and text fields
+        * Phone   [ 123-4567 ] *
+        *                      *
+        * Notes                *
+        * /------------------\ *
+        * | What a great     | *
+        * | guy!             | *
+        * \------------------/ *
+        *                      *
+        * ( + add field      ) *
+        * ( ! delete !       ) * <= red!
+        ************************
+
+3. iPad drawing program layout!
+
+                  V split view
+        ************************************
+        * Drawings |  [+]  [x]  [>]        * <= toolbar, add, trash, send/forward
+        *==========|-----------------------*
+        * Square > |                       *
+        * Box    > |                       *
+        *.Circle.>.|     O                 *
+        *          |                       *
+        *          |-----------------------*
+        *          | [/] [#] [O] [T]       * <= toolbar, black. pen, box, circle, text
+        ************************************
+
+Good luck!
 
 Actual proposals
 ----------------
