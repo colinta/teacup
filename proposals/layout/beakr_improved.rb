@@ -21,7 +21,8 @@ class ImageCaption < UITableViewCell  # I don't really care if this makes sense,
     end
 
   end
-
+  
+  # note by @farcaller: at this point bottom_right is overlapping on the right.
   layout :bottom_right do
 
     type :caption do
