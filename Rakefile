@@ -3,6 +3,7 @@ require File.expand_path '../lib/teacup/version.rb', __FILE__
 
 # Default task
 task :default => :spec # Run spec
+task :v       => :version # Alt
 
 # - - - - - - - - - - - - - - - - - - -
 # Tasks
