@@ -57,7 +57,7 @@ Actual proposals
 2. [teacup][teacup], by [colinta][]
 
 [iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
-[Commune]: https://github.com/colinta/teacup/blob/master/proposals/style/stylesheet_by_conradirwin.rb
-[teacup]: https://github.com/colinta/teacup/blob/master/proposals/style/teacup_by_colinta.rb
+[Commune]: https://github.com/colinta/teacup/blob/master/proposals/styles/stylesheet_by_conradirwin.rb
+[teacup]: https://github.com/colinta/teacup/blob/master/proposals/styles/teacup_by_colinta.rb
 [ConradIrwin]: https://github.com/ConradIrwin
 [colinta]: https://github.com/colinta
