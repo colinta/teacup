@@ -1,0 +1,1 @@
+# Idea: framework runtime, starts to load the application, load initializers, run migrations, etc
