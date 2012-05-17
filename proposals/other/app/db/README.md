@@ -1,6 +1,9 @@
 # DB
 
-I think we'd need two adapters:
+## CoreDataAdapter
+
+Rationale: CD is widely used in iOS projects and may be useful for simpler
+integration with UI.
 
 ## SqlLiteAdapter
 
