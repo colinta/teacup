@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.version       = Teacup::VERSION
 
-  gem.add_development_dependency 'rake'
+  gem.add_dependency 'rake'
   gem.add_development_dependency 'rspec'
 
 end
