@@ -12,6 +12,58 @@ rubyesque (well, actually a rubymotion-esque) way to create an interface.
 
 Using stylesheets and layouts, it makes coding an iOS app like designing a website with HTML and CSS.
 
+#### Showdown
+
+Regular
+
+```ruby
+class SomeController < UIViewController
+ def viewDidLoad
+  @field = UITextField.new
+  @field.height = 50
+  @field.width  = 200
+  view.addSubview(@field)
+  
+  @field2 = UITextField.new
+  @field2.height = 50
+  @field2.width  = 200
+  @field2.placeholder = 'Foo...'
+  view.addSubview(@field)
+  
+  true
+ end
+end
+```
+
+Teacup
+
+```ruby
+# Stylesheet
+
+Teacup::StyleSheet.new(:IPhone) do
+ 
+ style :field,
+  height: 50,
+  width:  200
+  
+ style :search, like: :field,
+  placeholder: 'Foo...'
+ 
+end
+
+# Controller
+
+class SomeController < UIViewController
+ 
+ def viewDidLoad
+  view.addSubview(Teacup.style(:field, UITextField.new))
+  view.addSubview(Teacup.style(:search))
+  true
+ end
+ 
+end
+```
+
  Development
 -------------
 
