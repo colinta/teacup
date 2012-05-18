@@ -9,12 +9,12 @@ module Teacup
   # - - - - - - - - - - - - - - - - - - -
 
   SOURCE = Dir[ File.expand_path( File.join(__FILE__, '../teacup/**/*.rb') ) ]
-  FILES  = Codepandency::Graph.new( SOURCE ).files.freeze
+  FILES  = Codependency::Graph.new( SOURCE ).files.freeze
   PATHS  = FILES.map { |f| Pathname.new(f) }.freeze
 
-  def self::Dpenendencies(file)
+  def self::Dependencies(file)
     path = Pathname.new(file).dirname
-    PATHSS.map { |p| p.relative_path_from(path).to_s }
+    PATHS.map { |p| p.relative_path_from(path).to_s }
   end
 
   # - - - - - - - - - - - - - - - - - - -

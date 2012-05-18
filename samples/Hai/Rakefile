@@ -1,10 +1,11 @@
 $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
-require 'teacup'
 
 Motion::Project::App.setup do |app|
   app.name = 'Hai'
 
-  app.files += Teacup::Dependencies(__FILE__)
-  app.files_dependencies 'app/app_delegate.rb' => Lotion::Dependencies(__FILE__)
+  app.device_family = :ipad
+
+  app.files += Dir.glob(File.join(app.project_dir, 'teacup/**/*.rb'))
+  app.files += Dir.glob(File.join(app.project_dir, 'styles/**/*.rb'))
 end
