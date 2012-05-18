@@ -1,3 +1,8 @@
+#!/usr/bin/env rake
+
+# Bundler gem tasks ftw
+require 'bundler/gem_tasks'
+
 require 'rspec/core/rake_task'
 require File.expand_path '../lib/teacup/version.rb', __FILE__
 
