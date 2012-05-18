@@ -17,6 +17,9 @@ task :v       => :version # Alt
 desc 'display Teacup\'s current version'
 task(:version) { version }
 
+desc 'diesplay list of contributors'
+task(:contrib)  { contrib }
+
 desc 'run RSpec tests'
 RSpec::Core::RakeTask.new
 
@@ -29,4 +32,8 @@ task(:prep) { system('rake build; rake install') }
 
 def version
   puts "Teacup #{Teacup::VERSION}"
+end
+
+def contrib
+  puts Teacup::CONTRIBUTORS
 end
