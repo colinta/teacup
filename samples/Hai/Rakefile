@@ -8,4 +8,5 @@ Motion::Project::App.setup do |app|
 
   app.files += Dir.glob(File.join(app.project_dir, 'teacup/**/*.rb'))
   app.files += Dir.glob(File.join(app.project_dir, 'styles/**/*.rb'))
+  app.files += Dir.glob(File.join(app.project_dir, 'app/**/*.rb'))
 end
