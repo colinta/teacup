@@ -66,10 +66,7 @@ end
 
 require 'teacup/helpers/helpers.rb'
 require 'teacup/version'
-<<<<<<< HEAD
 require 'teacup/contributors'
 require 'teacup/helpers/helpers'
 require 'teacup/style_sheet'
-=======
 require 'teacup/contributors'
->>>>>>> 6e50e1ae29796a603a2b07c25047f2b1a4e4c60b

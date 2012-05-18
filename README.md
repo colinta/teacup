@@ -33,7 +33,6 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 
 1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
 2. should provide a few useful layouts (see [readme for layout proposals](teacup/tree/master/proposals/layout)):
-
      * basic: vertically arranged "things", or
      * form: label/input combinations arranged in a table
      * navbar: with ability to customize the buttons that get placed at the top
@@ -50,14 +49,26 @@ and we will pick one in the #rubymotion channel on irc.freenode.net.
 6. teacup should take a little `config` block for easy configuration
 7. Ideally, there should be some way to "inherit" styles in this language. So you can define a basic layout for all platforms and then tweak (see [readme for style proposals](teacup/tree/master/proposals/styles))
 
+[iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
+
 Actual proposals
 ------------------
 
 1. [stylesheet][Commune], by [ConradIrwin][]
-2. [teacup][teacup], by [colinta][]
+2. [teacup][teacup_colinta], by [colinta][]
+3. [style][style_by_beakr], by [Beakr][]
+3. [layout][layout_by_beakr], by [Beakr][]
+4. [layout][layout_by_farcaller], by [farcaller][]
+5. [hybrid][], by [colinta][]
 
-[iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
 [Commune]: https://github.com/colinta/teacup/blob/master/proposals/styles/stylesheet_by_conradirwin.rb
-[teacup]: https://github.com/colinta/teacup/blob/master/proposals/styles/teacup_by_colinta.rb
+[teacup_colinta]: https://github.com/colinta/teacup/blob/master/proposals/styles/teacup_by_colinta.rb
+[style_by_beakr]: https://github.com/colinta/teacup/blob/master/proposals/layout/beakr_improved.rb
+[layout_by_beakr]: https://github.com/colinta/teacup/blob/master/proposals/styles/beakr_improved.rb
+[layout_by_farcaller]: https://github.com/colinta/teacup/blob/master/proposals/styles/layout_by_farcaller.rb
+[hybrid]: https://github.com/colinta/teacup/blob/master/proposals/layout/hybrid_style_and_layout_by_colinta.rb
+
 [ConradIrwin]: https://github.com/ConradIrwin
 [colinta]: https://github.com/colinta
+[farcaller]: https://github.com/farcaller
+[Beakr]: https://github.com/Beakr
