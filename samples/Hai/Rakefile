@@ -1,7 +1,10 @@
 $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
+require 'teacup'
 
 Motion::Project::App.setup do |app|
-  # Use `rake config' to see complete project settings.
   app.name = 'Hai'
+
+  app.files += Teacup::Dependencies(__FILE__)
+  app.files_dependencies 'app/app_delegate.rb' => Lotion::Dependencies(__FILE__)
 end
