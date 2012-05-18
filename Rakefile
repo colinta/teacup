@@ -20,6 +20,11 @@ task(:version) { version }
 desc 'run RSpec tests'
 RSpec::Core::RakeTask.new
 
+desc 'build and install the gem'
+task :prep do
+  system('rake build; rake install')
+end
+
 # - - - - - - - - - - - - - - - - - - -
 # Helpers
 # - - - - - - - - - - - - - - - - - - -
