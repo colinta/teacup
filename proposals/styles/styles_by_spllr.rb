@@ -11,17 +11,17 @@
 
 # Small style components
 Teacup::Style.define :rounded do |s|
-	s.borderRadius = 10
+  s.borderRadius = 10
 end
 
 # Style componets are extendable
 Teacup::Style.define :dark, :extends => :rounded do |s|
-	s.backgroundColor = rgba(50, 50, 50, 0.5)
-	s.textColor = rgb(255, 255, 255)
+  s.backgroundColor = rgba(50, 50, 50, 0.5)
+  s.textColor = rgb(255, 255, 255)
 end
 
 Teacup::Style.define :green_text do |s|
-	s.textColor = "#0000FF"
+  s.textColor = "#0000FF"
 end
 
 # Styles can be applies globaly
@@ -34,34 +34,34 @@ button.adopt_style :dark, :green_text
 
 # Styles can be refined
 button.style do |s|
-	s.backgroundColor = "#FF0099"
+  s.backgroundColor = "#FF0099"
 end
 
 # Styles can be applied within a style scope
 Teacup::Style.style_scope :dark do |s|
-	# All view instances will have :dark style applied
-	button = UIButton.alloc.init
-	cell = UITableCell.alloc.init
+  # All view instances will have :dark style applied
+  button = UIButton.alloc.init
+  cell = UITableCell.alloc.init
 end
 
 
 # Styles can define nested styles.
 # Nested will attempt to apply the nested styles a the getter with the corresponding name
 Teacup::Style.define_style :my_cell_style do |s|
-	s.backgroundColor = rgb(0, 0, 0)
-	
-	# apply styles the view in the #imageView
-	s.style :imageView do |s|
-		s.frame = [[10, 10], [50, 50]]
-	end
-	
-	# styles can be adopted
-	s.style :textLabel, :adopt => :green_text
-	
-	# styles can be adopted and overwritten
-	s.style :detailTextLabel, :adopt => :dark do |s|
-		s.textColor = UIColor.blueColor
-	end
+  s.backgroundColor = rgb(0, 0, 0)
+
+  # apply styles the view in the #imageView
+  s.style :imageView do |s|
+    s.frame = [[10, 10], [50, 50]]
+  end
+
+  # styles can be adopted
+  s.style :textLabel, :adopt => :green_text
+
+  # styles can be adopted and overwritten
+  s.style :detailTextLabel, :adopt => :dark do |s|
+    s.textColor = UIColor.blueColor
+  end
 end
 
 my_styled_cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:"MyCell")
@@ -73,9 +73,9 @@ my_styled_cell.adopt_style :my_cell_style
 # http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CoreAnimation_guide/Articles/Layout.html#//apple_ref/doc/uid/TP40006084-SW5
 #
 Teacup::Style.define_constraint :vertical_list do |c, rel|
-	c.width rel
-	c.minY  rel, :offset => -20
-	c.maxY  rel, :offset => 20
+  c.width rel
+  c.minY  rel, :offset => -20
+  c.maxY  rel, :offset => 20
 end
 
 super_button = UIButton.alloc.initWithFrame [[10, 10], [100, 30]]
