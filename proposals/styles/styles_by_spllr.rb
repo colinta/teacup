@@ -68,7 +68,7 @@ my_styled_cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault
 my_styled_cell.adopt_style :my_cell_style
 
 
-# Style component setting costraints
+# Style costraints settings
 # Constraints conform to CALayer constraints
 # http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CoreAnimation_guide/Articles/Layout.html#//apple_ref/doc/uid/TP40006084-SW5
 #
@@ -81,7 +81,9 @@ end
 super_button = UIButton.alloc.initWithFrame [[10, 10], [100, 30]]
 
 button_a = UIButton.alloc.init
-button_a.adopt_containt :vertical_list, super_button
+button_a.adopt_constaint :vertical_list, super_button
 
 button_b = UIButton.alloc.init
-button_b.adopt_containt :vertical_list, button_a
+button_b.adopt_constaint :vertical_list, button_a
+
+
