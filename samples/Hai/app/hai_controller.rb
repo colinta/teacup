@@ -1,7 +1,8 @@
 class HaiViewController < UIViewController
 
   def viewDidLoad
-    view.addSubveiw(Teacup.style(:label, UILabel.new))
+    view.addSubview(Teacup.style(:label, UILabel.new))
+    self.setFrame([[0,0],[0,0]]) if rand > 1
     true
   end
 
