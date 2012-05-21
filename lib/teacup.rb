@@ -1,21 +1,4 @@
-require 'codependency'
-require 'pathname'
-
 module Teacup
-
-  # - - - - - - - - - - - - - - - - - - -
-  # Thanks to https://github.com/jeremyruppel/lotion/
-  # for this bit.
-  # - - - - - - - - - - - - - - - - - - -
-
-  SOURCE = Dir[ File.expand_path( File.join(__FILE__, '../teacup/**/*.rb') ) ]
-  FILES  = Codependency::Graph.new( SOURCE ).files.freeze
-  PATHS  = FILES.map { |f| Pathname.new(f) }.freeze
-
-  def self::Dependencies(file)
-    path = Pathname.new(file).dirname
-    PATHS.map { |p| p.relative_path_from(path).to_s }
-  end
 
   # - - - - - - - - - - - - - - - - - - -
   # Config
@@ -85,10 +68,3 @@ module Teacup
     end
   end
 end
-
-require 'teacup/helpers/helpers.rb'
-require 'teacup/version'
-require 'teacup/contributors'
-require 'teacup/helpers/helpers'
-require 'teacup/style_sheet'
-require 'teacup/contributors'
