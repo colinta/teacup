@@ -77,8 +77,8 @@ teacup, being a community project, moves in "spurts" of decision making and
 coding.  Only the name — both the least and most important part :-) — is
 decided.
 
-We are currently open to ideas for the DSL syntax.  Please fork, add a proposal,
-and we will pick one in the #rubymotion channel on irc.freenode.net.
+We would love suggestions of any sort, and we're always free over at the `#teacuprb` channel on `irc.freenode.org`.
+
 
   Ideas that proposals should keep in mind
 --------------------------------------------
