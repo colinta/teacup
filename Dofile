@@ -1,0 +1,5 @@
+require 'do_it'
+
+tasks = DoIt.new do
+  todo 'Make a "nicer looking" sample app (or improve existing app).'
+end
