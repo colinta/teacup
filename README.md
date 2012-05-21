@@ -26,11 +26,11 @@ class SomeController < UIViewController
   @field.width  = 200
   view.addSubview(@field)
   
-  @field2 = UITextField.new
-  @field2.height = 50
-  @field2.width  = 200
-  @field2.placeholder = 'Foo...'
-  view.addSubview(@field)
+  @search = UITextField.new
+  @search.height = 50
+  @search.width  = 200
+  @search.placeholder = 'Find something...'
+  view.addSubview(@search)
   
   true
  end
