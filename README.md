@@ -12,6 +12,8 @@ rubyesque (well, actually a rubymotion-esque) way to create an interface.
 
 Using stylesheets and layouts, it makes coding an iOS app like designing a website with HTML and CSS.
 
+**Check out a working sample app [here](https://github.com/rubymotion/teacup/tree/master/samples/Hai)!**
+
 #### Showdown
 
 Regular
