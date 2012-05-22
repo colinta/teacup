@@ -105,6 +105,11 @@ We would love suggestions of any sort, and we're always free over at the `#teacu
 
 [iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
 
+Bugs
+----
+
+Please, do *not* hesitate to report any bugs you find with our source at the [Issues](https://github.com/rubymotion/teacup/issues) page.
+
 Actual proposals
 ------------------
 
