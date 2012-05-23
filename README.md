@@ -1,5 +1,5 @@
- Teacup
-========
+Teacup
+======
 
 A community-driven DSL for creating user interfaces on the iphone.
 
@@ -21,6 +21,7 @@ Regular
 ```ruby
 class SomeController < UIViewController
  def viewDidLoad
+
   @field = UITextField.new
   @field.height = 50
   @field.width  = 200
@@ -48,7 +49,7 @@ Teacup::StyleSheet.new(:IPhone) do
   height: 50,
   width:  200
   
- style :search, like: :field,
+ style :search, extends: :field,
   placeholder: 'Foo...'
  
 end
@@ -66,8 +67,8 @@ class SomeController < UIViewController
 end
 ```
 
- Development
--------------
+Development
+-----------
 
 *Current version*: v0.0.0 (or see `lib/teacup/version.rb`)
 
@@ -82,8 +83,8 @@ decided.
 We would love suggestions of any sort, and we're always free over at the `#teacuprb` channel on `irc.freenode.org`.
 
 
-  Ideas that proposals should keep in mind
---------------------------------------------
+Ideas that proposals should keep in mind
+----------------------------------------
 
 1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
 2. should provide a few useful layouts (see [readme for layout proposals](teacup/tree/master/proposals/layout)):
@@ -111,7 +112,7 @@ Bugs
 Please, do *not* hesitate to report any bugs you find with our source at the [Issues](https://github.com/rubymotion/teacup/issues) page.
 
 Actual proposals
-------------------
+----------------
 
 1. [stylesheet][Commune], by [ConradIrwin][]
 2. [teacup][teacup_colinta], by [colinta][]
