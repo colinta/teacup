@@ -1,143 +1,143 @@
 module Teacup
-  # StyleSheets in Teacup act as a central configuration mechanism,
+  # Stylesheets in Teacup act as a central configuration mechanism,
   # they have two aims:
   #
   # 1. Allow you to store "Details" away from the main body of your code.
   #    (controllers shouldn't have to be filled with style rules)
   # 2. Allow you to easily re-use configuration in many places.
   #
-  # The API really provides only two methods, {StyleSheet#style} to store properties
-  # on the StyleSheet; and {StyleSheet#query} to get them out again:
+  # The API really provides only two methods, {Stylesheet#style} to store properties
+  # on the Stylesheet; and {Stylesheet#query} to get them out again:
   #
   # @example
-  #   sheet = Teacup::StyleSheet.new
-  #   sheet.style :buttons, :corners => :rounded
+  #   stylesheet = Teacup::Stylesheet.new
+  #   stylesheet.style :buttons, :corners => :rounded
   #   # => nil
-  #   sheet.query :buttons
+  #   stylesheet.query :buttons
   #   # => {:corners => :rounded}
   #
   # In addition to this, two separate mechanisms are provided for sharing
-  # configuration within sheets.
+  # configuration within stylesheets.
   #
-  # Firstly, if you set the ':like' property for a given query, then on lookup
-  # the StyleSheet will merge the properties for the ':like' query into the return
-  # value. Conflicts are resolved so that properties with the original query
+  # Firstly, if you set the ':extends' property for a given stylename, then on lookup
+  # the Stylesheet will merge the properties for the ':extends' stylename into the return
+  # value. Conflicts are resolved so that properties with the original stylename
   # are resolved in its favour.
   #
   # @example
-  #   Teacup::StyleSheet.new(:IPad) do
+  #   Teacup::Stylesheet.new(:IPad) do
   #     style :button,
   #       background: UIColor.blackColor,
   #       top: 100
   #
-  #     style :ok_button, like: :button,
+  #     style :ok_button, extends: :button,
   #       title: "OK!",
   #       top: 200
   #
   #   end
-  #   Teacup::StyleSheet::IPad.query(:ok_button)
+  #   Teacup::Stylesheet::IPad.query(:ok_button)
   #   # => {background: UIColor.blackColor, top: 200, title: "OK!"}
   #
-  # Secondly, you can include StyleSheets into each other, in exactly the same way as you
+  # Secondly, you can import Stylesheets into each other, in exactly the same way as you
   # can include Modules into each other in Ruby. This allows you to share rules between
-  # StyleSheets.
+  # Stylesheets.
   #
-  # As you'd expect, conflicts are resolve so that the StyleSheet on which you call query
+  # As you'd expect, conflicts are resolve so that the Stylesheet on which you call query
   # has the highest precedence.
   #
   # @example
-  #   Teacup::StyleSheet.new(:IPad) do
+  #   Teacup::Stylesheet.new(:IPad) do
   #     style :ok_button,
   #       title: "OK!"
   #   end
   #
-  #   Teacup::StyleSheet.new(:IPadVertical) do
-  #     include :IPad
+  #   Teacup::Stylesheet.new(:IPadVertical) do
+  #     import :IPad
   #     style :ok_button,
   #       width: 80
   #   end
-  #   Teacup::StyleSheet::IPadVertical.query(:ok_button)
+  #   Teacup::Stylesheet::IPadVertical.query(:ok_button)
   #   # => {title: "OK!", width: 80}
   #
   # The two merging mechanisms are considered independently, so you can override
-  # a property both in a ':like' rule, and also in an included StyleSheet. In such a
-  # a case the StyleSheet inclusion conflicts are resolved independently; and then in
-  # a second phase, the ':like' chain is flattened.
+  # a property both in a ':extends' rule, and also in an imported Stylesheet. In such a
+  # a case the Stylesheet inclusion conflicts are resolved independently; and then in
+  # a second phase, the ':extends' chain is flattened.
   #
-  class StyleSheet
+  class Stylesheet
     attr_reader :name
 
-    # Create a new StyleSheet with the given name.
+    # Create a new Stylesheet with the given name.
     #
     # @param name, The name to give.
-    # @param &block, The body of the StyleSheet instance_eval'd.
+    # @param &block, The body of the Stylesheet instance_eval'd.
     # @example
-    #   Teacup::StyleSheet.new(:IPadVertical) do
-    #     include :IPadBase
+    #   Teacup::Stylesheet.new(:IPadVertical) do
+    #     import :IPadBase
     #     style :continue_button,
     #        top: 50
     #   end
     #
     def initialize(name, &block)
       @name = name.to_sym
-      Teacup::StyleSheet.const_set(@name, self)
+      Teacup::Stylesheet.const_set(@name, self)
       instance_eval &block
       self
     end
 
-    # Include another StyleSheet into this one, the rules defined
+    # Include another Stylesheet into this one, the rules defined
     # within it will have lower precedence than those defined here
     # in the case that they share the same keys.
     #
-    # @param Symbol the name of the sheet.
+    # @param Symbol the name of the stylesheet.
     # @example
-    #   Teacup::StyleSheet.new(:IPadVertical) do
-    #     include :IPadBase
-    #     include :VerticalTweaks
+    #   Teacup::Stylesheet.new(:IPadVertical) do
+    #     import :IPadBase
+    #     import :VerticalTweaks
     #   end
-    def include(name_or_sheet)
-      if StyleSheet === name_or_sheet
-        included << name_or_sheet.name
+    def import(name_or_stylesheet)
+      if Stylesheet === name_or_stylesheet
+        imported << name_or_stylesheet.name
       else
-        included << name_or_sheet.to_sym
+        imported << name_or_stylesheet.to_sym
       end
     end
 
-    # Add a set of properties for a given query or queries.
+    # Add a set of properties for a given stylename or set of stylenames.
     #
-    # @param Symbol, *query
+    # @param Symbol, *stylename
     # @param Hash[Symbol, Object], properties
     # @example
-    #   Teacup::StyleSheet.new(:IPadBase) do
+    #   Teacup::Stylesheet.new(:IPadBase) do
     #     style :pretty_button,
     #       backgroundColor: UIColor.blackColor
     #
-    #     style :continue_button, like: :pretty_button,
+    #     style :continue_button, extends: :pretty_button,
     #       title: "Continue!",
     #       top: 50
     #   end
     def style(*queries)
       properties = queries.pop
-      queries.each do |query|
-        styles[query].update(properties)
+      queries.each do |stylename|
+        styles[stylename].update(properties)
       end
     end
 
-    # Get the properties defined for the given query, in this StyleSheet and all
-    # those that are included.
+    # Get the properties defined for the given stylename, in this Stylesheet and all
+    # those that have been imported.
     #
-    # If the ':like' property is set, we then repeat the process with the value
+    # If the ':extends' property is set, we then repeat the process with the value
     # of that, and include them into the result with lower precedence.
     #
-    # @param Symbol query, the query to look up.
+    # @param Symbol stylename, the stylename to look up.
     # @return Hash[Symbol, *] the resulting properties.
     # @example
-    #   Teacup::StyleSheet::IPadBase.query(:continue_button)
+    #   Teacup::Stylesheet::IPadBase.query(:continue_button)
     #   # => {backgroundColor: UIColor.blackColor, title: "Continue!", top: 50}
-    def query(query)
-      this_rule = properties_for(query)
+    def query(stylename)
+      this_rule = properties_for(stylename)
 
-      if also_include = this_rule.delete(:like)
+      if also_include = this_rule.delete(:extends)
         query(also_include).merge(this_rule)
       else
         this_rule
@@ -148,44 +148,44 @@ module Teacup
     #
     # @return String
     def inspect
-      "Teacup::StyleSheet:#{name.inspect}"
+      "Teacup::Stylesheet:#{name.inspect}"
     end
 
     protected
 
-    # Get the properties for a given query, including any properties
-    # defined on sheets that have been included into this one, but not
-    # resolving ':like' inheritance.
+    # Get the properties for a given stylename, including any properties
+    # defined on stylesheets that have been imported into this one, but not
+    # resolving ':extends' inheritance.
     #
-    # @param Symbol query, the query to search for.
-    # @param Hash so_far, the properties already found in sheets with
+    # @param Symbol stylename, the stylename to search for.
+    # @param Hash so_far, the properties already found in stylesheets with
     #                     lower precedence than this one.
-    # @param Hash seen, the StyleSheets that we've already visited, this is
+    # @param Hash seen, the Stylesheets that we've already visited, this is
     #                   to avoid pathological cases where stylesheets
-    #                   have been included recursively.
+    #                   have been imported recursively.
     # @return Hash
-    def properties_for(query, so_far={}, seen={})
+    def properties_for(stylename, so_far={}, seen={})
       return so_far if seen[self]
       seen[self] = true
 
-      included.each do |name|
-        unless Teacup::StyleSheet.const_defined?(name)
-          raise "Teacup tried to include StyleSheet:#{name} into StyleSheet:#{self.name}, but it didn't exist"
+      imported.each do |name|
+        unless Teacup::Stylesheet.const_defined?(name)
+          raise "Teacup tried to import Stylesheet:#{name} into Stylesheet:#{self.name}, but it didn't exist"
         end
-        Teacup::StyleSheet.const_get(name).properties_for(query, so_far, seen)
+        Teacup::Stylesheet.const_get(name).properties_for(stylename, so_far, seen)
       end
 
-      so_far.update(styles[query])
+      so_far.update(styles[stylename])
     end
 
-    # The list of StyleSheet names that have been included in this one.
+    # The list of Stylesheet names that have been imported into this one.
     #
     # @return Array[Symbol]
-    def included
-      @included ||= []
+    def imported
+      @imported ||= []
     end
 
-    # The actual contents of this sheet as a Hash from query to properties.
+    # The actual contents of this stylesheet as a Hash from stylename to properties.
     #
     # @return Hash[Symbol, Hash]
     def styles
