@@ -21,16 +21,10 @@ module Teacup
   #
   module Layout
 
-    # Define or alter the layout for a view.
+    # Alter the layout of a view
     #
-    # @param class_or_instance  The first parameter is the view that you want to
-    #                           layout. Though for convenience you can also pass
-    #                           a UIView subclass and a new view will be created
-    #                           for you.
-    #
-    #                           If a new view is created, or the passed view is
-    #                           not yet present in the view heirarchy it will be
-    #                           added at the current level. (see &block)
+    # @param instance           The first parameter is the view that you want to
+    #                           layout.
     #
     # @param name               The second parameter is optional, and is the
     #                           stylename to apply to the element. When using
@@ -42,61 +36,29 @@ module Teacup
     #                           of properties to apply to the view directly.
     #
     # @param &block             If a block is passed, it is evaluated such that
-    #                           any calls to {layout} that occur within that
+    #                           any calls to {subview} that occur within that
     #                           block cause created subviews to be added to *this*
     #                           view instead of to the top-level view.
     #
-    # For example, when creating a layout in the interface block of a
-    # constructor, you might want to add several labels:
-    # 
-    # @example
-    #   interface(:my_view_controller) do
-    #     layout(UILabel, :left_label, text: "One")
-    #     layout(UILabel, :left_label, text: "Two")
-    #   end
+    # For example, to alter the width and height of a carousel:
     #
-    # You might also need to create nested structures in order to get perfect
-    # view effects:
-    # 
-    # @example
-    #   interface(:my_view_controller) do
-    #     layout(UIView, :shiny_thing) {
-    #       layout(UIView, :glow) {
-    #         layout(UIView, :star)
-    #       }
-    #       layout(UIView, :moon)
-    #     }
-    #   end
-    #
-    # Use of the layout function is not restricted to defining interfaces
-    # though, it can also be used to alter existing views.
-    #
-    # For example, to add a new image to a carousel:
-    #
-    # @example
-    #   layout(carousel) {
-    #     layout(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
-    #   }
-    #
-    # Or to modify the properties of an element:
-    # 
     # @example
     #   layout(carousel, width: 500, height: 100)
     #
-    def layout(class_or_instance, name_or_properties, properties_or_nil=nil, &block)
-      instance = Class === class_or_instance ? class_or_instance.new : class_or_instance
-
-      if Class === class_or_instance
-        unless class_or_instance <= UIView
-          raise "Expected subclass of UIView, got: #{class_or_instance.inspect}"
-        end
-        instance = class_or_instance.new
-      elsif UIView === class_or_instance
-        instance = class_or_instance
-      else
-        raise "Expected a UIView, got: #{class_or_instance.inspect}"
-      end
-
+    # Or to layout the carousel in the default style:
+    #
+    # @example
+    #   layout(carousel, :default_carousel)
+    #
+    # You can also use this method with {subview}, for example to add a new
+    # image to a carousel:
+    #
+    # @example
+    #   layout(carousel) {
+    #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
+    #   }
+    #
+    def layout(instance, name_or_properties, properties_or_nil=nil, &block)
       if properties_or_nil
         name = name_or_properties.to_sym
         properties = properties_or_nil
@@ -112,15 +74,71 @@ module Teacup
       instance.style(properties) if properties
       instance.stylename = name if name
 
-      if !instance.superview && !(instance == top_level_view)
-        (superview_chain.last || top_level_view).addSubview(instance)
-      end
       begin
         superview_chain << instance
         instance_exec(instance, &block) if block_given?
       ensure
         superview_chain.pop
       end
+
+      instance
+    end
+
+    # Add a new subview to the view heirarchy.
+    #
+    # By default the subview will be added at the top level of the view heirarchy, though
+    # if this function is executed within a block passed to {layout} or {subview}, then this
+    # view will be added as a subview of the instance being layed out by the block.
+    #
+    # This is particularly useful when coupled with the {UIViewController.heirarchy} function
+    # that allows you to declare your view heirarchy.
+    #
+    # @param class_or_instance  The UIView subclass (or instance thereof) that you want
+    #                           to add. If you pass a class, an instance will be created
+    #                           by calling {new}.
+    #
+    # @param *args              Arguments to pass to {layout} to instruct teacup how to
+    #                           lay out the newly added subview.
+    #
+    # @param &block             A block to execute with the current view context set to
+    #                           your new element, see {layout} for more details.
+    #
+    # @return instance          The instance that was added to the view heirarchy.
+    #
+    # For example, to specify that a controller should contain some labels:
+    #
+    # @example
+    #   MyViewController < UIViewController
+    #     heirarchy(:my_view) do
+    #       subview(UILabel, text: 'Test')
+    #       subview(UILabel, :styled_label)
+    #     end
+    #   end
+    #
+    # If you need to add a new image at runtime, you can also do that:
+    #
+    # @example
+    #   layout(carousel) {
+    #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
+    #   }
+    #
+    def subview(class_or_instance, *args, &block)
+      instance = Class === class_or_instance ? class_or_instance.new : class_or_instance
+
+      if Class === class_or_instance
+        unless class_or_instance <= UIView
+          raise "Expected subclass of UIView, got: #{class_or_instance.inspect}"
+        end
+        instance = class_or_instance.new
+      elsif UIView === class_or_instance
+        instance = class_or_instance
+      else
+        raise "Expected a UIView, got: #{class_or_instance.inspect}"
+      end
+
+      (superview_chain.last || top_level_view).addSubview(instance)
+
+      layout(instance, *args, &block)
 
       instance
     end
