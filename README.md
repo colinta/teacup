@@ -14,6 +14,25 @@ Using stylesheets and layouts, it makes coding an iOS app like designing a websi
 
 **Check out a working sample app [here](https://github.com/rubymotion/teacup/tree/master/samples/Hai)!**
 
+#### Installation
+
+First get the teacup library into your local project using git submodules:
+
+```bash
+$ git submodule add https://github.com:rubymotion/teacup vendor/teacup
+```
+
+Then add the teacup library to your Rakefile:
+```
+  # Add libraries *before* your app so that you can access constants they define safely
+  #
+  dirs = ['vendor/teacup/lib', 'app']
+
+  # require all the directories in order.
+  app.files = dirs.map{|d| Dir.glob(File.join(app.project_dir, "#{d}/**/*.rb")) }.flatten
+```
+
+
 #### Showdown
 
 Regular
