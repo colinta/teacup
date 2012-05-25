@@ -67,10 +67,13 @@ module Teacup
   class Stylesheet
     attr_reader :name
 
-    # Create a new Stylesheet with the given name.
+    # Create a new Stylesheet.
     #
-    # @param name, The name to give.
+    # If a name is provided then a new constant will be created using that name.
+    #
+    # @param name, The (optional) name to give.
     # @param &block, The body of the Stylesheet instance_eval'd.
+    #
     # @example
     #   Teacup::Stylesheet.new(:IPadVertical) do
     #     import :IPadBase
@@ -78,9 +81,15 @@ module Teacup
     #        top: 50
     #   end
     #
-    def initialize(name, &block)
-      @name = name.to_sym
-      Teacup::Stylesheet.const_set(@name, self)
+    #   Teacup::Stylesheet::IPadVertical.query(:continue_button)
+    #   # => {top: 50}
+    #
+    def initialize(name=nil, &block)
+      if name
+        @name = name.to_sym
+        Teacup::Stylesheet.const_set(@name, self)
+      end
+
       instance_eval &block
       self
     end
@@ -89,18 +98,27 @@ module Teacup
     # within it will have lower precedence than those defined here
     # in the case that they share the same keys.
     #
-    # @param Symbol the name of the stylesheet.
+    # @param Symbol|Teacup::Stylesheet  the name of the stylesheet,
+    #                                   or the stylesheet to include.
+    #
+    # When defining a stylesheet declaratively, it is better to use the symbol
+    # that represents a stylesheet, as the constant may not be defined yet:
+    #
     # @example
     #   Teacup::Stylesheet.new(:IPadVertical) do
     #     import :IPadBase
     #     import :VerticalTweaks
     #   end
+    #
+    #
+    # If you are using anonymous stylsheets however, then it will be necessary
+    # to pass an actual stylesheet object.
+    #
+    # @example
+    #   @stylesheet.import(base_stylesheet)
+    #
     def import(name_or_stylesheet)
-      if Stylesheet === name_or_stylesheet
-        imported << name_or_stylesheet.name
-      else
-        imported << name_or_stylesheet.to_sym
-      end
+      imported << name_or_stylesheet
     end
 
     # Add a set of properties for a given stylename or set of stylenames.
@@ -168,21 +186,33 @@ module Teacup
       return so_far if seen[self]
       seen[self] = true
 
-      imported.each do |name|
-        unless Teacup::Stylesheet.const_defined?(name)
-          raise "Teacup tried to import Stylesheet:#{name} into Stylesheet:#{self.name}, but it didn't exist"
-        end
-        Teacup::Stylesheet.const_get(name).properties_for(stylename, so_far, seen)
+      imported_stylesheets.each do |stylesheet|
+        stylesheet.properties_for(stylename, so_far, seen)
       end
 
       so_far.update(styles[stylename])
     end
 
-    # The list of Stylesheet names that have been imported into this one.
+    # The list of Stylesheets or names that have been imported into this one.
     #
-    # @return Array[Symbol]
+    # @return Array[Symbol|Stylesheet]
     def imported
       @imported ||= []
+    end
+
+    # The array of Stylesheets that have been imported into this one.
+    #
+    # @return Array[Stylesheet]
+    def imported_stylesheets
+      imported.map do |name_or_stylesheet|
+        if Teacup::Stylesheet === name_or_stylesheet
+          name_or_stylesheet
+        elsif Teacup::Stylesheet.const_defined?(name_or_stylesheet)
+          Teacup::Stylesheet.const_get(name_or_stylesheet)
+        else
+          raise "Teacup tried to import Stylesheet:#{name_or_stylesheet.inspect} into Stylesheet:#{self.name}, but it didn't exist"
+        end
+      end
     end
 
     # The actual contents of this stylesheet as a Hash from stylename to properties.
