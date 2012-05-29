@@ -180,25 +180,3 @@ Problems to solve...
         ************************************
 
 Good luck!
-
-Actual proposals
-----------------
-
-1. [stylesheet][Commune], by [ConradIrwin][]
-2. [teacup][teacup_colinta], by [colinta][]
-3. [style][style_by_beakr], by [Beakr][]
-3. [layout][layout_by_beakr], by [Beakr][]
-4. [layout][layout_by_farcaller], by [farcaller][]
-5. [hybrid][], by [colinta][]
-
-[Commune]: https://github.com/colinta/teacup/blob/master/proposals/styles/stylesheet_by_conradirwin.rb
-[teacup_colinta]: https://github.com/colinta/teacup/blob/master/proposals/styles/teacup_by_colinta.rb
-[style_by_beakr]: https://github.com/colinta/teacup/blob/master/proposals/layout/beakr_improved.rb
-[layout_by_beakr]: https://github.com/colinta/teacup/blob/master/proposals/styles/beakr_improved.rb
-[layout_by_farcaller]: https://github.com/colinta/teacup/blob/master/proposals/styles/layout_by_farcaller.rb
-[hybrid]: https://github.com/colinta/teacup/blob/master/proposals/layout/hybrid_style_and_layout_by_colinta.rb
-
-[ConradIrwin]: https://github.com/ConradIrwin
-[colinta]: https://github.com/colinta
-[farcaller]: https://github.com/farcaller
-[Beakr]: https://github.com/Beakr
