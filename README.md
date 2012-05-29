@@ -133,7 +133,7 @@ Please, do *not* hesitate to report any bugs you find with our source at the [Is
 Use cases
 ---------
 
-Try and "solve" these problems using your proposed syntax.
+Problems to solve...
 
 1. TableViewCell:
 
