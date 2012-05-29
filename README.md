@@ -62,7 +62,7 @@ Teacup
 ```ruby
 # Stylesheet
 
-Teacup::StyleSheet.new(:IPhone) do
+Teacup::Stylesheet.new(:IPhone) do
 
  style :field,
   height: 50,
