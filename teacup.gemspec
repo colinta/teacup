@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   apps.
   DESC
 
-  gem.summary = 'CSS-like templates for RubyMotion.'
+  gem.summary = 'A community-driven DSL for creating user interfaces on the iphone.'
   gem.homepage = 'https://github.com/rubymotion/teacup'
 
   gem.files   = %w(lib/teacup.rb
@@ -17,9 +17,9 @@ Gem::Specification.new do |gem|
                    lib/teacup/contributors.rb
                    lib/teacup/helpers/helpers.rb
                    lib/teacup/style_sheet.rb)
-  
-  gem.executables = gem.files.grep(%r(^bin/)).map { |f| File.basename(f) }
-  gem.test_files  = gem.files.grep(%r{^(test|spec|features)/})
+
+  gem.executables = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
+  gem.test_files  = gem.files.grep(%r{^spec/})
 
   gem.name          = 'teacup'
   gem.require_paths = ['lib']
