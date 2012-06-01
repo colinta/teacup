@@ -145,10 +145,11 @@ module Teacup
     end
 
     # Returns a stylesheet to use to style the contents of this controller's
-    # view.
+    # view.  You can also assign a stylesheet to {stylesheet=}, which will in
+    # turn call {restyle!}.
     #
     # This method will be queried each time {restyle!} is called, and also
-    # implicitly # whenever Teacup needs to draw your layout (currently only at
+    # implicitly whenever Teacup needs to draw your layout (currently only at
     # view load time).
     #
     # @return Teacup::Stylesheet
@@ -164,7 +165,25 @@ module Teacup
     #    end
     #  end
     def stylesheet
-      nil
+      @stylesheet
+    end
+
+    # Assigning a new stylesheet triggers {restyle!}, so do this during a
+    # rotation to get your different layouts applied.
+    #
+    # Assigning a stylesheet is an *alternative* to returning a Stylesheet in
+    # the {stylesheet} method. Note that {restyle!} calls {stylesheet}, so while
+    # assigning a stylesheet will trigger {restyle!}, your stylesheet will not
+    # be picked up if you don't return it in a custom stylesheet method.
+    #
+    # @return Teacup::Stylesheet
+    #
+    # @example
+    #
+    #   stylesheet = Teacup::Stylesheet::IPadHorizontal
+    def stylesheet= new_stylesheet
+      @stylesheet = new_stylesheet
+      restyle!
     end
 
     # Instruct teacup to reapply styles to your subviews
