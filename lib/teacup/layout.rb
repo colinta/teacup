@@ -16,7 +16,7 @@ module Teacup
   #     end
   #
   #     def stylesheet
-  #       Teacup::Stylesheet::Logo
+  #       Teacup::Stylesheet[:logo]
   #     end
   #   end
   #
@@ -159,9 +159,9 @@ module Teacup
     #  def stylesheet
     #    if [UIDeviceOrientationLandscapeLeft,
     #        UIDeviceOrientationLandscapeRight].include?(UIDevice.currentDevice.orientation)
-    #      Teacup::Stylesheet::IPad
+    #      Teacup::Stylesheet[:ipad]
     #    else
-    #      Teacup::Stylesheet::IPadVertical
+    #      Teacup::Stylesheet[:ipadvertical]
     #    end
     #  end
     def stylesheet
@@ -180,7 +180,7 @@ module Teacup
     #
     # @example
     #
-    #   stylesheet = Teacup::Stylesheet::IPadHorizontal
+    #   stylesheet = Teacup::Stylesheet[:ipadhorizontal]
     def stylesheet= new_stylesheet
       @stylesheet = new_stylesheet
       restyle!

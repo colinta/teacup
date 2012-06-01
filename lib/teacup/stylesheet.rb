@@ -25,7 +25,7 @@ module Teacup
   # are resolved in its favour.
   #
   # @example
-  #   Teacup::Stylesheet.new(:IPad) do
+  #   Teacup::Stylesheet.new(:ipad) do
   #     style :button,
   #       backgroundImage: UIImage.imageNamed("big_red_shiny_button"),
   #       top: 100
@@ -35,7 +35,7 @@ module Teacup
   #       top: 200
   #
   #   end
-  #   Teacup::Stylesheet::IPad.query(:ok_button)
+  #   Teacup::Stylesheet[:ipad].query(:ok_button)
   #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), top: 200, title: "OK!"}
   #
   # Secondly, you can import Stylesheets into each other, in exactly the same way as you
@@ -46,17 +46,17 @@ module Teacup
   # call query has the highest precedence.
   #
   # @example
-  #   Teacup::Stylesheet.new(:IPad) do
+  #   Teacup::Stylesheet.new(:ipad) do
   #     style :ok_button,
   #       title: "OK!"
   #   end
   #
-  #   Teacup::Stylesheet.new(:IPadVertical) do
-  #     import :IPad
+  #   Teacup::Stylesheet.new(:ipadvertical) do
+  #     import :ipad
   #     style :ok_button,
   #       width: 80
   #   end
-  #   Teacup::Stylesheet::IPadVertical.query(:ok_button)
+  #   Teacup::Stylesheet[:ipadvertical].query(:ok_button)
   #   # => {title: "OK!", width: 80}
   #
   # The two merging mechanisms are considered independently, so you can override
@@ -67,6 +67,16 @@ module Teacup
   class Stylesheet
     attr_reader :name
 
+    class << self
+      def stylesheets
+        @stylesheets ||= {}
+      end
+
+      def []= name, stylesheet
+        stylesheets[name] = stylesheet
+      end
+    end
+
     # Create a new Stylesheet.
     #
     # If a name is provided then a new constant will be created using that name.
@@ -75,19 +85,19 @@ module Teacup
     # @param &block, The body of the Stylesheet instance_eval'd.
     #
     # @example
-    #   Teacup::Stylesheet.new(:IPadVertical) do
-    #     import :IPadBase
+    #   Teacup::Stylesheet.new(:ipadvertical) do
+    #     import :ipadbase
     #     style :continue_button,
     #        top: 50
     #   end
     #
-    #   Teacup::Stylesheet::IPadVertical.query(:continue_button)
+    #   Teacup::Stylesheet[:ipadvertical].query(:continue_button)
     #   # => {top: 50}
     #
     def initialize(name=nil, &block)
       if name
         @name = name.to_sym
-        Teacup::Stylesheet.const_set(@name, self)
+        Teacup::Stylesheet[@name] = self
       end
 
       instance_eval &block
@@ -105,13 +115,13 @@ module Teacup
     # that represents a stylesheet, as the constant may not be defined yet:
     #
     # @example
-    #   Teacup::Stylesheet.new(:IPadVertical) do
-    #     import :IPadBase
-    #     import :VerticalTweaks
+    #   Teacup::Stylesheet.new(:ipadvertical) do
+    #     import :ipadbase
+    #     import :verticaltweaks
     #   end
     #
     #
-    # If you are using anonymous stylsheets however, then it will be necessary
+    # If you are using anonymous stylesheets however, then it will be necessary
     # to pass an actual stylesheet object.
     #
     # @example
@@ -126,7 +136,7 @@ module Teacup
     # @param Symbol, *stylename
     # @param Hash[Symbol, Object], properties
     # @example
-    #   Teacup::Stylesheet.new(:IPadBase) do
+    #   Teacup::Stylesheet.new(:ipadbase) do
     #     style :pretty_button,
     #       backgroundImage: UIImage.imageNamed("big_red_shiny_button")
     #
@@ -150,7 +160,7 @@ module Teacup
     # @param Symbol stylename, the stylename to look up.
     # @return Hash[Symbol, *] the resulting properties.
     # @example
-    #   Teacup::Stylesheet::IPadBase.query(:continue_button)
+    #   Teacup::Stylesheet[:ipadbase].query(:continue_button)
     #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
     def query(stylename)
       this_rule = properties_for(stylename)

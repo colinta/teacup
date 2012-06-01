@@ -1,4 +1,4 @@
-Teacup::Stylesheet.new(:IPad) do
+Teacup::StyleSheet.new(:ipad) do
 
   style UILabel,
     textColor: UIColor.blueColor
