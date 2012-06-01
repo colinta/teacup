@@ -27,7 +27,7 @@ module Teacup
   # @example
   #   Teacup::Stylesheet.new(:IPad) do
   #     style :button,
-  #       background: UIColor.blackColor,
+  #       backgroundImage: UIImage.imageNamed("big_red_shiny_button"),
   #       top: 100
   #
   #     style :ok_button, extends: :button,
@@ -36,14 +36,14 @@ module Teacup
   #
   #   end
   #   Teacup::Stylesheet::IPad.query(:ok_button)
-  #   # => {background: UIColor.blackColor, top: 200, title: "OK!"}
+  #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), top: 200, title: "OK!"}
   #
   # Secondly, you can import Stylesheets into each other, in exactly the same way as you
   # can include Modules into each other in Ruby. This allows you to share rules between
   # Stylesheets.
   #
-  # As you'd expect, conflicts are resolve so that the Stylesheet on which you call query
-  # has the highest precedence.
+  # As you'd expect, conflicts are resolved so that the Stylesheet on which you
+  # call query has the highest precedence.
   #
   # @example
   #   Teacup::Stylesheet.new(:IPad) do
@@ -128,7 +128,7 @@ module Teacup
     # @example
     #   Teacup::Stylesheet.new(:IPadBase) do
     #     style :pretty_button,
-    #       backgroundColor: UIColor.blackColor
+    #       backgroundImage: UIImage.imageNamed("big_red_shiny_button")
     #
     #     style :continue_button, extends: :pretty_button,
     #       title: "Continue!",
@@ -151,7 +151,7 @@ module Teacup
     # @return Hash[Symbol, *] the resulting properties.
     # @example
     #   Teacup::Stylesheet::IPadBase.query(:continue_button)
-    #   # => {backgroundColor: UIColor.blackColor, title: "Continue!", top: 50}
+    #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
     def query(stylename)
       this_rule = properties_for(stylename)
 
