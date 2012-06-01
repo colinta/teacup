@@ -72,6 +72,10 @@ module Teacup
         @stylesheets ||= {}
       end
 
+      def [] name
+        stylesheets[name]
+      end
+
       def []= name, stylesheet
         stylesheets[name] = stylesheet
       end
