@@ -217,8 +217,8 @@ module Teacup
       imported.map do |name_or_stylesheet|
         if Teacup::Stylesheet === name_or_stylesheet
           name_or_stylesheet
-        elsif Teacup::Stylesheet.const_defined?(name_or_stylesheet)
-          Teacup::Stylesheet.const_get(name_or_stylesheet)
+        elsif Teacup::Stylesheet.stylesheets.key? name_or_stylesheet
+          Teacup::Stylesheet.stylesheets[name_or_stylesheet]
         else
           raise "Teacup tried to import Stylesheet:#{name_or_stylesheet.inspect} into Stylesheet:#{self.name}, but it didn't exist"
         end
