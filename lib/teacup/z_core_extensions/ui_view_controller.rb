@@ -35,7 +35,7 @@ class UIViewController
     #     end
     #   end
     #
-    def layout(stylename, properties={}, &block)
+    def layout(stylename=nil, properties={}, &block)
       @layout_definition = [stylename, properties, block]
     end
 
