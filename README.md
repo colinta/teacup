@@ -35,22 +35,20 @@ Then add the teacup library to your Rakefile:
 
 #### Showdown
 
-Regular
+Cocoa
 
 ```ruby
 class SomeController < UIViewController
  def viewDidLoad
 
-  @field = UITextField.new
-  @field.height = 50
-  @field.width  = 200
-  view.addSubview(@field)
+  field = UITextField.new
+  field.frame = [10, 10, 50, 200]
+  view.addSubview(field)
 
-  @search = UITextField.new
-  @search.height = 50
-  @search.width  = 200
-  @search.placeholder = 'Find something...'
-  view.addSubview(@search)
+  search = UITextField.new
+  field.frame = [10, 70, 50, 200]
+  search.placeholder = 'Find something...'
+  view.addSubview(search)
 
   true
  end
@@ -64,12 +62,16 @@ Teacup
 
 Teacup::Stylesheet.new(:IPhone) do
 
- style :field,
-  height: 50,
-  width:  200
+  style :field,
+    left: 10,
+    top: 10,
+    height: 50,
+    width:  200
 
- style :search, extends: :field,
-  placeholder: 'Foo...'
+  style :search, extends: :field,
+    left: 10,
+    top: 70,
+    placeholder: 'Find something...'
 
 end
 
@@ -77,11 +79,12 @@ end
 
 class SomeController < UIViewController
 
- def viewDidLoad
-  view.addSubview(Teacup.style(:field, UITextField.new))
-  view.addSubview(Teacup.style(:search))
-  true
- end
+  # don't think of this as "viewDidLoad", think of it as a nib file, that you
+  # are declaring in your UIViewController.
+  layout do
+    subview(UITextField, :field)
+    subview(UITextField, :search)
+  end
 
 end
 ```
@@ -89,51 +92,28 @@ end
 Development
 -----------
 
-*Current version*: v0.0.0 (or see `lib/teacup/version.rb`)
+*Current version*: v0.0.1 (or see `lib/teacup/version.rb`)
 
-*Last milestone*: Pick a name
+*Last milestone*: Pick a DSL
 
-*Next milestone*: Pick a DSL
+*Next milestone*: Release layout and stylesheet DSL to the world.
 
 teacup, being a community project, moves in "spurts" of decision making and
-coding.  Only the name — both the least and most important part :-) — is
-decided.
+coding.
 
-We would love suggestions of any sort, and we're always free over at the `#teacuprb` channel on `irc.freenode.org`.
-
-
-Ideas that proposals should keep in mind
-----------------------------------------
-
-1. output will conform, unless explicitly *disabled* to the [iOS HIG][]
-2. should provide a few useful layouts (see [readme for layout proposals](teacup/tree/master/proposals/layout)):
-     * basic: vertically arranged "things", or
-     * form: label/input combinations arranged in a table
-     * navbar: with ability to customize the buttons that get placed at the top
-     * tabbar: similar, but with the tabs at the bottom instead of nav at the top
-     * splitview: A splitview controller (for iPad Apps) with sane navigation defaults, nice loading webviews and JSON to populate the items in the popover menu
-
-3. layouts should have ways of placing things relative to edges, so placing a
-   label or nav at the "bottom" that spans the entire width should be *easy*.
-   (This means we'll need to check for ipad or iphone.)
-4. actions are either blocks, defined inline, or target/action combos (e.g.
-   `target: self, action: :my_method`)
-5. there should be a consistent "styling" language, preferably in a separate
-   file, something that could be handed to a designer.  this is the BIG item!
-6. teacup should take a little `config` block for easy configuration
-7. Ideally, there should be some way to "inherit" styles in this language. So you can define a basic layout for all platforms and then tweak (see [readme for style proposals](teacup/tree/master/proposals/styles))
-
-[iOS HIG]: http://developer.apple.com/library/ios/#DOCUMENTATION/UserExperience/Conceptual/MobileHIG/Introduction/Introduction.html
+We would love suggestions of any sort, and we're always free over at the
+`#teacuprb` channel on `irc.freenode.org`.
 
 Bugs
 ----
 
-Please, do *not* hesitate to report any bugs you find with our source at the [Issues](https://github.com/rubymotion/teacup/issues) page.
+Please, do *not* hesitate to report any bugs you find with our source at the
+[Issues](https://github.com/rubymotion/teacup/issues) page.
 
 Use cases
 ---------
 
-Problems to solve...
+Problems to solve... these would make for good example code.
 
 1. TableViewCell:
 

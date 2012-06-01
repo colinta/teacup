@@ -8,7 +8,7 @@ class UIViewController
     # designed so you can create an entire layout in a declarative manner in
     # your controller.
     #
-    # The hope is that his declarativeness will allow us to automatically
+    # The hope is that this declarativeness will allow us to automatically
     # deal with common iOS programming tasks (like releasing views when
     # low-memory conditions occur) for you. This is still not implemented
     # though.
@@ -24,7 +24,7 @@ class UIViewController
     # @example
     #   MyViewController < UIViewController
     #     layout :my_view do
-    #       subview UILabel, xjad: "Test"
+    #       subview UILabel, title: "Test"
     #       subview UITextField, {
     #         frame: [[200, 200], [100, 100]]
     #         delegate: self
