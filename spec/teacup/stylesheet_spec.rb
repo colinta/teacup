@@ -4,15 +4,15 @@ describe "Teacup::Stylesheet" do
 
   describe 'creation' do
     before do
-      @stylesheet = Teacup::Stylesheet.new(:ConstantTest) { }
+      @stylesheet = Teacup::Stylesheet.new(:constanttest) { }
     end
 
     after do
-      Teacup::Stylesheet.send(:remove_const, :ConstantTest)
+      Teacup::Stylesheet.stylesheets.delete(:constanttest)
     end
 
     it 'should create constants for named stylesheets' do
-      Teacup::Stylesheet::ConstantTest.should == @stylesheet
+      Teacup::Stylesheet[:constanttest].should == @stylesheet
     end
 
     it 'should allow creating anonymous stylesheets' do
@@ -101,28 +101,28 @@ describe "Teacup::Stylesheet" do
     end
   end
 
-  describe 'importing another stylsheet' do
+  describe 'importing another stylesheet' do
 
     before do
       @oo_name_importer = Teacup::Stylesheet.new do
-        import :ImportedByName
+        import :importedbyname
 
         style :label,
           backgroundColor: :blue
       end
 
-      Teacup::Stylesheet.new(:ImportedByName) do
+      Teacup::Stylesheet.new(:importedbyname) do
         style :label,
           title: "Imported by name"
       end
 
       @name_importer = Teacup::Stylesheet.new do
-        import :ImportedByName
+        import :importedbyname
 
         style :label,
           backgroundColor: :blue
       end
-      
+
       imported_anonymously = Teacup::Stylesheet.new do
         style :label,
           title: "Imported anonymously"
@@ -135,8 +135,8 @@ describe "Teacup::Stylesheet" do
           backgroundColor: :blue
       end
 
-      Teacup::Stylesheet.new(:ImportRecursion) do
-        import :ImportRecursion
+      Teacup::Stylesheet.new(:importrecursion) do
+        import :importrecursion
 
         style :label,
           title: "Import recursion"
@@ -151,8 +151,8 @@ describe "Teacup::Stylesheet" do
     end
 
     after do
-      Teacup::Stylesheet.send(:remove_const, :ImportedByName)
-      Teacup::Stylesheet.send(:remove_const, :ImportRecursion)
+      Teacup::Stylesheet.stylesheets.delete(:importedbyname)
+      Teacup::Stylesheet.stylesheets.delete(:importrecursion)
     end
 
     it 'should work with a name' do
@@ -168,7 +168,7 @@ describe "Teacup::Stylesheet" do
     end
 
     it 'should not explode if a cycle is created' do
-      Teacup::Stylesheet::ImportRecursion.query(:label).should include(title: "Import recursion")
+      Teacup::Stylesheet[:importrecursion].query(:label).should include(title: "Import recursion")
     end
 
     it 'should explode if an unknown stylesheet is imported' do

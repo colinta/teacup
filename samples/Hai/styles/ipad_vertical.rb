@@ -1,3 +1,3 @@
-Teacup::StyleSheet.new(:IPadVertical) do
-  include :IPad
+Teacup::StyleSheet.new(:ipadvertical) do
+  import :ipad
 end

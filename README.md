@@ -60,7 +60,7 @@ Teacup
 ```ruby
 # Stylesheet
 
-Teacup::Stylesheet.new(:IPhone) do
+Teacup::Stylesheet.new(:iphone) do
 
   style :field,
     left: 10,

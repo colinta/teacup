@@ -1,4 +1,4 @@
-Teacup::StyleSheet.new(:IPad) do
+Teacup::StyleSheet.new(:ipad) do
 
   style :label,
     text: 'Hai!',
@@ -7,5 +7,5 @@ Teacup::StyleSheet.new(:IPad) do
     left: 100,
     width: 200,
     height: 50
-    
+
 end
