@@ -59,16 +59,14 @@ module Teacup
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
     #   }
     #
-    def layout(instance, name_or_properties, properties_or_nil=nil, &block)
+    def layout(instance, name_or_properties=nil, properties_or_nil=nil, &block)
+      name = name_or_properties.to_sym if name_or_properties
+      properties = nil
       if properties_or_nil
-        name = name_or_properties.to_sym
         properties = properties_or_nil
       elsif Hash === name_or_properties
         name = nil
         properties = name_or_properties
-      else
-        name = name_or_properties.to_sym
-        properties = nil
       end
 
       instance.stylesheet = stylesheet
