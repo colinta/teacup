@@ -7,7 +7,7 @@ module Teacup
   module View
     # The current stylename that is used to look up properties in the stylesheet.
     attr_reader :stylename
-    
+
     # The current stylesheet will be looked at when properties are needed.
     attr_reader :stylesheet
 
@@ -31,10 +31,10 @@ module Teacup
     # return the correct value at all times.
     #
     # @param Teacup::Stylesheet  stylesheet.
-    def stylesheet=(stylesheet)
-      @stylesheet = stylesheet
-      style(stylesheet.query(stylename)) if stylename && stylesheet
-      subviews.each{ |subview| subview.stylesheet = stylesheet }
+    def stylesheet=(new_stylesheet)
+      @stylesheet = new_stylesheet
+      style(new_stylesheet.query(stylename)) if stylename && new_stylesheet
+      subviews.each{ |subview| subview.stylesheet = new_stylesheet }
     end
 
     # Animate a change to a new stylename.
@@ -95,7 +95,7 @@ module Teacup
 
       #OUCH! Figure out why this is needed
       if rand > 1
-        setCornerRadius(1.0) 
+        setCornerRadius(1.0)
         setFrame([[0,0],[0,0]])
         setTransform(nil)
         setMasksToBounds(0)
