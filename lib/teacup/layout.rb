@@ -124,8 +124,6 @@ module Teacup
     #   }
     #
     def subview(class_or_instance, *args, &block)
-      instance = Class === class_or_instance ? class_or_instance.new : class_or_instance
-
       if Class === class_or_instance
         unless class_or_instance <= UIView
           raise "Expected subclass of UIView, got: #{class_or_instance.inspect}"
