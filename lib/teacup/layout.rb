@@ -59,7 +59,7 @@ module Teacup
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
     #   }
     #
-    def layout(instance, name_or_properties=nil, properties_or_nil=nil, &block)
+    def layout(view, name_or_properties=nil, properties_or_nil=nil, &block)
       name = name_or_properties.to_sym if name_or_properties
       properties = nil
       if properties_or_nil
@@ -69,18 +69,18 @@ module Teacup
         properties = name_or_properties
       end
 
-      instance.stylesheet = stylesheet
-      instance.style(properties) if properties
-      instance.stylename = name if name
+      view.stylesheet = stylesheet
+      view.style(properties) if properties
+      view.stylename = name if name
 
       begin
-        superview_chain << instance
-        instance_exec(instance, &block) if block_given?
+        superview_chain << view
+        instance_exec(view, &block) if block_given?
       ensure
         superview_chain.pop
       end
 
-      instance
+      view
     end
 
     # Add a new subview to the view heirarchy.
