@@ -1,19 +1,20 @@
 module Teacup
-  # Teacup::Layout defines a layout function that can be used to configure the
-  # layout of views in your application.
+  # Teacup::Layout defines a layout and subview function that can be used to
+  # declare and configure the layout of views and the view hierarchy in your
+  # application.
   #
-  # It is included into UIView and UIViewController directly so these functions
-  # should be available when you need them.
+  # This module is included into UIView and UIViewController directly so these
+  # functions are available in the places you need them.
   #
   # In order to use layout() in a UIViewController most effectively you will want
   # to define a stylesheet method that returns a stylesheet.
   #
   # @example
   #   class MyViewController < UIViewController
-  #     interface(:my_view) do
+  #     layout(:my_view) do
   #       layout UIImage, :logo
   #     end
-  #  
+  #
   #     def stylesheet
   #       Teacup::Stylesheet::Logo
   #     end
