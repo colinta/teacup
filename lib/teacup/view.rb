@@ -18,7 +18,7 @@ module Teacup
     # @param Symbol  stylename
     def stylename=(stylename)
       @stylename = stylename
-      style(stylesheet.query(stylename)) if stylesheet
+      restyle!
     end
 
     # Alter the stylesheet of this view.
@@ -33,8 +33,12 @@ module Teacup
     # @param Teacup::Stylesheet  stylesheet.
     def stylesheet=(new_stylesheet)
       @stylesheet = new_stylesheet
-      style(new_stylesheet.query(stylename)) if stylename && new_stylesheet
       subviews.each{ |subview| subview.stylesheet = new_stylesheet }
+    end
+
+    def restyle!(orientation=nil)
+      apply_style(@stylesheet.query(@stylename)) if @stylesheet
+      subviews.each{ |subview| subview.restyle!(orientation) }
     end
 
     # Animate a change to a new stylename.
@@ -69,11 +73,13 @@ module Teacup
     # a warning message will be emitted.
     #
     # @param Hash  the properties to set.
-    def style(properties)
+    def apply_style(properties, orientation=nil)
 
-      self.class.ancestors.each do |ancestor|
-        if default_properties = stylesheet.query(ancestor)
-          properties = default_properties.merge properties
+      if stylesheet
+        self.class.ancestors.each do |ancestor|
+          if default_properties = stylesheet.query(ancestor)
+            properties = default_properties.merge properties
+          end
         end
       end
 
@@ -86,7 +92,11 @@ module Teacup
       landscapeleft = properties.delete(:landscape_left)
       landscaperight = properties.delete(:landscape_right)
 
-      case UIApplication.sharedApplication.statusBarOrientation
+      if orientation.nil?
+        orientation = UIApplication.sharedApplication.statusBarOrientation
+      end
+
+      case orientation
       when UIInterfaceOrientationPortrait
         properties.merge(portrait) if portrait === Hash
         properties.merge(upsideup) if upsideup === Hash
@@ -121,15 +131,7 @@ module Teacup
           puts "Teacup WARN: Can't apply #{key} to #{inspect}"
         end
       end
-
-      #OUCH! Figure out why this is needed
-      if rand > 1
-        setCornerRadius(1.0)
-        setFrame([[0,0],[0,0]])
-        setTransform(nil)
-        setMasksToBounds(0)
-        setShadowOffset(0)
-      end
+      self.setNeedsDisplay
     end
 
     # merge definitions for 'frame' into one.

@@ -150,15 +150,16 @@ module Teacup
     #   end
     def style(*queries, &block)
       properties = {}
-      if queries[0] == self
-        # You get ONE style for free when styling the "root" (`style self` in a
-        # Teacup::Stylesheet), and that is that portrait orientation is enabled.
-        # If you want to turn this off, set portrait: false
-        properties[:portrait] = true
-      end
 
       # if the last argument is a Hash, include it
-      properties.update(queries.pop) if queries[-1] === Hash
+      properties.update(queries.pop) if Hash === queries[-1]
+
+      # empty style block => top-level style block, and assign default to
+      # :portrait
+      if queries.empty?
+        properties[:portrait] = true unless properties.has_key? :portrait
+        queries = [:'__root__']  # this magical name corresponds to the "root view"
+      end
 
       # if a block is given, create a Style (using Teacup::Style DSL) and merge
       # it with the hash.  It overrides the hash, because it will appear later
@@ -188,7 +189,7 @@ module Teacup
       this_rule = properties_for(stylename)
 
       if also_include = this_rule.delete(:extends)
-        query(also_include).merge(this_rule)
+        query(also_include).update(this_rule)
       else
         this_rule
       end
