@@ -9,7 +9,7 @@ module Teacup
 
     def method_missing(name, *args, &block)
       if block
-        self[name] = Teacup::Style.new(args, &block)
+        self[name] = Teacup::Style.new(*args, &block)
       else
         self[name] = args.shift
       end
