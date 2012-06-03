@@ -118,7 +118,7 @@ module Teacup
         elsif layer.respond_to?(setter)
           layer.send(setter, value)
         else
-          $stderr.puts "Teacup WARN: Can't apply #{key} to #{inspect}"
+          puts "Teacup WARN: Can't apply #{key} to #{inspect}"
         end
       end
 
