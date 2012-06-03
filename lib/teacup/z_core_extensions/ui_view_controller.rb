@@ -1,4 +1,4 @@
-class UIViewController
+class TeacupViewController < UIViewController
   include Teacup::Layout
 
   class << self
@@ -50,15 +50,21 @@ class UIViewController
   # If you want to use Teacup in your controller, please hook into layoutDidLoad,
   # not viewDidLoad.
   def viewDidLoad
-    UIDevice.currentDevice.beginGeneratingDeviceOrientationNotifications
+    super
 
     if self.class.layout_definition
       name, properties, block = self.class.layout_definition
+      name = :'__root__' if not name
       layout(view, name, properties, &block)
     end
 
     layoutDidLoad
   end
+
+  def viewWillAppear(animated)
+    self.view.restyle!
+  end
+
 
   def layoutDidLoad
     true
@@ -66,34 +72,34 @@ class UIViewController
 
   def shouldAutorotateToInterfaceOrientation(orientation)
     if view.stylesheet
-      properties = view.stylesheet.query(view.stylesheet)
-      properties.merge(view.stylesheet.query(view.stylename)) if view.stylename
+      properties = view.stylesheet.query(view.stylename)
 
       # check for orientation-specific properties
       case orientation
       when UIInterfaceOrientationPortrait
         return true if (properties[:portrait] or properties[:upside_up])
-        return false
       when UIInterfaceOrientationPortraitUpsideDown
         if UIDevice.currentDevice.userInterfaceIdiom == :iphone.uidevice
-          # iphone must have an explicit upsidedown style, otherwise this returns
+          # iphone must have an explicit upside-down style, otherwise this returns
           # false
           return true if properties[:upside_down]
         else
           # ipad can just have a portrait style
           return true if (properties[:portrait] or properties[:upside_down])
         end
-        return false
       when UIInterfaceOrientationLandscapeLeft
         return true if (properties[:landscape] or properties[:landscape_left])
-        return false
       when UIInterfaceOrientationLandscapeRight
         return true if (properties[:landscape] or properties[:landscape_right])
-        return false
       end
+      return false
     end
 
     return orientation == UIInterfaceOrientationPortrait
+  end
+
+  def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
+    view.restyle!(orientation)
   end
 
 end

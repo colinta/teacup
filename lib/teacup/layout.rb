@@ -177,40 +177,13 @@ module Teacup
     # @example
     #
     #   stylesheet = Teacup::Stylesheet[:ipadhorizontal]
-    def stylesheet= new_stylesheet
+    def stylesheet=(new_stylesheet)
       @stylesheet = new_stylesheet
-      restyle!
-    end
-
-    # Instruct teacup to reapply styles to your subviews
-    #
-    # You should call this whenever the return value of your stylesheet meethod
-    # would change,
-    #
-    # @example
-    #   def willRotateToInterfaceOrientation(io, duration: duration)
-    #     restyle!
-    #   end
-    def restyle!
-      top_level_view.stylesheet = stylesheet
+      view.stylesheet = new_stylesheet
+      view.restyle!
     end
 
     protected
-
-    # Get's the top-level UIView for this object.
-    #
-    # This can either be 'self' if the current object is in fact a UIView,
-    # or 'view' if it's a controller.
-    #
-    # @return UIView
-    def top_level_view
-      case self
-      when UIViewController
-        view
-      when UIView
-        self
-      end
-    end
 
     # Get's the current stack of views in nested calls to layout.
     #
