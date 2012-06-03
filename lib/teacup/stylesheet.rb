@@ -149,7 +149,10 @@ module Teacup
     #       top: 50
     #   end
     def style(*queries)
-      properties = queries.pop
+      # you get ONE style for free: portrait orientation is "enabled"
+      # if you want to turn this off, set portrait: false
+      properties = { portrait: true }
+      properties.merge(queries.pop)
       queries.each do |stylename|
         styles[stylename].update(properties)
       end
