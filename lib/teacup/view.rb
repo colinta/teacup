@@ -114,6 +114,21 @@ module Teacup
       # convert top/left/width/height to frame values
       clean_properties properties
 
+
+      if layer_properties = properties.delete(:layer)
+        layer_properties.each do |key, value|
+          assign = :"#{key}="
+          setter = ('set' + key.to_s.sub(/^./) {|c| c.capitalize}).to_sym
+          if layer.respond_to?(assign)
+            layer.send(assign, value)
+          elsif layer.respond_to?(setter)
+            layer.send(setter, value)
+        else
+          puts "Teacup WARN: Can't apply #{key} to #{self.layer.inspect}"
+          end
+        end
+      end
+
       properties.each do |key, value|
         assign = :"#{key}="
         setter = ('set' + key.to_s.sub(/^./) {|c| c.capitalize}).to_sym
@@ -121,14 +136,10 @@ module Teacup
           setTitle(value, forState: UIControlStateNormal)
         elsif respond_to?(assign)
           send(assign, value)
-        elsif layer.respond_to?(assign)
-          layer.send(assign, value)
         elsif respond_to?(setter)
           send(setter, value)
-        elsif layer.respond_to?(setter)
-          layer.send(setter, value)
         else
-          puts "Teacup WARN: Can't apply #{key} to #{inspect}"
+          puts "Teacup WARN: Can't apply #{key} to #{self.inspect}"
         end
       end
       self.setNeedsDisplay
