@@ -1,1 +1,0 @@
-# Idea: framework booting before application (if it's needed at all)
