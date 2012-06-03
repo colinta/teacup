@@ -199,7 +199,7 @@ module Teacup
     #
     # @return String
     def inspect
-      "Teacup::Stylesheet[:#{name.inspect}]"
+      "Teacup::Stylesheet[#{name.inspect}] = #{@styles}"
     end
 
     protected
