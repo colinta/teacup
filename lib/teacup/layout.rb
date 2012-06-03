@@ -70,8 +70,8 @@ module Teacup
       end
 
       view.stylesheet = stylesheet
-      view.style(properties) if properties
-      view.stylename = name if name
+      view.stylename = name
+      view.apply_style(properties) if properties
 
       begin
         superview_chain << view
