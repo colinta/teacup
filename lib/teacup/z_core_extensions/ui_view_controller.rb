@@ -58,5 +58,38 @@ class UIViewController
     layoutDidLoad
   end
 
-  def layoutDidLoad; true; end
+  def layoutDidLoad
+    true
+  end
+
+  def shouldAutorotateToInterfaceOrientation(orientation)
+    if view.stylesheet && view.stylename
+      properties = view.stylesheet.query(view.stylename)
+
+      # check for orientation-specific properties
+      case orientation
+      when UIInterfaceOrientationPortrait
+        return true if (properties[portrait:] or properties[upsideup:])
+        return false
+      when UIInterfaceOrientationPortraitUpsideDown
+        return true if (properties[portrait:] or properties[upsidedown:])
+        return false
+      when UIInterfaceOrientationLandscapeLeft
+        return true if (properties[landscape:] or properties[landscapeleft:])
+        return false
+      when UIInterfaceOrientationLandscapeRight
+        return true if (properties[landscape:] or properties[landscaperight:])
+        return false
+      when UIInterfaceOrientationLandscapeFaceUp
+        return true if (properties[face:] or properties[faceup:])
+        return false
+      when UIInterfaceOrientationLandscapeFaceDown
+        return true if (properties[face:] or properties[facedown:])
+        return false
+      end
+    end
+
+    super
+  end
+
 end
