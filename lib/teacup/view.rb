@@ -115,14 +115,18 @@ module Teacup
       clean_properties properties
 
       properties.each do |key, value|
+        assign = :"#{key}="
+        setter = ('set' + key.to_s.sub(/^./) {|c| c.capitalize}).to_sym
         if key == :title && UIButton === self
           setTitle(value, forState: UIControlStateNormal)
-        elsif respond_to?(:"#{key}=")
-          send(:"#{key}=", value)
-        elsif layer.respond_to?(:"#{key}=")
-          layer.send(:"#{key}=", value)
-        elsif key == :keyboardType
-          setKeyboardType(value)
+        elsif respond_to?(assign)
+          send(assign, value)
+        elsif layer.respond_to?(assign)
+          layer.send(assign, value)
+        elsif respond_to?(setter)
+          send(setter, value)
+        elsif layer.respond_to?(setter)
+          layer.send(setter, value)
         else
           $stderr.puts "Teacup WARN: Can't apply #{key} to #{inspect}"
         end
