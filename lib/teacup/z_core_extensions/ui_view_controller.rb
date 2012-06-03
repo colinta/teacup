@@ -69,22 +69,23 @@ class UIViewController
       # check for orientation-specific properties
       case orientation
       when UIInterfaceOrientationPortrait
-        return true if (properties[portrait:] or properties[upsideup:])
+        return true if (properties[:portrait] or properties[:upside_up])
         return false
       when UIInterfaceOrientationPortraitUpsideDown
-        return true if (properties[portrait:] or properties[upsidedown:])
+        if UIDevice.currentDevice.userInterfaceIdiom == :iphone.uidevice
+          # iphone must have an explicit upsidedown style, otherwise this returns
+          # false
+          return true if properties[:upside_down]
+        else
+          # ipad can just have a portrait style
+          return true if (properties[:portrait] or properties[:upside_down])
+        end
         return false
       when UIInterfaceOrientationLandscapeLeft
-        return true if (properties[landscape:] or properties[landscapeleft:])
+        return true if (properties[:landscape] or properties[:landscape_left])
         return false
       when UIInterfaceOrientationLandscapeRight
-        return true if (properties[landscape:] or properties[landscaperight:])
-        return false
-      when UIInterfaceOrientationLandscapeFaceUp
-        return true if (properties[face:] or properties[faceup:])
-        return false
-      when UIInterfaceOrientationLandscapeFaceDown
-        return true if (properties[face:] or properties[facedown:])
+        return true if (properties[:landscape] or properties[:landscape_right])
         return false
       end
     end
