@@ -148,11 +148,26 @@ module Teacup
     #       title: "Continue!",
     #       top: 50
     #   end
-    def style(*queries)
-      # you get ONE style for free: portrait orientation is "enabled"
-      # if you want to turn this off, set portrait: false
-      properties = { portrait: true }
-      properties.merge(queries.pop)
+    def style(*queries, &block)
+      properties = {}
+      if queries[0] == self
+        # You get ONE style for free when styling the "root" (`style self` in a
+        # Teacup::Stylesheet), and that is that portrait orientation is enabled.
+        # If you want to turn this off, set portrait: false
+        properties[:portrait] = true
+      end
+
+      # if the last argument is a Hash, include it
+      properties.update(queries.pop) if queries[-1] === Hash
+
+      # if a block is given, create a Style (using Teacup::Style DSL) and merge
+      # it with the hash.  It overrides the hash, because it will appear later
+      # in the code.
+      if block
+        properties.update(Teacup::Style.new(&block))
+      end
+
+      # iterate over the style names and assign properties
       queries.each do |stylename|
         styles[stylename].update(properties)
       end

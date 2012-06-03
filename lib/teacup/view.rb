@@ -86,7 +86,7 @@ module Teacup
       landscapeleft = properties.delete(:landscape_left)
       landscaperight = properties.delete(:landscape_right)
 
-      case UIDevice.currentDevice.orientation
+      case UIApplication.sharedApplication.statusBarOrientation
       when UIInterfaceOrientationPortrait
         properties.merge(portrait) if portrait === Hash
         properties.merge(upsideup) if upsideup === Hash
