@@ -76,8 +76,43 @@ module Teacup
           properties = default_properties.merge properties
         end
       end
-      
-      clean_properties! properties
+
+      # orientation-specific properties
+      portrait = properties.delete(portrait:)
+      upsideup = properties.delete(upsideup:)
+      upsidedown = properties.delete(upsidedown:)
+
+      landscape = properties.delete(landscape:)
+      landscapeleft = properties.delete(landscapeleft:)
+      landscaperight = properties.delete(landscaperight:)
+
+      face = properties.delete(face:)
+      faceup = properties.delete(faceup:)
+      facedown = properties.delete(facedown:)
+
+      case UIDevice.currentDevice.orientation
+      when UIInterfaceOrientationPortrait
+        properties.merge(portrait) if portrait === Hash
+        properties.merge(upsideup) if upsideup === Hash
+      when UIInterfaceOrientationPortraitUpsideDown
+        properties.merge(portrait) if portrait === Hash
+        properties.merge(upsidedown) if upsidedown === Hash
+      when UIInterfaceOrientationLandscapeLeft
+        properties.merge(landscape) if landscape === Hash
+        properties.merge(landscapeleft) if landscapeleft === Hash
+      when UIInterfaceOrientationLandscapeRight
+        properties.merge(landscape) if landscape === Hash
+        properties.merge(landscaperight) if landscaperight === Hash
+      when UIInterfaceOrientationLandscapeFaceUp
+        properties.merge(face) if face === Hash
+        properties.merge(faceup) if faceup === Hash
+      when UIInterfaceOrientationLandscapeFaceDown
+        properties.merge(face) if face === Hash
+        properties.merge(facedown) if facedown === Hash
+      end
+
+      # convert top/left/width/height to frame values
+      clean_properties properties
 
       properties.each do |key, value|
         if key == :title && UIButton === self
@@ -113,7 +148,7 @@ module Teacup
     #
     # @param Hash
     # @return Hash
-    def clean_properties!(properties)
+    def clean_properties(properties)
       return unless [:frame, :left, :top, :width, :height].any?(&properties.method(:key?))
 
       frame = properties.delete(:frame) || self.frame
