@@ -86,7 +86,7 @@ module Teacup
       # orientation-specific properties
       portrait = properties.delete(:portrait)
       upsideup = properties.delete(:upside_up)
-      upsidedown = properties.delete(:upside_down)
+      upside_down = properties.delete(:upside_down)
 
       landscape = properties.delete(:landscape)
       landscapeleft = properties.delete(:landscape_left)
@@ -98,17 +98,17 @@ module Teacup
 
       case orientation
       when UIInterfaceOrientationPortrait
-        properties.merge(portrait) if portrait === Hash
-        properties.merge(upsideup) if upsideup === Hash
+        properties.update(portrait) if Hash === portrait
+        properties.update(upsideup) if Hash === upsideup
       when UIInterfaceOrientationPortraitUpsideDown
-        properties.merge(portrait) if portrait === Hash
-        properties.merge(upsidedown) if upsidedown === Hash
+        properties.update(portrait) if Hash === portrait
+        properties.update(upside_down) if Hash === upside_down
       when UIInterfaceOrientationLandscapeLeft
-        properties.merge(landscape) if landscape === Hash
-        properties.merge(landscapeleft) if landscapeleft === Hash
+        properties.update(landscape) if Hash === landscape
+        properties.update(landscapeleft) if Hash === landscapeleft
       when UIInterfaceOrientationLandscapeRight
-        properties.merge(landscape) if landscape === Hash
-        properties.merge(landscaperight) if landscaperight === Hash
+        properties.update(landscape) if Hash === landscape
+        properties.update(landscaperight) if Hash === landscaperight
       end
 
       # convert top/left/width/height to frame values
