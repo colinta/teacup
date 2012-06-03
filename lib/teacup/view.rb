@@ -78,17 +78,13 @@ module Teacup
       end
 
       # orientation-specific properties
-      portrait = properties.delete(portrait:)
-      upsideup = properties.delete(upsideup:)
-      upsidedown = properties.delete(upsidedown:)
+      portrait = properties.delete(:portrait)
+      upsideup = properties.delete(:upside_up)
+      upsidedown = properties.delete(:upside_down)
 
-      landscape = properties.delete(landscape:)
-      landscapeleft = properties.delete(landscapeleft:)
-      landscaperight = properties.delete(landscaperight:)
-
-      face = properties.delete(face:)
-      faceup = properties.delete(faceup:)
-      facedown = properties.delete(facedown:)
+      landscape = properties.delete(:landscape)
+      landscapeleft = properties.delete(:landscape_left)
+      landscaperight = properties.delete(:landscape_right)
 
       case UIDevice.currentDevice.orientation
       when UIInterfaceOrientationPortrait
@@ -103,12 +99,6 @@ module Teacup
       when UIInterfaceOrientationLandscapeRight
         properties.merge(landscape) if landscape === Hash
         properties.merge(landscaperight) if landscaperight === Hash
-      when UIInterfaceOrientationLandscapeFaceUp
-        properties.merge(face) if face === Hash
-        properties.merge(faceup) if faceup === Hash
-      when UIInterfaceOrientationLandscapeFaceDown
-        properties.merge(face) if face === Hash
-        properties.merge(facedown) if facedown === Hash
       end
 
       # convert top/left/width/height to frame values
