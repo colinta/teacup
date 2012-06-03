@@ -65,8 +65,9 @@ class UIViewController
   end
 
   def shouldAutorotateToInterfaceOrientation(orientation)
-    if view.stylesheet && view.stylename
-      properties = view.stylesheet.query(view.stylename)
+    if view.stylesheet
+      properties = view.stylesheet.query(view.stylesheet)
+      properties.merge(view.stylesheet.query(view.stylename)) if view.stylename
 
       # check for orientation-specific properties
       case orientation
@@ -92,7 +93,7 @@ class UIViewController
       end
     end
 
-    super
+    return orientation == UIInterfaceOrientationPortrait
   end
 
 end
