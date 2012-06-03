@@ -50,6 +50,8 @@ class UIViewController
   # If you want to use Teacup in your controller, please hook into layoutDidLoad,
   # not viewDidLoad.
   def viewDidLoad
+    UIDevice.currentDevice.beginGeneratingDeviceOrientationNotifications
+
     if self.class.layout_definition
       name, properties, block = self.class.layout_definition
       layout(view, name, properties, &block)
