@@ -36,6 +36,8 @@ class TeacupViewController < UIViewController
     #   end
     #
     def layout(stylename=nil, properties={}, &block)
+      stylename = :'__root__' if not stylename
+
       @layout_definition = [stylename, properties, block]
     end
 
@@ -54,7 +56,6 @@ class TeacupViewController < UIViewController
 
     if self.class.layout_definition
       name, properties, block = self.class.layout_definition
-      name = :'__root__' if not name
       layout(view, name, properties, &block)
     end
 
@@ -64,7 +65,6 @@ class TeacupViewController < UIViewController
   def viewWillAppear(animated)
     self.view.restyle!
   end
-
 
   def layoutDidLoad
     true
