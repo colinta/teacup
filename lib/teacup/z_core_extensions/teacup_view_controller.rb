@@ -44,7 +44,11 @@ class TeacupViewController < UIViewController
     attr_reader :layout_definition
     attr_reader :stylesheet
 
-    def stylesheet=(new_stylesheet)
+    def stylesheet(new_stylesheet=nil)
+      if new_stylesheet.nil?
+        return @stylesheet
+      end
+
       if Symbol === new_stylesheet
         new_stylesheet = Teacup::Stylesheet[new_stylesheet]
       end
@@ -61,13 +65,13 @@ class TeacupViewController < UIViewController
   def viewDidLoad
     super
 
+    if not self.stylesheet
+      self.stylesheet = self.class.stylesheet
+    end
+
     if self.class.layout_definition
       stylename, properties, block = self.class.layout_definition
       layout(view, stylename, properties, &block)
-    end
-
-    if not self.stylesheet
-      self.stylesheet = self.class.stylesheet
     end
 
     layoutDidLoad
