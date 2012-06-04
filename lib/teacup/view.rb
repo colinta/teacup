@@ -70,6 +70,13 @@ module Teacup
     #
     # @param Hash  the properties to set.
     def style(properties)
+
+      self.class.ancestors.each do |ancestor|
+        if default_properties = stylesheet.query(ancestor)
+          properties = default_properties.merge properties
+        end
+      end
+      
       clean_properties! properties
 
       properties.each do |key, value|
