@@ -1,4 +1,5 @@
-class TeacupViewController < UIViewController
+
+class UIViewController
   include Teacup::Layout
   include Teacup::Controller
 
@@ -53,34 +54,6 @@ class TeacupViewController < UIViewController
     end
 
   end # class << self
-
-  def shouldAutorotateToInterfaceOrientation(orientation)
-    if view.stylesheet
-      properties = view.stylesheet.query(view.stylename)
-
-      # check for orientation-specific properties
-      case orientation
-      when UIInterfaceOrientationPortrait
-        return true if (properties[:portrait] or properties[:upside_up])
-      when UIInterfaceOrientationPortraitUpsideDown
-        if UIDevice.currentDevice.userInterfaceIdiom == :iphone.uidevice
-          # iphone must have an explicit upside-down style, otherwise this returns
-          # false
-          return true if properties[:upside_down]
-        else
-          # ipad can just have a portrait style
-          return true if (properties[:portrait] or properties[:upside_down])
-        end
-      when UIInterfaceOrientationLandscapeLeft
-        return true if (properties[:landscape] or properties[:landscape_left])
-      when UIInterfaceOrientationLandscapeRight
-        return true if (properties[:landscape] or properties[:landscape_right])
-      end
-      return false
-    end
-
-    return orientation == UIInterfaceOrientationPortrait
-  end
 
   def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
     view.restyle!(orientation)
