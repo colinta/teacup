@@ -1,3 +1,4 @@
+
 module Teacup
 
   # Teacup::Controller defines methods that allow a hierarchy to be build using
