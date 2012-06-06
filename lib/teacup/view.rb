@@ -8,8 +8,16 @@ module Teacup
     # The current stylename that is used to look up properties in the stylesheet.
     attr_reader :stylename
 
-    # The current stylesheet will be looked at when properties are needed.
-    attr_reader :stylesheet
+    # The current stylesheet will be looked at when properties are needed.  It
+    # is loaded lazily, so that assignment can occur before the Stylesheet has
+    # been created.
+    def stylesheet
+      if Symbol === @stylesheet
+        @stylesheet = Teacup::Stylesheet[@stylesheet]
+      end
+
+      @stylesheet
+    end
 
     # Alter the stylename of this view.
     #
@@ -169,6 +177,11 @@ module Teacup
       properties[:frame] = frame
       properties
     end
+
+    def top_level_view
+      return self
+    end
+
   end
 
 end

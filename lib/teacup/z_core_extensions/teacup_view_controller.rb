@@ -1,7 +1,10 @@
 class TeacupViewController < UIViewController
   include Teacup::Layout
+  include Teacup::Controller
 
   class << self
+    attr_reader :layout_definition
+
     # Define the layout of a controller's view.
     #
     # This function is analogous to Teacup::Layout#layout, though it is
@@ -41,49 +44,15 @@ class TeacupViewController < UIViewController
       @layout_definition = [stylename, properties, block]
     end
 
-    attr_reader :layout_definition
-    attr_reader :stylesheet
-
     def stylesheet(new_stylesheet=nil)
       if new_stylesheet.nil?
         return @stylesheet
       end
 
-      if Symbol === new_stylesheet
-        new_stylesheet = Teacup::Stylesheet[new_stylesheet]
-      end
-
       @stylesheet = new_stylesheet
     end
 
-  end
-
-  # Instantiate the layout from the class, and then call layoutDidLoad.
-  #
-  # If you want to use Teacup in your controller, please hook into layoutDidLoad,
-  # not viewDidLoad.
-  def viewDidLoad
-    super
-
-    if not self.stylesheet
-      self.stylesheet = self.class.stylesheet
-    end
-
-    if self.class.layout_definition
-      stylename, properties, block = self.class.layout_definition
-      layout(view, stylename, properties, &block)
-    end
-
-    layoutDidLoad
-  end
-
-  def viewWillAppear(animated)
-    self.view.restyle!
-  end
-
-  def layoutDidLoad
-    true
-  end
+  end # class << self
 
   def shouldAutorotateToInterfaceOrientation(orientation)
     if view.stylesheet
