@@ -42,8 +42,6 @@ class UIViewController
     #   end
     #
     def layout(stylename=nil, properties={}, &block)
-      stylename = :'__root__' if not stylename
-
       @layout_definition = [stylename, properties, block]
     end
 
@@ -145,7 +143,7 @@ class UIViewController
   #
   # the teacup developers apologize for any inconvenience. :-)
   def autorotateToOrientation(orientation)
-    if view.stylesheet
+    if view.stylesheet and view.stylename
       properties = view.stylesheet.query(view.stylename)
 
       # check for orientation-specific properties
