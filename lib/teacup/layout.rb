@@ -19,7 +19,6 @@ module Teacup
   #       Teacup::Stylesheet[:logo]
   #     end
   #   end
-  #
   module Layout
 
     # Alter the layout of a view
