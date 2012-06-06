@@ -1,7 +1,5 @@
-# most of the methods that are related to UIViewControllers are in the
-# Teacup::Controller module, but some of them could not be added there:
-#   - class << self methods
-#
+# Adds methods to the UIViewController class to make defining a layout and
+# stylesheet very easy.  Also provides rotation methods that analyze
 class UIViewController
   include Teacup::Layout
 
