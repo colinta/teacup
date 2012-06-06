@@ -62,11 +62,17 @@ Teacup
 
 Teacup::Stylesheet.new(:iphone) do
 
+  style :root,
+    landscape: true  # enable landscape rotation (otherwise only portrait is enabled)
+
   style :field,
     left: 10,
     top: 10,
     height: 50,
-    width:  200
+    width:  200,
+    landscape: {
+      width: 360  # make it wide in landscape view
+    }
 
   style :search, extends: :field,
     left: 10,
@@ -81,7 +87,7 @@ class SomeController < UIViewController
 
   # don't think of this as "viewDidLoad", think of it as a nib file, that you
   # are declaring in your UIViewController.
-  layout do
+  layout :root do
     subview(UITextField, :field)
     subview(UITextField, :search)
   end
