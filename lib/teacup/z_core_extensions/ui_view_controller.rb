@@ -159,13 +159,14 @@ class UIViewController
           return true if properties[:upside_down]
         else
           # ipad can just have a portrait style
-          return true if (properties[:portrait] or properties[:upside_down])
+          return true if properties[:portrait] or properties[:upside_down]
         end
       when UIInterfaceOrientationLandscapeLeft
-        return true if (properties[:landscape] or properties[:landscape_left])
+        return true if properties[:landscape] or properties[:landscape_left]
       when UIInterfaceOrientationLandscapeRight
-        return true if (properties[:landscape] or properties[:landscape_right])
+        return true if properties[:landscape] or properties[:landscape_right]
       end
+
       return false
     end
 
