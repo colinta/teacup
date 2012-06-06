@@ -154,13 +154,6 @@ module Teacup
       # if the last argument is a Hash, include it
       properties.update(queries.pop) if Hash === queries[-1]
 
-      # empty style block => top-level style block, and assign default to
-      # :portrait
-      if queries.empty?
-        properties[:portrait] = true unless properties.has_key? :portrait
-        queries = [:'__root__']  # this magical name corresponds to the "root view"
-      end
-
       # if a block is given, create a Style (using Teacup::Style DSL) and merge
       # it with the hash.  It overrides the hash, because it will appear later
       # in the code.
