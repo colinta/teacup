@@ -38,7 +38,7 @@ module Teacup
     end
 
     def restyle!(orientation=nil)
-      apply_style(@stylesheet.query(@stylename)) if @stylesheet
+      style(stylesheet.query(@stylename)) if @stylesheet
       subviews.each{ |subview| subview.restyle!(orientation) }
     end
 
@@ -75,7 +75,7 @@ module Teacup
     # a warning message will be emitted.
     #
     # @param Hash  the properties to set.
-    def apply_style(properties, orientation=nil)
+    def style(properties, orientation=nil)
 
       if stylesheet
         self.class.ancestors.each do |ancestor|
