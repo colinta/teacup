@@ -154,13 +154,6 @@ module Teacup
       # if the last argument is a Hash, include it
       properties.update(queries.pop) if Hash === queries[-1]
 
-      # if a block is given, create a Style (using Teacup::Style DSL) and merge
-      # it with the hash.  It overrides the hash, because it will appear later
-      # in the code.
-      if block
-        properties.update(Teacup::Style.new(&block))
-      end
-
       # iterate over the style names and assign properties
       queries.each do |stylename|
         styles[stylename].update(properties)
