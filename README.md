@@ -92,6 +92,11 @@ class SomeController < UIViewController
     subview(UITextField, :search)
   end
 
+  # the stylesheet determines the placement and design of your views.  You can
+  # also implement a stylesheet method, or assign the stylesheet name to the
+  # UIViewController later.
+  stylesheet :iphone
+
 end
 ```
 
