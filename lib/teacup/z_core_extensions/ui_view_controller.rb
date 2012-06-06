@@ -153,7 +153,7 @@ class UIViewController
 
         return true if properties[:portrait] or properties[:upside_up]
       when UIInterfaceOrientationPortraitUpsideDown
-        if UIDevice.currentDevice.userInterfaceIdiom == :iphone.uidevice
+        if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
           # iphone must have an explicit upside-down style, otherwise this returns
           # false
           return true if properties[:upside_down]
