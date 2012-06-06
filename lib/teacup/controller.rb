@@ -92,6 +92,42 @@ module Teacup
       true
     end
 
+    # The compiling mechanisms combined with how UIKit works of rubymotion do
+    # not allow the `shouldAutorotateToInterfaceOrientation` method to be
+    # overridden in modules/extensions.  So instead, HERE is the code for what
+    # `shouldAutorotateToInterfaceOrientation` should look like if you want
+    # to use the teacup rotation stuff.  Call this method from your own
+    # `shouldAutorotateToInterfaceOrientation` method.
+    #
+    # the teacup developers apologize for any inconvenience. :-)
+    def autorotateToOrientation(orientation)
+      if view.stylesheet
+        properties = view.stylesheet.query(view.stylename)
+
+        # check for orientation-specific properties
+        case orientation
+        when UIInterfaceOrientationPortrait
+          return true if (properties[:portrait] or properties[:upside_up])
+        when UIInterfaceOrientationPortraitUpsideDown
+          if UIDevice.currentDevice.userInterfaceIdiom == :iphone.uidevice
+            # iphone must have an explicit upside-down style, otherwise this returns
+            # false
+            return true if properties[:upside_down]
+          else
+            # ipad can just have a portrait style
+            return true if (properties[:portrait] or properties[:upside_down])
+          end
+        when UIInterfaceOrientationLandscapeLeft
+          return true if (properties[:landscape] or properties[:landscape_left])
+        when UIInterfaceOrientationLandscapeRight
+          return true if (properties[:landscape] or properties[:landscape_right])
+        end
+        return false
+      end
+
+      return orientation == UIInterfaceOrientationPortrait
+    end
+
   end
 
 end
