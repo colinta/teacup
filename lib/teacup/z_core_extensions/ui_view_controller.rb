@@ -150,6 +150,7 @@ class UIViewController
         # portrait is "on" by default, must be turned off explicitly
         if not properties.has_key? :portrait and not properties.has_key? :upside_up
           return true
+        end
 
         return true if properties[:portrait] or properties[:upside_up]
       when UIInterfaceOrientationPortraitUpsideDown
