@@ -147,7 +147,11 @@ class UIViewController
       # check for orientation-specific properties
       case orientation
       when UIInterfaceOrientationPortrait
-        return true if (properties[:portrait] or properties[:upside_up])
+        # portrait is "on" by default, must be turned off explicitly
+        if not properties.has_key? :portrait and not properties.has_key? :upside_up
+          return true
+
+        return true if properties[:portrait] or properties[:upside_up]
       when UIInterfaceOrientationPortraitUpsideDown
         if UIDevice.currentDevice.userInterfaceIdiom == :iphone.uidevice
           # iphone must have an explicit upside-down style, otherwise this returns
