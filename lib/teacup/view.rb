@@ -17,6 +17,7 @@ module Teacup
     #
     # @param Symbol  stylename
     def stylename=(stylename)
+
       @stylename = stylename
       restyle!
     end
@@ -52,6 +53,7 @@ module Teacup
     #
     def animate_to_stylename(stylename, options={})
       return if self.stylename == stylename
+
       UIView.beginAnimations(nil, context: nil)
       # TODO: This should be in a style-sheet!
       UIView.setAnimationDuration(options[:duration]) if options[:duration]
@@ -114,7 +116,6 @@ module Teacup
       # convert top/left/width/height to frame values
       clean_properties properties
 
-
       if layer_properties = properties.delete(:layer)
         layer_properties.each do |key, value|
           assign = :"#{key}="
@@ -169,4 +170,5 @@ module Teacup
       properties
     end
   end
+
 end
