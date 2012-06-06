@@ -1,3 +1,4 @@
+
 module Teacup
   # Teacup::Layout defines a layout and subview function that can be used to
   # declare and configure the layout of views and the view hierarchy in your
