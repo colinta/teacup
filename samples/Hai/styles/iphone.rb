@@ -1,4 +1,8 @@
-Teacup::StyleSheet.new(:ipad) do
+
+Teacup::Stylesheet.new(:iphone) do
+
+  style :hai,
+    landscape: true
 
   style UILabel,
     textColor: UIColor.blueColor
