@@ -85,7 +85,6 @@ class UIView
   #
   # @param Hash  the properties to set.
   def style(properties, orientation=nil)
-
     if stylesheet
       self.class.ancestors.each do |ancestor|
         if default_properties = stylesheet.query(ancestor)
