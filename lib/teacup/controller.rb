@@ -71,7 +71,6 @@ module Teacup
     # If you want to use Teacup in your controller, please hook into layoutDidLoad,
     # not viewDidLoad.
     def viewDidLoad
-      super
 
       if not self.stylesheet
         self.stylesheet = self.class.stylesheet
