@@ -95,12 +95,12 @@ class UIView
 
     # orientation-specific properties
     portrait = properties.delete(:portrait)
-    upsideup = properties.delete(:upside_up)
+    upside_up = properties.delete(:upside_up)
     upside_down = properties.delete(:upside_down)
 
     landscape = properties.delete(:landscape)
-    landscapeleft = properties.delete(:landscape_left)
-    landscaperight = properties.delete(:landscape_right)
+    landscape_left = properties.delete(:landscape_left)
+    landscape_right = properties.delete(:landscape_right)
 
     if orientation.nil?
       orientation = UIApplication.sharedApplication.statusBarOrientation
@@ -109,16 +109,16 @@ class UIView
     case orientation
     when UIInterfaceOrientationPortrait
       properties.update(portrait) if Hash === portrait
-      properties.update(upsideup) if Hash === upsideup
+      properties.update(upside_up) if Hash === upside_up
     when UIInterfaceOrientationPortraitUpsideDown
       properties.update(portrait) if Hash === portrait
       properties.update(upside_down) if Hash === upside_down
     when UIInterfaceOrientationLandscapeLeft
       properties.update(landscape) if Hash === landscape
-      properties.update(landscapeleft) if Hash === landscapeleft
+      properties.update(landscape_left) if Hash === landscape_left
     when UIInterfaceOrientationLandscapeRight
       properties.update(landscape) if Hash === landscape
-      properties.update(landscaperight) if Hash === landscaperight
+      properties.update(landscape_right) if Hash === landscape_right
     end
 
     # convert top/left/width/height to frame values
