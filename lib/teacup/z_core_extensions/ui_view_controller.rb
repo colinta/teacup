@@ -40,7 +40,6 @@ class UIViewController
     #   end
     #
     def layout(stylename=nil, properties={}, &block)
-      puts "layout_definition"
       @layout_definition = [stylename, properties, block]
     end
 
@@ -75,7 +74,6 @@ class UIViewController
   #    end
   #  end
   def stylesheet
-    puts "@stylesheet: #{@stylesheet.inspect}"
     @stylesheet
   end
 
@@ -92,8 +90,8 @@ class UIViewController
   # @example
   #
   #   stylesheet = Teacup::Stylesheet[:ipadhorizontal]
+  #   stylesheet = :ipadhorizontal
   def stylesheet=(new_stylesheet)
-    puts "new_stylesheet: #{new_stylesheet.inspect}"
     @stylesheet = new_stylesheet
     view.stylesheet = new_stylesheet
     view.restyle!
@@ -114,7 +112,6 @@ class UIViewController
       self.stylesheet = self.class.stylesheet
     end
 
-    puts self.class.layout_definition
     if self.class.layout_definition
       stylename, properties, block = self.class.layout_definition
       layout(view, stylename, properties, &block)
