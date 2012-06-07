@@ -53,11 +53,6 @@ class UIViewController
 
   end # class << self
 
-  def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
-    view.restyle!(orientation)
-  end
-
-
   # Returns a stylesheet to use to style the contents of this controller's
   # view.  You can also assign a stylesheet to {stylesheet=}, which will in
   # turn call {restyle!}.
@@ -172,6 +167,10 @@ class UIViewController
     end
 
     return orientation == UIInterfaceOrientationPortrait
+  end
+
+  def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
+    view.restyle!(orientation)
   end
 
 end
