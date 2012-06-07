@@ -1,7 +1,7 @@
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    @window.rootViewController = MyHaiViewController.alloc.init
+    @window.rootViewController = HaiViewController.alloc.init
     @window.makeKeyAndVisible
 
     true
