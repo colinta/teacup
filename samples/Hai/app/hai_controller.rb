@@ -1,5 +1,7 @@
 class HaiViewController < UIViewController
+end
 
+class MyHaiViewController < HaiViewController
   stylesheet :iphone
 
   layout :hai do
@@ -11,4 +13,8 @@ class HaiViewController < UIViewController
     autorotateToOrientation(orientation)
   end
 
+end
+
+class MCTableViewController < UITableViewController
+  stylesheet :main
 end
