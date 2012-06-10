@@ -104,8 +104,11 @@ module Teacup
         Teacup::Stylesheet[@name] = self
       end
 
-      instance_eval &block
-      self
+      # we just store the block for now, because some classes are not "ready"
+      # for instance, calling `UIFont.systemFontOfSize()` will cause the
+      # application to crash.  We will lazily-load this block in `query`, and
+      # then set it to nil.
+      @block = block
     end
 
     # Include another Stylesheet into this one, the rules defined
@@ -135,7 +138,33 @@ module Teacup
       imported << name_or_stylesheet
     end
 
-    # Add a set of properties for a given stylename or set of stylenames.
+    # Get the properties defined for the given stylename, in this Stylesheet and all
+    # those that have been imported.
+    #
+    # If the ':extends' property is set, we then repeat the process with the value
+    # of that, and include them into the result with lower precedence.
+    #
+    # @param Symbol stylename, the stylename to look up.
+    # @return Hash[Symbol, *] the resulting properties.
+    # @example
+    #   Teacup::Stylesheet[:ipadbase].query(:continue_button)
+    #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
+    def query(stylename)
+      if @block
+        instance_eval &@block
+        @block = nil
+      end
+
+      this_rule = properties_for(stylename)
+
+      if also_include = this_rule.delete(:extends)
+        query(also_include).update(this_rule)
+      else
+        this_rule
+      end
+    end
+
+    # Add a set of properties for a given stylename or multiple stylenames.
     #
     # @param Symbol, *stylename
     # @param Hash[Symbol, Object], properties
@@ -160,32 +189,11 @@ module Teacup
       end
     end
 
-    # Get the properties defined for the given stylename, in this Stylesheet and all
-    # those that have been imported.
-    #
-    # If the ':extends' property is set, we then repeat the process with the value
-    # of that, and include them into the result with lower precedence.
-    #
-    # @param Symbol stylename, the stylename to look up.
-    # @return Hash[Symbol, *] the resulting properties.
-    # @example
-    #   Teacup::Stylesheet[:ipadbase].query(:continue_button)
-    #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
-    def query(stylename)
-      this_rule = properties_for(stylename)
-
-      if also_include = this_rule.delete(:extends)
-        query(also_include).update(this_rule)
-      else
-        this_rule
-      end
-    end
-
     # A unique and hopefully meaningful description of this Object.
     #
     # @return String
     def inspect
-      "Teacup::Stylesheet[#{name.inspect}] = #{@styles}"
+      "Teacup::Stylesheet[#{name.inspect}] = #{@styles.inspect}"
     end
 
     protected
@@ -229,7 +237,7 @@ module Teacup
         elsif Teacup::Stylesheet.stylesheets.key? name_or_stylesheet
           Teacup::Stylesheet.stylesheets[name_or_stylesheet]
         else
-          raise "Teacup tried to import Stylesheet:#{name_or_stylesheet.inspect} into Stylesheet:#{self.name}, but it didn't exist"
+          raise "Teacup tried to import Stylesheet '#{name_or_stylesheet.inspect}' into Stylesheet[#{self.name}], but it didn't exist"
         end
       end
     end
