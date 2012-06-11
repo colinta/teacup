@@ -150,11 +150,6 @@ module Teacup
     #   Teacup::Stylesheet[:ipadbase].query(:continue_button)
     #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
     def query(stylename)
-      if @block
-        instance_eval &@block
-        @block = nil
-      end
-
       this_rule = properties_for(stylename)
 
       if also_include = this_rule.delete(:extends)
@@ -211,6 +206,12 @@ module Teacup
     # @return Hash
     def properties_for(stylename, so_far={}, seen={})
       return so_far if seen[self]
+
+      if @block
+        instance_eval &@block
+        @block = nil
+      end
+
       seen[self] = true
 
       imported_stylesheets.each do |stylesheet|

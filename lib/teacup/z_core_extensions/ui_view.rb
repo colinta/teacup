@@ -42,6 +42,7 @@ class UIView
   # @param Teacup::Stylesheet  stylesheet.
   def stylesheet=(new_stylesheet)
     @stylesheet = new_stylesheet
+    restyle!
     subviews.each{ |subview| subview.stylesheet = new_stylesheet }
   end
 
