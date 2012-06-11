@@ -1,3 +1,5 @@
-.DS_Store
-.rspec
-.sass-cache/
+.repl_history
+build
+resources/*.nib
+resources/*.momd
+resources/*.storyboardc
