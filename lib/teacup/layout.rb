@@ -1,3 +1,4 @@
+
 module Teacup
   # Teacup::Layout defines a layout and subview function that can be used to
   # declare and configure the layout of views and the view hierarchy in your
@@ -16,10 +17,9 @@ module Teacup
   #     end
   #
   #     def stylesheet
-  #       Teacup::Stylesheet::Logo
+  #       Teacup::Stylesheet[:logo]
   #     end
   #   end
-  #
   module Layout
 
     # Alter the layout of a view
@@ -59,30 +59,29 @@ module Teacup
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
     #   }
     #
-    def layout(instance, name_or_properties, properties_or_nil=nil, &block)
-      if properties_or_nil
-        name = name_or_properties.to_sym
-        properties = properties_or_nil
-      elsif Hash === name_or_properties
+    def layout(view, name_or_properties=nil, properties_or_nil=nil, &block)
+      name = nil
+      properties = properties_or_nil
+
+      if Hash === name_or_properties
         name = nil
         properties = name_or_properties
-      else
+      elsif name_or_properties
         name = name_or_properties.to_sym
-        properties = nil
       end
 
-      instance.stylesheet = stylesheet
-      instance.style(properties) if properties
-      instance.stylename = name if name
+      view.stylesheet = stylesheet
+      view.stylename = name
+      view.style(properties) if properties
 
       begin
-        superview_chain << instance
-        instance_exec(instance, &block) if block_given?
+        superview_chain << view
+        instance_exec(view, &block) if block_given?
       ensure
         superview_chain.pop
       end
 
-      instance
+      view
     end
 
     # Add a new subview to the view heirarchy.
@@ -124,8 +123,6 @@ module Teacup
     #   }
     #
     def subview(class_or_instance, *args, &block)
-      instance = Class === class_or_instance ? class_or_instance.new : class_or_instance
-
       if Class === class_or_instance
         unless class_or_instance <= UIView
           raise "Expected subclass of UIView, got: #{class_or_instance.inspect}"
@@ -144,58 +141,7 @@ module Teacup
       instance
     end
 
-    # Returns a stylesheet to use to style the contents of this controller's
-    # view.
-    #
-    # This method will be queried each time {restyle!} is called, and also
-    # implicitly # whenever Teacup needs to draw your layout (currently only at
-    # view load time).
-    #
-    # @return Teacup::Stylesheet
-    #
-    # @example
-    #
-    #  def stylesheet
-    #    if [UIDeviceOrientationLandscapeLeft,
-    #        UIDeviceOrientationLandscapeRight].include?(UIDevice.currentDevice.orientation)
-    #      Teacup::Stylesheet::IPad
-    #    else
-    #      Teacup::Stylesheet::IPadVertical
-    #    end
-    #  end
-    def stylesheet
-      nil
-    end
-
-    # Instruct teacup to reapply styles to your subviews
-    #
-    # You should call this whenever the return value of your stylesheet meethod
-    # would change,
-    #
-    # @example
-    #   def willRotateToInterfaceOrientation(io, duration: duration)
-    #     restyle!
-    #   end
-    def restyle!
-      top_level_view.stylesheet = stylesheet
-    end
-
     protected
-
-    # Get's the top-level UIView for this object.
-    #
-    # This can either be 'self' if the current object is in fact a UIView,
-    # or 'view' if it's a controller.
-    #
-    # @return UIView
-    def top_level_view
-      case self
-      when UIViewController
-        view
-      when UIView
-        self
-      end
-    end
 
     # Get's the current stack of views in nested calls to layout.
     #
