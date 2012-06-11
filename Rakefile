@@ -1,39 +1,14 @@
-#!/usr/bin/env rake
+$:.unshift('/Library/RubyMotion/lib')
+require 'motion/project'
 
-# Bundler gem tasks ftw
-require 'bundler/gem_tasks'
 
-require 'rspec/core/rake_task'
-require File.expand_path '../lib/teacup/version.rb', __FILE__
+dirs = ['lib', 'app']
 
-# Default task
-task :default => :spec # Run spec
-task :v       => :version # Alt
 
-# - - - - - - - - - - - - - - - - - - -
-# Tasks
-# - - - - - - - - - - - - - - - - - - -
-
-desc 'display Teacup\'s current version'
-task(:version) { version }
-
-desc 'diesplay list of contributors'
-task(:contrib)  { contrib }
-
-desc 'run RSpec tests'
-RSpec::Core::RakeTask.new
-
-desc 'build and install the gem'
-task(:prep) { system('rake build; rake install') }
-
-# - - - - - - - - - - - - - - - - - - -
-# Helpers
-# - - - - - - - - - - - - - - - - - - -
-
-def version
-  puts "Teacup #{Teacup::VERSION}"
-end
-
-def contrib
-  puts Teacup::CONTRIBUTORS
+Motion::Project::App.setup do |app|
+  # Use `rake config' to see complete project settings.
+  app.files = dirs.map{|d| Dir.glob(File.join(app.project_dir, "#{d}/**/*.rb")) }.flatten
+  app.name = 'teacup'
+  app.files_dependencies 'app/app_delegate.rb' => 'app/styles/main_styles.rb'
+  app.files_dependencies 'app/controllers/landscape_only_controller.rb' => 'app/controllers/first_controller.rb'
 end
