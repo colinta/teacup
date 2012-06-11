@@ -7,23 +7,10 @@ class FirstController < UIViewController
     subview(UIView, :background) do
       @welcome = subview(UILabel, :welcome)
       subview(UILabel, :footer)
-      @button = subview(UIButton.buttonWithType(:rounded.uibuttontype), :next_message)
+      @button = subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :next_message)
     end
 
-    @button.on(:touch) do |event|
-      msg = next_message
-      puts msg, messages.length
-      if msg
-        @welcome.text = msg
-      else
-        @welcome.text = 'Next example...'
-        @button.off(:touch)
-
-        @button.on(:touch) do |event|
-          next_view
-        end
-      end
-    end
+    @button.addTarget(self, action: :next_message, forControlEvents:UIControlEventTouchUpInside)
   end
 
   # used in testing
@@ -36,7 +23,15 @@ class FirstController < UIViewController
   end
 
   def next_message
-    messages.shift
+    msg = messages.shift
+    if msg
+      @welcome.text = msg
+    else
+      @welcome.text = 'Next example...'
+
+      @button.removeTarget(self, action: :next_view, forControlEvents:UIControlEventTouchUpInside)
+      @button.addTarget(self, action: :next_view, forControlEvents:UIControlEventTouchUpInside)
+    end
   end
 
   def messages
