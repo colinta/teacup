@@ -50,11 +50,13 @@ class SomeController < UIViewController
 
     @field = UITextField.new
     @field.frame = [[10, 10], [200, 50]]
+    @search.textColor = UIColor.redColor
     view.addSubview(@field)
 
     @search = UITextField.new
     @search.frame = [[10, 70], [200, 50]]
     @search.placeholder = 'Find something...'
+    @search.textColor = UIColor.redColor
     view.addSubview(@search)
 
     true
@@ -109,6 +111,9 @@ Teacup::Stylesheet.new(:some_view) do
     top: 70,
     placeholder: 'Find something...'
 
+  style UITextField,                # Defining styles based on view class instead
+    textColor: UIColor.redColor     # of style name.
+
 end
 
 # Controller
@@ -149,6 +154,17 @@ Development
 *Last milestone*: Release layout and stylesheet DSL to the world.
 
 *Next milestone*: Provide default styles, that mimic Interface Builder's object library
+
+**Changelog v0.2.0:**
+
+- Stylesheets are no longer constants. Instead, they can be fetched by name: `Teacup::Stylesheet[:iphone]`
+
+- Stylesheets can be assigned by calling the `stylesheet :stylesheet_name` inside a view.
+
+- Ability to style based on view class.
+
+- Support for orientation-based styles.
+
 
 teacup, being a community project, moves in "spurts" of decision making and
 coding.  We will announce when we are in "proposal mode".  That's a good time to
