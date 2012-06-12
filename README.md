@@ -32,6 +32,13 @@ Then add the teacup library to your Rakefile:
   end
 ```
 
+You can run the test suite or compile the test app:
+
+```bash
+$ cd vendor/teacup
+$ rake spec  # or just rake, to run the app.
+```
+
 #### Showdown
 
 Cocoa
