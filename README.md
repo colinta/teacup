@@ -23,15 +23,17 @@ $ git submodule add https://github.com:rubymotion/teacup vendor/teacup
 ```
 
 Then add the teacup library to your Rakefile:
+
 ```
   # Add libraries *before* your app so that you can access constants they define safely
   #
   dirs = ['vendor/teacup/lib', 'app']
 
-  # require all the directories in order.
-  app.files = dirs.map{|d| Dir.glob(File.join(app.project_dir, "#{d}/**/*.rb")) }.flatten
+  Motion::Project::App.setup do |app|
+    # ...
+    app.files = dirs.map{|d| Dir.glob(File.join(app.project_dir, "#{d}/**/*.rb")) }.flatten
+  end
 ```
-
 
 #### Showdown
 
@@ -39,19 +41,41 @@ Cocoa
 
 ```ruby
 class SomeController < UIViewController
- def viewDidLoad
 
-  field = UITextField.new
-  field.frame = [10, 10, 50, 200]
-  view.addSubview(field)
+  def viewDidLoad
 
-  search = UITextField.new
-  field.frame = [10, 70, 50, 200]
-  search.placeholder = 'Find something...'
-  view.addSubview(search)
+    @field = UITextField.new
+    @field.frame = [[10, 10], [200, 50]]
+    view.addSubview(@field)
 
-  true
- end
+    @search = UITextField.new
+    @search.frame = [[10, 70], [200, 50]]
+    @search.placeholder = 'Find something...'
+    view.addSubview(@search)
+
+    true
+  end
+
+  # code to handle orientation changes
+  def shouldAutorotateToInterfaceOrientation(orientation)
+    if orientation == UIDeviceOrientationPortraitUpsideDown
+      return false
+    end
+    true
+  end
+
+  # perform the frame changes
+  def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
+    case orientation
+    when UIDeviceOrientationLandscapeLeft, UIDeviceOrientationLandscapeRight
+      @field.frame = [[10, 10], [360, 50]]
+      @search.frame = [[10, 70], [360, 50]]
+    else
+      @field.frame = [[10, 10], [200, 50]]
+      @search.frame = [[10, 70], [200, 50]]
+    end
+  end
+
 end
 ```
 
@@ -60,16 +84,18 @@ Teacup
 ```ruby
 # Stylesheet
 
-Teacup::Stylesheet.new(:iphone) do
+Teacup::Stylesheet.new(:some_view) do
 
   style :root,
     landscape: true  # enable landscape rotation (otherwise only portrait is enabled)
+                     # this must be on the root-view, to indicate that this view is
+                     # capable of handling rotations
 
   style :field,
-    left: 10,
-    top: 10,
-    height: 50,
+    left:   10,
+    top:    10,
     width:  200,
+    height: 50,
     landscape: {
       width: 360  # make it wide in landscape view
     }
@@ -85,29 +111,42 @@ end
 
 class SomeController < UIViewController
 
-  # don't think of this as "viewDidLoad", think of it as a nib file, that you
-  # are declaring in your UIViewController.
-  layout :root do
-    subview(UITextField, :field)
-    subview(UITextField, :search)
-  end
-
   # the stylesheet determines the placement and design of your views.  You can
   # also implement a stylesheet method, or assign the stylesheet name to the
   # UIViewController later.
-  stylesheet :iphone
+  stylesheet :some_view
+
+  # think of this as a nib file that you are declaring in your UIViewController.
+  # it is styled according to the :root styles, and can add and style subviews
+  layout :root do
+    subview(UITextField, :field)
+    @search = subview(UITextField, :search)
+  end
+
+  # you have to enable the auto-rotation stuff by implementing a
+  # shouldAutorotateToInterfaceOrientation method
+  def shouldAutorotateToInterfaceOrientation(orientation)
+    # but don't worry, we made that painless, too!
+    autorotateToOrientation(orientation)
+  end
 
 end
 ```
 
+The orientation styling is really neat, I think you'll find that you will be
+more encouraged to enable multiple orientations, since the code is pretty
+painless.
+
+
+
 Development
 -----------
 
-*Current version*: v0.0.1 (or see `lib/teacup/version.rb`)
+*Current version*: v0.2.0 (or see `lib/teacup/version.rb`)
 
-*Last milestone*: Pick a DSL
+*Last milestone*: Release layout and stylesheet DSL to the world.
 
-*Next milestone*: Release layout and stylesheet DSL to the world.
+*Next milestone*: Provide default styles, that mimic Interface Builder's object library
 
 teacup, being a community project, moves in "spurts" of decision making and
 coding.
