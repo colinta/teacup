@@ -3,16 +3,13 @@ Teacup
 
 A community-driven DSL for creating user interfaces on the iphone.
 
-By including the `Teacup` module, you can easily create layouts that adhere to
-the [iOS user interface guidelines][iOS HIG], and it's an easy way to assign labels,
-delegators, and datasources.
+Using teacup, you can easily create and style layouts while keeping your code
+dry.  The goal is to offer a rubyesque (well, actually a rubymotion-esque) way
+to create interfaces programmatically.
 
-The goal is not to simply rename CocoaTouch method names, but to offer a
-rubyesque (well, actually a rubymotion-esque) way to create an interface.
+**Check out a working sample app [here][Hai]!**
 
-Using stylesheets and layouts, it makes coding an iOS app like designing a website with HTML and CSS.
-
-**Check out a working sample app [here](https://github.com/rubymotion/teacup/tree/master/samples/Hai)!**
+[Hai]: https://github.com/rubymotion/teacup/tree/master/samples/Hai
 
 #### Installation
 
