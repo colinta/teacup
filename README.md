@@ -60,7 +60,7 @@ class SomeController < UIViewController
     true
   end
 
-  # code to handle orientation changes
+  # code to enable orientation changes
   def shouldAutorotateToInterfaceOrientation(orientation)
     if orientation == UIDeviceOrientationPortraitUpsideDown
       return false
@@ -68,7 +68,7 @@ class SomeController < UIViewController
     true
   end
 
-  # perform the frame changes
+  # perform the frame changes depending on orientation
   def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
     case orientation
     when UIDeviceOrientationLandscapeLeft, UIDeviceOrientationLandscapeRight
@@ -137,11 +137,9 @@ class SomeController < UIViewController
 end
 ```
 
-The orientation styling is really neat, I think you'll find that you will be
-more encouraged to enable multiple orientations, since the code is pretty
+The orientation styling is really neat.  I think you'll find that you will be
+more inspired to enable multiple orientations because the code is so much more
 painless.
-
-
 
 Development
 -----------
@@ -153,15 +151,15 @@ Development
 *Next milestone*: Provide default styles, that mimic Interface Builder's object library
 
 teacup, being a community project, moves in "spurts" of decision making and
-coding.
+coding.  We will announce when we are in "proposal mode".  That's a good time to
+jump into the project and offer suggestions for its future.
 
-We would love suggestions of any sort, and we're always free over at the
-`#teacuprb` channel on `irc.freenode.org`.
+And we're usually hanging out over at the `#teacuprb` channel on `irc.freenode.org`.
 
 Bugs
 ----
 
-Please, do *not* hesitate to report any bugs you find with our source at the
+Please report any bugs you find with our source at the
 [Issues](https://github.com/rubymotion/teacup/issues) page.
 
 Use cases
