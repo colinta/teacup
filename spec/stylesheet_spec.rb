@@ -1,18 +1,17 @@
-require 'spec_helper'
 
 describe "Teacup::Stylesheet" do
 
   describe 'creation' do
     before do
-      @stylesheet = Teacup::Stylesheet.new(:ConstantTest) { }
+      @stylesheet = Teacup::Stylesheet.new(:constanttest) { }
     end
 
     after do
-      Teacup::Stylesheet.send(:remove_const, :ConstantTest)
+      Teacup::Stylesheet.stylesheets.delete(:constanttest)
     end
 
     it 'should create constants for named stylesheets' do
-      Teacup::Stylesheet::ConstantTest.should == @stylesheet
+      Teacup::Stylesheet[:constanttest].should == @stylesheet
     end
 
     it 'should allow creating anonymous stylesheets' do
@@ -33,12 +32,12 @@ describe "Teacup::Stylesheet" do
     end
 
     it 'should let you properties for a stylename' do
-      @stylesheet.query(:example_button).should include(frame: [[0, 0], [100, 100]])
+      @stylesheet.query(:example_button)[:frame].should == [[0, 0], [100, 100]]
     end
 
     it 'should let you define properties for many stylenames' do
-      @stylesheet.query(:example_label).should include(backgroundColor: :blue)
-      @stylesheet.query(:example_textfield).should include(backgroundColor: :blue)
+      @stylesheet.query(:example_label)[:backgroundColor].should == :blue
+      @stylesheet.query(:example_textfield)[:backgroundColor].should == :blue
     end
 
     it 'should return {} for unknown stylenames' do
@@ -60,11 +59,12 @@ describe "Teacup::Stylesheet" do
     end
 
     it 'should union different properties' do
-      @stylesheet.query(:example_button).should include(title: "Example!", backgroundColor: :blue)
+      @stylesheet.query(:example_button)[:title].should == "Example!"
+      @stylesheet.query(:example_button)[:backgroundColor].should == :blue
     end
 
     it 'should give later properties precedence' do
-      @stylesheet.query(:example_button).should include(frame: [[100, 100], [200, 200]])
+      @stylesheet.query(:example_button)[:frame].should == [[100, 100], [200, 200]]
     end
   end
 
@@ -89,57 +89,60 @@ describe "Teacup::Stylesheet" do
     end
 
     it 'should union different properties' do
-      @stylesheet.query(:left_label).should include(font: "IMPACT", left: 100)
+      @stylesheet.query(:left_label)[:font].should == "IMPACT"
+      @stylesheet.query(:left_label)[:left].should == 100
     end
 
     it 'should given the raw properties precedence' do
-      @stylesheet.query(:left_label).should include(backgroundColor: :green)
+      @stylesheet.query(:left_label)[:backgroundColor].should == :green
     end
 
     it 'should follow a chain of extends' do
-      @stylesheet.query(:how_much).should include(backgroundColor: :red, left: 100, font: "IMPACT")
+      @stylesheet.query(:how_much)[:backgroundColor].should == :red
+      @stylesheet.query(:how_much)[:left] == 100
+      @stylesheet.query(:how_much)[:font] == "IMPACT"
     end
   end
 
-  describe 'importing another stylsheet' do
+  describe 'importing another stylesheet' do
 
     before do
       @oo_name_importer = Teacup::Stylesheet.new do
-        import :ImportedByName
+        import :importedbyname
 
         style :label,
           backgroundColor: :blue
       end
 
-      Teacup::Stylesheet.new(:ImportedByName) do
+      Teacup::Stylesheet.new(:importedbyname) do
         style :label,
           title: "Imported by name"
       end
 
       @name_importer = Teacup::Stylesheet.new do
-        import :ImportedByName
-
-        style :label,
-          backgroundColor: :blue
-      end
-      
-      imported_anonymously = Teacup::Stylesheet.new do
-        style :label,
-          title: "Imported anonymously"
-      end
-
-      @anonymous_importer = Teacup::Stylesheet.new do
-        import imported_anonymously
+        import :importedbyname
 
         style :label,
           backgroundColor: :blue
       end
 
-      Teacup::Stylesheet.new(:ImportRecursion) do
-        import :ImportRecursion
+      # imported_anonymously = Teacup::Stylesheet.new do
+      #   style :label,
+      #     title: "Imported anonymously"
+      # end
+
+      # @anonymous_importer = Teacup::Stylesheet.new do
+      #   import imported_anonymously
+      #
+      #   style :label,
+      #     backgroundColor: :blue
+      # end
+
+      Teacup::Stylesheet.new(:importrecursion) do
+        import :importrecursion
 
         style :label,
-          title: "Import recursion"
+          importtitle: "Import recursion"
       end
 
       @broken_stylesheet = Teacup::Stylesheet.new do
@@ -151,36 +154,43 @@ describe "Teacup::Stylesheet" do
     end
 
     after do
-      Teacup::Stylesheet.send(:remove_const, :ImportedByName)
-      Teacup::Stylesheet.send(:remove_const, :ImportRecursion)
+      Teacup::Stylesheet.stylesheets.delete(:importedbyname)
+      Teacup::Stylesheet.stylesheets.delete(:importrecursion)
     end
 
     it 'should work with a name' do
-      @name_importer.query(:label).should include(title: "Imported by name", backgroundColor: :blue)
+      @name_importer.query(:label)[:title].should == "Imported by name"
+      @name_importer.query(:label)[:backgroundColor].should == :blue
     end
 
     it 'should work with a name even if defined out of order' do
-      @oo_name_importer.query(:label).should include(title: "Imported by name", backgroundColor: :blue)
+      @oo_name_importer.query(:label)[:title].should == "Imported by name"
+      @oo_name_importer.query(:label)[:backgroundColor].should == :blue
     end
 
-    it 'should work with a value' do
-      @anonymous_importer.query(:label).should include(title: "Imported anonymously", backgroundColor: :blue)
-    end
+    # it 'should work with a value' do
+    #   @anonymous_importer.query(:label)
+    #   @anonymous_importer.query(:label)[:title].should == "Imported anonymously"
+    #   @oo_name_importer.query(:label)[:backgroundColor].should == :blue
+    # end
 
     it 'should not explode if a cycle is created' do
-      Teacup::Stylesheet::ImportRecursion.query(:label).should include(title: "Import recursion")
+      Teacup::Stylesheet[:importrecursion].query(:label)[:importtitle].should == "Import recursion"
     end
 
     it 'should explode if an unknown stylesheet is imported' do
-      lambda {
+      error = nil
+      begin
         @broken_stylesheet.query(:label)
-      }.should raise_error(/Stylesheet::NonExtant/)
+      rescue Exception => error
+      end
+      error.nil?.should == false
     end
   end
 
   describe 'querying imported stylesheets' do
     before do
-      most_generic = Teacup::Stylesheet.new do
+      @most_generic = Teacup::Stylesheet.new :most_generic do
         style :label,
           backgroundColor: :blue,
           title: "Most generic"
@@ -189,39 +199,41 @@ describe "Teacup::Stylesheet" do
           title: "Click Here!"
       end
 
-      stylesheet = Teacup::Stylesheet.new do
-        import most_generic
+      @stylesheet = Teacup::Stylesheet.new :stylesheet do
+        import :most_generic
 
         style :label,
           borderRadius: 10,
           title: "Stylesheet"
       end
 
-      most_specific = Teacup::Stylesheet.new do
-        import stylesheet
+      @most_specific = Teacup::Stylesheet.new :most_specific do
+        import :stylesheet
 
         style :label,
           title: "Most specific",
           font: "IMPACT"
       end
-
-      @most_specific, @stylesheet = [most_specific, stylesheet]
     end
 
     it 'should union different properties for the same rule' do
-      @stylesheet.query(:label).should include(backgroundColor: :blue, borderRadius: 10)
+      @stylesheet.query(:label)[:backgroundColor].should == :blue
+      @stylesheet.query(:label)[:borderRadius] == 10
     end
 
     it 'should give the importer precedence' do
-      @stylesheet.query(:label).should include(title: "Stylesheet")
+      @stylesheet.query(:label)[:title].should == "Stylesheet"
     end
 
     it 'should follow chains of imports' do
-      @most_specific.query(:label).should include(title: "Most specific", font: "IMPACT", borderRadius: 10, backgroundColor: :blue)
+      @most_specific.query(:label)[:title].should == "Most specific"
+      @most_specific.query(:label)[:font].should == "IMPACT"
+      @most_specific.query(:label)[:borderRadius].should == 10
+      @most_specific.query(:label)[:backgroundColor].should == :blue
     end
 
     it 'should allow querying a rule which exists only in the importee' do
-      @stylesheet.query(:button).should include(title: "Click Here!")
+      @stylesheet.query(:button)[:title].should == "Click Here!"
     end
   end
 
@@ -239,13 +251,14 @@ describe "Teacup::Stylesheet" do
             text: "Imported last"
         }
       end
-      stylesheet.query(:label).should include(text: "Imported last", backgroundColor: :blue)
+      stylesheet.query(:label)[:text].should == "Imported last"
+      stylesheet.query(:label)[:backgroundColor].should == :blue
     end
 
     it 'should give precedence to less-nested imports' do
       stylesheet = Teacup::Stylesheet.new do
-        import Teacup::Stylesheet.new{
-          import Teacup::Stylesheet.new{
+        import Teacup::Stylesheet.new {
+          import Teacup::Stylesheet.new {
             style :button,
               text: "Indirect import",
               backgroundColor: :blue
@@ -255,7 +268,9 @@ describe "Teacup::Stylesheet" do
             text: "Direct import"
         }
       end
-      stylesheet.query(:button).should include(text: "Direct import", backgroundColor: :blue)
+
+      stylesheet.query(:button)[:text].should == "Direct import"
+      stylesheet.query(:button)[:backgroundColor].should == :blue
     end
 
     it 'should give precedence to imported rules over extended rules' do
@@ -272,7 +287,10 @@ describe "Teacup::Stylesheet" do
             text: "Imported"
         }
       end
-      stylesheet.query(:my_textfield).should include(text: "Imported", backgroundColor: :blue, borderRadius: 10)
+
+      stylesheet.query(:my_textfield)[:text].should == "Imported"
+      stylesheet.query(:my_textfield)[:backgroundColor].should == :blue
+      stylesheet.query(:my_textfield)[:borderRadius].should == 10
     end
   end
 end

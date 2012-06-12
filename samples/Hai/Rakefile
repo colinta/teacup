@@ -4,13 +4,12 @@ require 'motion/project'
 Motion::Project::App.setup do |app|
   app.name = 'Hai'
 
-  app.device_family = :ipad
+  app.device_family = :iphone
 
-  app.files += Dir.glob(File.join(app.project_dir, '../../lib/teacup/**/*.rb'))
+  app.files += Dir.glob(File.join(app.project_dir, '../../lib/**/*.rb'))
   app.files += Dir.glob(File.join(app.project_dir, 'styles/**/*.rb'))
   app.files += Dir.glob(File.join(app.project_dir, 'app/**/*.rb'))
-  app.files_dependencies './../../lib/teacup/view.rb' => './../../lib/teacup/stylesheet.rb'
-  app.files_dependencies './../../lib/teacup/layout.rb' => './../../lib/teacup/view.rb'
+  app.files_dependencies './../../lib/teacup/layout.rb' => './../../lib/teacup/stylesheet.rb'
   app.files_dependencies './../../lib/teacup/z_core_extensions/ui_view_controller.rb' => './../../lib/teacup/layout.rb'
   app.files_dependencies './../../lib/teacup/z_core_extensions/ui_view.rb' => './../../lib/teacup/z_core_extensions/ui_view_controller.rb'
   app.files_dependencies 'app/app_delegate.rb' => './../../lib/teacup/z_core_extensions/ui_view.rb'
