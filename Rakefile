@@ -11,4 +11,5 @@ Motion::Project::App.setup do |app|
   app.name = 'teacup'
   app.files_dependencies 'app/app_delegate.rb' => 'app/styles/main_styles.rb'
   app.files_dependencies 'app/controllers/landscape_only_controller.rb' => 'app/controllers/first_controller.rb'
+  app.identifier = 'com.rubymotion.teacup'
 end
