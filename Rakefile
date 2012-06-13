@@ -5,7 +5,6 @@ require 'bubble-wrap/loader'
 Bundler.setup
 Bundler.require
 BW.require 'motion/**/*.rb'
-BW.require 'app/**/*.rb'
 
 
 Motion::Project::App.setup do |app|
