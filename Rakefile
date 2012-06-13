@@ -4,15 +4,12 @@ require "bundler/gem_tasks"
 require 'bubble-wrap/loader'
 Bundler.setup
 Bundler.require
-
-
-dirs = ['lib', 'app']
+BW.require 'motion/**/*.rb'
+BW.require 'app/**/*.rb'
 
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
-  app.files = dirs.map{|d| Dir.glob(File.join(app.project_dir, "#{d}/**/*.rb")) }.flatten
   app.name = 'teacup'
-  app.files_dependencies 'app/app_delegate.rb' => 'app/styles/main_styles.rb'
-  app.files_dependencies 'app/controllers/landscape_only_controller.rb' => 'app/controllers/first_controller.rb'
+  app.identifier = 'com.rubymotion.teacup'
 end
