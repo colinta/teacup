@@ -1,31 +1,33 @@
+# -*- encoding: utf-8 -*-
 require File.expand_path('../lib/teacup/version.rb', __FILE__)
-require File.expand_path('../lib/teacup/contributors.rb', __FILE__)
 
 Gem::Specification.new do |gem|
-
-  gem.authors  = Teacup::CONTRIBUTORS
+  gem.authors = ['Conrad Irwin', 'Colin Thomas-Arnold', 'Mark Villacampa', 'Chris Clarke']
+  gem.email   = ['conrad@rapportive.com', 'colinta@gmail.com']
+  gem.summary     = %{DSLs that allow rubymotion developers to create iOS UIs programmatically.}
   gem.description = <<-DESC
-  Teacup is a community-driven DSL for making CSS-like templates for RubyMotion iOS
-  apps.
-  DESC
+      rubymotion has enabled ruby developers to create native iOS applications
+      using their favorite language, but creating views programmatically is an
+      exercise in patience and repetition.  Teacup aims to alleviate those
+      headaches by providing a DSL that can be used to create layouts (aka view
+      hierarchies) easily, and to style those layouts using CSS-like
+      stylesheets.  The end result is easier to maintain and DRYer (we hope!).
+      DESC
 
-  gem.summary = 'A community-driven DSL for creating user interfaces on the iphone.'
-  gem.homepage = 'https://github.com/rubymotion/teacup'
+  gem.homepage    = 'https://github.com/rubymotion/teacup'
 
-  gem.files   = %w(lib/teacup.rb
-                   lib/teacup/version.rb
-                   lib/teacup/contributors.rb
-                   lib/teacup/helpers/helpers.rb
-                   lib/teacup/style_sheet.rb)
-
-  gem.executables = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-  gem.test_files  = gem.files.grep(%r{^spec/})
+  gem.files         = `git ls-files`.split($\)
+  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
 
   gem.name          = 'teacup'
   gem.require_paths = ['lib']
   gem.version       = Teacup::VERSION
 
-  gem.add_dependency 'rake'
-  gem.add_development_dependency 'rspec'
+  # Put dependencies here
+  # e.g. gem.add_dependency "some_gem", "~> optional_version_number"
+
+  gem.add_dependency 'bubble-wrap'
+  gem.add_development_dependency 'rake'
 
 end
