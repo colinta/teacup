@@ -2,7 +2,7 @@ v0.2.0
 ------
 
 - Stylesheets are no longer constants. Instead, they can be fetched by name: `Teacup::Stylesheet[:iphone]`
-- Stylesheets can be assigned by calling the `stylesheet :stylesheet_name` inside a view.
+- Stylesheets can be assigned by calling the `stylesheet :stylesheet_name` inside a view controller.
 - Ability to style based on view class.
 - Support for orientation-based styles.
 
