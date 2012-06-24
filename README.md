@@ -22,13 +22,9 @@ $ git submodule add https://github.com/rubymotion/teacup vendor/teacup
 Then add the teacup library to your Rakefile:
 
 ```
-  # Add libraries *before* your app so that you can access constants they define safely
-  #
-  dirs = ['vendor/teacup/lib', 'app']
-
   Motion::Project::App.setup do |app|
     # ...
-    app.files = dirs.map{|d| Dir.glob(File.join(app.project_dir, "#{d}/**/*.rb")) }.flatten
+    app.files.unshift(*Dir['vendor/teacup/lib/**/*.rb'])
   end
 ```
 
