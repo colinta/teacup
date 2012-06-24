@@ -5,8 +5,11 @@ Gem::Specification.new do |gem|
 
   gem.authors  = Teacup::CONTRIBUTORS
   gem.description = <<-DESC
-  Teacup is a community-driven DSL for making CSS-like templates for RubyMotion iOS
-  apps.
+  Teacup is a community-driven DSL for making CSS-like styling, and layouts for complex, and simple
+  iOS apps with RubyMotion.
+  
+  By aiming at making RubyMotion less tedious, Teacup makes RubyMotion feel like interface builder, and
+  work like a CSS stylesheet.
   DESC
 
   gem.summary = 'A community-driven DSL for creating user interfaces on the iphone.'

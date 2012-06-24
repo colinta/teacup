@@ -16,7 +16,7 @@ to create interfaces programmatically.
 First get the teacup library into your local project using git submodules:
 
 ```bash
-$ git submodule add https://github.com:rubymotion/teacup vendor/teacup
+$ git submodule add https://github.com/rubymotion/teacup vendor/teacup
 ```
 
 Then add the teacup library to your Rakefile:
