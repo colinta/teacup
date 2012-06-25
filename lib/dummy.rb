@@ -14,6 +14,11 @@ class DummyLayer < CALayer
     setTransform(nil)
     setMasksToBounds(nil)
     setShadowOffset(nil)
+    setShadowOpacity(nil)
+    setShadowRadius(nil)
+    setShadowOffset(nil)
+    setShadowColor(nil)
+    setShadowPath(nil)
   end
 
 end
