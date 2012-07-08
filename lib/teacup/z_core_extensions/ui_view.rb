@@ -141,18 +141,24 @@ class UIView
     end
 
     properties.each do |key, value|
-      assign = :"#{key}="
-      setter = ('set' + key.to_s.sub(/^./) {|c| c.capitalize}).to_sym
+      if key =~ /^set[A-Z]/
+        assign = nil
+        setter = key.to_s + ':'
+      else
+        assign = :"#{key}="
+        setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
+      end
+
       if key == :title && UIButton === self
         setTitle(value, forState: UIControlStateNormal)
-      elsif respond_to?(assign)
+      elsif assign and respond_to?(assign)
         # puts "Setting #{key} = #{value.inspect}"
         send(assign, value)
-      elsif respond_to?(setter)
+      elsif respondsToSelector(setter)
         # puts "Calling self(#{key}, #{value.inspect})"
         send(setter, value)
       else
-        puts "Teacup WARN: Can't apply #{key} to #{self.inspect}"
+        puts "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{self.inspect}"
       end
     end
     self.setNeedsDisplay
