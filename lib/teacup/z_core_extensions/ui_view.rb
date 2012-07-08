@@ -95,8 +95,8 @@ class UIView
         elsif layer.respond_to?(setter)
           # NSLog "Calling layer(#{key}, #{value.inspect})"
           layer.send(setter, value)
-      else
-        NSLog "Teacup WARN: Can't apply #{key} to #{self.layer.inspect}"
+        else
+          NSLog "Teacup WARN: Can't apply #{key} to #{self.layer.inspect}"
         end
       end
     end
