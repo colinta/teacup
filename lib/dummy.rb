@@ -3,6 +3,15 @@ class DummyView < UIView
 
   def dummy
     setFrame(nil)
+    setOpaque(nil)
+  end
+
+end
+
+class DummyScrollView < UIScrollView
+
+  def dummy
+    setScrollEnabled(nil)
   end
 
 end
