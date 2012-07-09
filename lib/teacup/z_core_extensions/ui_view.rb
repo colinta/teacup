@@ -184,11 +184,13 @@ class UIView
     return unless [:frame, :left, :top, :width, :height].any?(&properties.method(:key?))
 
     frame = properties.delete(:frame) || self.frame
+    origin = properties.delete(:origin) || frame[0]
+    size = properties.delete(:size) || frame[1]
 
-    frame[0][0] = properties.delete(:left) || frame[0][0]
-    frame[0][1] = properties.delete(:top) || frame[0][1]
-    frame[1][0] = properties.delete(:width) || frame[1][0]
-    frame[1][1] = properties.delete(:height) || frame[1][1]
+    frame[0][0] = properties.delete(:left) || origin[0]
+    frame[0][1] = properties.delete(:top) || origin[1]
+    frame[1][0] = properties.delete(:width) || size[0]
+    frame[1][1] = properties.delete(:height) || size[1]
 
     properties[:frame] = frame
     properties
