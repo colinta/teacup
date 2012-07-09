@@ -128,6 +128,7 @@ class UIView
       end
     end
     self.setNeedsDisplay
+    self.setNeedsLayout
   end
 
   def top_level_view
