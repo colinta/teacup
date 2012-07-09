@@ -167,6 +167,7 @@ class UIView
       end
     end
     self.setNeedsDisplay
+    self.setNeedsLayout
   end
 
   # merge definitions for 'frame' into one.
