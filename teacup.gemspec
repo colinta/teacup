@@ -2,6 +2,8 @@ require File.expand_path('../lib/teacup/version.rb', __FILE__)
 require File.expand_path('../lib/teacup/contributors.rb', __FILE__)
 
 Gem::Specification.new do |gem|
+  gem.name          = 'teacup'
+  gem.version       = Teacup::VERSION
 
   gem.authors  = ['the rubymotion community']
 
@@ -17,11 +19,8 @@ DESC
   gem.homepage = 'https://github.com/rubymotion/teacup'
 
   gem.files       = `git ls-files`.split($\)
-  gem.test_files  = gem.files.grep(%r{^spec/})
-
-  gem.name          = 'teacup'
   gem.require_paths = ['lib']
-  gem.version       = Teacup::VERSION
+  gem.test_files  = gem.files.grep(%r{^spec/})
 
   gem.add_dependency 'rake'
   gem.add_development_dependency 'rspec'
