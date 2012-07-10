@@ -8,6 +8,7 @@ class DummyView < UIView
 
 end
 
+
 class DummyScrollView < UIScrollView
 
   def dummy
@@ -15,6 +16,16 @@ class DummyScrollView < UIScrollView
   end
 
 end
+
+
+class DummyLabel < UILabel
+
+  def dummy
+    setAdjustsFontSizeToFitWidth(nil)
+  end
+
+end
+
 
 class DummyLayer < CALayer
 
