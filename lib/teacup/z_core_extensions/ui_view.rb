@@ -110,21 +110,31 @@ class UIView
         setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
       end
 
-      if key == :title && UIButton === self
-        # NSLog "Setting #{key} = #{value.inspect}, forState:UIControlStateNormal"
-        setTitle(value, forState: UIControlStateNormal)
-      # elsif key == :normal && UIButton === self
-      #   setImage(value, forState: UIControlStateNormal)
-      # elsif key == :highlighted && UIButton === self
-      #   setImage(value, forState: UIControlStateHighlighted)
-      elsif assign and respond_to?(assign)
-        # NSLog "Setting #{key} = #{value.inspect}"
-        send(assign, value)
-      elsif respondsToSelector(setter)
-        # NSLog "Calling self(#{key}, #{value.inspect})"
-        send(setter, value)
-      else
-        NSLog "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{self.inspect}"
+      handled = false
+      self.class.ancestors.each do |ancestor|
+        if not handled and ancestor.teacup_handlers.has_key? key
+          ancestor.teacup_handlers[key].call(self, value)
+          handled = true
+        end
+      end
+
+      if not handled
+        if key == :title && UIButton === self
+          # NSLog "Setting #{key} = #{value.inspect}, forState:UIControlStateNormal"
+          setTitle(value, forState: UIControlStateNormal)
+        # elsif key == :normal && UIButton === self
+        #   setImage(value, forState: UIControlStateNormal)
+        # elsif key == :highlighted && UIButton === self
+        #   setImage(value, forState: UIControlStateHighlighted)
+        elsif assign and respond_to?(assign)
+          # NSLog "Setting #{key} = #{value.inspect}"
+          send(assign, value)
+        elsif respondsToSelector(setter)
+          # NSLog "Calling self(#{key}, #{value.inspect})"
+          send(setter, value)
+        else
+          NSLog "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{self.inspect}"
+        end
       end
     end
     self.setNeedsDisplay
@@ -133,6 +143,16 @@ class UIView
 
   def top_level_view
     return self
+  end
+
+  class << self
+    def teacup_handlers
+      @teacup_handlers ||= {}
+    end
+
+    def teacup_assign key, &block
+      teacup_handlers[key] = &block
+    end
   end
 
 end
