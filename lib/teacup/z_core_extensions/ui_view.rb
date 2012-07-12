@@ -102,23 +102,25 @@ class UIView
     end
 
     properties.each do |key, value|
-      if key =~ /^set[A-Z]/
-        assign = nil
-        setter = key.to_s + ':'
-      else
-        assign = :"#{key}="
-        setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
-      end
-
       handled = false
       self.class.ancestors.each do |ancestor|
-        if not handled and ancestor.teacup_handlers.has_key? key
+        break if handled or not ancestor.respond_to? :teacup_handlers
+
+        if ancestor.teacup_handlers.has_key? key
           ancestor.teacup_handlers[key].call(self, value)
           handled = true
         end
       end
 
       if not handled
+        if key =~ /^set[A-Z]/
+          assign = nil
+          setter = key.to_s + ':'
+        else
+          assign = :"#{key}="
+          setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
+        end
+
         if key == :title && UIButton === self
           # NSLog "Setting #{key} = #{value.inspect}, forState:UIControlStateNormal"
           setTitle(value, forState: UIControlStateNormal)
@@ -151,7 +153,7 @@ class UIView
     end
 
     def teacup_assign key, &block
-      teacup_handlers[key] = &block
+      teacup_handlers[key] = block
     end
   end
 
