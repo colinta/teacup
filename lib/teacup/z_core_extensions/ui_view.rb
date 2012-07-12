@@ -111,6 +111,7 @@ class UIView
 
     target.class.ancestors.each do |ancestor|
       if ancestor.respond_to? :teacup_handlers and ancestor.teacup_handlers.has_key? key
+        NSLog "#{ancestor.name} is Handling #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
         ancestor.teacup_handlers[key].call(target, value)
         return
       end
