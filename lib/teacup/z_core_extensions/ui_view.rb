@@ -9,6 +9,9 @@ class UIView
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
 
+  # Enable debug messages for this object
+  attr_accessor :debug
+
   # The current stylesheet will be looked at when properties are needed.  It
   # is loaded lazily, so that assignment can occur before the Stylesheet has
   # been created.
@@ -84,63 +87,55 @@ class UIView
   # a warning message will be emitted.
   #
   # @param Hash  the properties to set.
-  def style(properties)
-    if layer_properties = properties.delete(:layer)
-      layer_properties.each do |key, value|
-        assign = :"#{key}="
-        setter = ('set' + key.to_s.sub(/^./) {|c| c.capitalize}).to_sym
-        if layer.respond_to?(assign)
-          # NSLog "Setting layer.#{key} = #{value.inspect}"
-          layer.send(assign, value)
-        elsif layer.respond_to?(setter)
-          # NSLog "Calling layer(#{key}, #{value.inspect})"
-          layer.send(setter, value)
-        else
-          NSLog "Teacup WARN: Can't apply #{key} to #{self.layer.inspect}"
-        end
-      end
-    end
-
+  def style(properties, orientation=nil)
+    _apply_hash self, properties
     properties.each do |key, value|
-      handled = false
-      self.class.ancestors.each do |ancestor|
-        break if handled or not ancestor.respond_to? :teacup_handlers
-
-        if ancestor.teacup_handlers.has_key? key
-          ancestor.teacup_handlers[key].call(self, value)
-          handled = true
-        end
-      end
-
-      if not handled
-        if key =~ /^set[A-Z]/
-          assign = nil
-          setter = key.to_s + ':'
-        else
-          assign = :"#{key}="
-          setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
-        end
-
-        if key == :title && UIButton === self
-          # NSLog "Setting #{key} = #{value.inspect}, forState:UIControlStateNormal"
-          setTitle(value, forState: UIControlStateNormal)
-        # elsif key == :normal && UIButton === self
-        #   setImage(value, forState: UIControlStateNormal)
-        # elsif key == :highlighted && UIButton === self
-        #   setImage(value, forState: UIControlStateHighlighted)
-        elsif assign and respond_to?(assign)
-          # NSLog "Setting #{key} = #{value.inspect}"
-          send(assign, value)
-        elsif respondsToSelector(setter)
-          # NSLog "Calling self(#{key}, #{value.inspect})"
-          send(setter, value)
-        else
-          NSLog "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{self.inspect}"
-        end
-      end
+      _apply self, key, value
     end
+
     self.setNeedsDisplay
     self.setNeedsLayout
+  end
+
+  def _apply_hash(target, properties)
+    properties.each do |key, value|
+      _apply target, key, value
+    end
+  end
+
+  def _apply(target, key, value)
+    # you can send methods to subviews and such this way
+    if Hash === value
+      return _apply_hash target.send(key), value
+    end
+
+    target.class.ancestors.each do |ancestor|
+      if ancestor.respond_to? :teacup_handlers and ancestor.teacup_handlers.has_key? key
+        ancestor.teacup_handlers[key].call(target, value)
+        return
+      end
+    end
+
+    if key =~ /^set[A-Z]/
+      assign = nil
+      setter = key.to_s + ':'
+    else
+      assign = :"#{key}="
+      setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
+    end
+
+    if key == :title && UIButton === target
+      NSLog "Setting #{key} = #{value.inspect}, forState:UIControlStateNormal" if target.respond_to? :debug and target.debug
+      target.setTitle(value, forState: UIControlStateNormal)
+    elsif assign and target.respond_to?(assign)
+      NSLog "Setting #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
+      target.send(assign, value)
+    elsif target.respondsToSelector(setter)
+      NSLog "Calling target(#{key}, #{value.inspect})" if target.respond_to? :debug and target.debug
+      target.send(setter, value)
+    else
+      NSLog "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{target.inspect}"
+    end
   end
 
   def top_level_view
