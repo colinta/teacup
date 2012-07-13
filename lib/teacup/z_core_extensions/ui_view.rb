@@ -54,6 +54,30 @@ class UIView
     subviews.each{ |subview| subview.restyle!(orientation) }
   end
 
+  # get one stylesheet by stylename
+  # my_view[:button] :button => #<UIButton..>
+  def [] name
+    r = []
+    subviews.each do |view|
+      if view.stylename == name
+        return view
+      end
+    end
+    nil
+  end
+
+  # get stylesheets by stylename
+  # my_view.all :button => [#<UIButton..>, #<UIButton...>]
+  def all name
+    r = []
+    subviews.each do |view|
+      if view.stylename == name
+        r.push name
+      end
+    end
+    r
+  end
+
   # Animate a change to a new stylename.
   #
   # This is equivalent to wrapping a call to .stylename= inside
