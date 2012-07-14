@@ -108,17 +108,17 @@ class UIView
 
     case orientation
     when UIInterfaceOrientationPortrait
-      properties.update(portrait) if Hash === portrait
-      properties.update(upside_up) if Hash === upside_up
+      properties = portrait.update(properties) if Hash === portrait
+      properties = upside_up.update(properties) if Hash === upside_up
     when UIInterfaceOrientationPortraitUpsideDown
-      properties.update(portrait) if Hash === portrait
-      properties.update(upside_down) if Hash === upside_down
+      properties = portrait.update(properties) if Hash === portrait
+      properties = upside_down.update(properties) if Hash === upside_down
     when UIInterfaceOrientationLandscapeLeft
-      properties.update(landscape) if Hash === landscape
-      properties.update(landscape_left) if Hash === landscape_left
+      properties = landscape.update(properties) if Hash === landscape
+      properties = landscape_left.update(properties) if Hash === landscape_left
     when UIInterfaceOrientationLandscapeRight
-      properties.update(landscape) if Hash === landscape
-      properties.update(landscape_right) if Hash === landscape_right
+      properties = landscape.update(properties) if Hash === landscape
+      properties = landscape_right.update(properties) if Hash === landscape_right
     end
 
     # convert top/left/width/height to frame values
