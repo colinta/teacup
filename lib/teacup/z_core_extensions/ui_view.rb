@@ -88,26 +88,33 @@ class UIView
   #
   # @param Hash  the properties to set.
   def style(properties, orientation=nil)
-    _apply_hash self, properties
+    teacup_apply_hash self, properties
     properties.each do |key, value|
-      _apply self, key, value
+      teacup_apply self, key, value
     end
 
     self.setNeedsDisplay
     self.setNeedsLayout
   end
 
-  def _apply_hash(target, properties)
+  # applies a Hash of styles, and converts the frame styles (origin, size, top,
+  # left, width, height) into one frame property.
+  def teacup_apply_hash(target, properties)
     properties.each do |key, value|
-      _apply target, key, value
+      teacup_apply target, key, value
     end
   end
 
-  def _apply(target, key, value)
+  # Applies a single style to a target.  Delegates to a teacup_handler if one is
+  # found.
+  def teacup_apply(target, key, value)
     # you can send methods to subviews and such this way
     if Hash === value
-      return _apply_hash target.send(key), value
+      return teacup_apply_hash target.send(key), value
     end
+
+    # note about `debug`: not all objects in this method are a UIView instance,
+    # so don't assume that the object *has* a debug method.
 
     target.class.ancestors.each do |ancestor|
       if ancestor.respond_to? :teacup_handlers and ancestor.teacup_handlers.has_key? key
