@@ -29,18 +29,18 @@ class UIView
       @teacup_handlers ||= {}
     end
 
-    def teacup_assign keys*, &block
-      if keys.length == 0
+    def teacup_assign *stylenames, &block
+      if stylenames.length == 0
         raise TypeError.new "No style names assigned in Teacup::UIView##teacup_assign"
-      elsif keys.length == 1 and Hash === keys[0]
-        keys.each do |key, alias|
-          teacup_handlers[alias] = proc { |view, value|
-            teacup_apply view, key, value
+      elsif stylenames.length == 1 and Hash === stylenames[0]
+        stylenames.each do |stylename, style_alias|
+          teacup_handlers[style_alias] = proc { |view, value|
+            teacup_apply view, style_name, value
           }
         end
       else
-        keys.each do |key|
-          teacup_handlers[key] = block
+        stylenames.each do |stylename|
+          teacup_handlers[stylename] = block
         end
       end
       self
