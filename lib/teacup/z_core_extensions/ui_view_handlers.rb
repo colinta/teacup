@@ -37,6 +37,7 @@ class UIView
           teacup_handlers[alias] = proc { |view, value|
             teacup_apply view, key, value
           }
+        end
       else
         keys.each do |key|
           teacup_handlers[key] = block
