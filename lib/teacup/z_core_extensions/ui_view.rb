@@ -108,11 +108,6 @@ class UIView
   # Applies a single style to a target.  Delegates to a teacup_handler if one is
   # found.
   def teacup_apply(target, key, value)
-    # you can send methods to subviews and such this way
-    if Hash === value
-      return teacup_apply_hash target.send(key), value
-    end
-
     # note about `debug`: not all objects in this method are a UIView instance,
     # so don't assume that the object *has* a debug method.
 
@@ -122,6 +117,12 @@ class UIView
         ancestor.teacup_handlers[key].call(target, value)
         return
       end
+    end
+
+    # you can send methods to subviews (e.g. UIButton#titleLabel) and CALayers
+    # (e.g. UIView#layer) by assigning a hash to a style name.
+    if Hash === value
+      return teacup_apply_hash target.send(key), value
     end
 
     if key =~ /^set[A-Z]/
