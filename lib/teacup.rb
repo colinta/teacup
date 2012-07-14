@@ -17,8 +17,8 @@ Motion::Project::App.setup do |app|
     insert_point = index + 1
   end
 
+  app.files.insert(insert_point, File.join(File.dirname(__FILE__), 'dummy.rb'))
   Dir.glob(File.join(File.dirname(__FILE__), 'teacup/**/*.rb')).reverse.each do |file|
     app.files.insert(insert_point, file)
   end
-  app.files.push(File.join(File.dirname(__FILE__), 'dummy.rb'))
 end
