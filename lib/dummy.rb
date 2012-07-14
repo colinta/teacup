@@ -28,6 +28,8 @@ class DummyLayer < CALayer
     setShadowOffset(nil)
     setShadowColor(nil)
     setShadowPath(nil)
+    setOpaque(nil)
+    setTranslucent(nil)
   end
 
 end
