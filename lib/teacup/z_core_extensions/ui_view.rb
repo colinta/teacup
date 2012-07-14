@@ -150,14 +150,4 @@ class UIView
     return self
   end
 
-  class << self
-    def teacup_handlers
-      @teacup_handlers ||= {}
-    end
-
-    def teacup_assign key, &block
-      teacup_handlers[key] = block
-    end
-  end
-
 end
