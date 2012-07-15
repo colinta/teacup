@@ -53,5 +53,5 @@ UIView.teacup_handler :size { |view, size|
 ##|  UIButton
 ##|
 UIButton.teacup_handler :title { |view, title|
-  target.setTitle(title, forState: UIControlStateNormal)
+  view.setTitle(title, forState: UIControlStateNormal)
 }
