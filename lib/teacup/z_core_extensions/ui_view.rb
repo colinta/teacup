@@ -47,7 +47,7 @@ class UIView
   end
 
   def restyle!(orientation=nil)
-    style(stylesheet.query(@stylename)) if @stylesheet
+    style(stylesheet.query(@stylename), orientation) if @stylesheet
     subviews.each{ |subview| subview.restyle!(orientation) }
   end
 
