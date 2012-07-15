@@ -66,6 +66,30 @@ describe "Teacup::View" do
       @view.layer.borderWidth.should == 10
     end
 
+    it 'should merge :extends properties' do
+      @view.style(text: "text", extends: { text: "extended", tag: 1 })
+      @view.tag.should == 1
+      @view.text.should == "text"
+    end
+
+    it 'should merge hashes' do
+      @view.style({layer: {borderWidth: 10}, extends: { layer: { borderWidth: 20, opacity: 0.5 } }}, UIInterfaceOrientationPortrait)
+      @view.layer.opacity.should == 0.5
+      @view.layer.borderWidth.should == 10
+    end
+
+    it 'should merge and flatten orientation rules' do
+      @view.style({portrait: {text: "text"}, extends: { portrait: { text: "extended", tag: 1 } }}, UIInterfaceOrientationPortrait)
+      @view.tag.should == 1
+      @view.text.should == "text"
+    end
+
+    it 'should respect precedence rules' do
+      @view.style({text: "text", extends: { portrait: { text: "extended", tag: 1 } }}, UIInterfaceOrientationPortrait)
+      @view.tag.should == 1
+      @view.text.should == "text"
+    end
+
     it 'should warn about unknown thingies' do
       @view.style(partyTime: :always)
     end

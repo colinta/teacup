@@ -88,8 +88,8 @@ describe "Teacup::Stylesheet" do
 
     end
 
-    it 'should union different properties' do
-      @stylesheet.query(:left_label)[:font].should == "IMPACT"
+    it 'should put extended properties into an "extends" Hash' do
+      @stylesheet.query(:left_label)[:extends][:font].should == "IMPACT"
       @stylesheet.query(:left_label)[:left].should == 100
     end
 
@@ -99,8 +99,10 @@ describe "Teacup::Stylesheet" do
 
     it 'should follow a chain of extends' do
       @stylesheet.query(:how_much)[:backgroundColor].should == :red
-      @stylesheet.query(:how_much)[:left] == 100
-      @stylesheet.query(:how_much)[:font] == "IMPACT"
+      @stylesheet.query(:how_much)[:extends][:backgroundColor].should == :green
+      @stylesheet.query(:how_much)[:extends][:extends][:backgroundColor].should == :blue
+      @stylesheet.query(:how_much)[:extends][:left] == 100
+      @stylesheet.query(:how_much)[:extends][:extends][:font] == "IMPACT"
     end
   end
 
@@ -241,18 +243,18 @@ describe "Teacup::Stylesheet" do
     it 'should give precedence to later imports' do
       stylesheet = Teacup::Stylesheet.new do
         import Teacup::Stylesheet.new{
-          style :label,
+          style :label_bla,
             text: "Imported first",
             backgroundColor: :blue
         }
 
         import Teacup::Stylesheet.new{
-          style :label,
+          style :label_bla,
             text: "Imported last"
         }
       end
-      stylesheet.query(:label)[:text].should == "Imported last"
-      stylesheet.query(:label)[:backgroundColor].should == :blue
+      stylesheet.query(:label_bla)[:text].should == "Imported last"
+      stylesheet.query(:label_bla)[:backgroundColor].should == :blue
     end
 
     it 'should give precedence to less-nested imports' do
@@ -289,7 +291,7 @@ describe "Teacup::Stylesheet" do
       end
 
       stylesheet.query(:my_textfield)[:text].should == "Imported"
-      stylesheet.query(:my_textfield)[:backgroundColor].should == :blue
+      stylesheet.query(:my_textfield)[:extends][:backgroundColor].should == :blue
       stylesheet.query(:my_textfield)[:borderRadius].should == 10
     end
   end
