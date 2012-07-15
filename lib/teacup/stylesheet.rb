@@ -208,6 +208,10 @@ module Teacup
     def properties_for(stylename, so_far={}, seen={})
       return so_far if seen[self]
 
+      # the block handed to Stylesheet#new is not run immediately - it is run
+      # the first time the stylesheet is queried.  This fixes bugs related to
+      # some resources (fonts) not available when the application is first
+      # started.
       if @block
         instance_eval &@block
         @block = nil
