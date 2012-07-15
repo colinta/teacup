@@ -13,15 +13,15 @@
 # You can declare multiple names in the teacup_handler method to create aliases
 # for your handler:
 #
-#    UIButton.teacup_assign :returnKeyType, :returnkey { |view, keytype|
+#    UIButton.teacup_handler :returnKeyType, :returnkey { |view, keytype|
 #      view.setReturnKeyType(keytype)
 #    }
 #
 # Since teacup already supports translating a property like `returnKeyType` into
 # the setter `setReturnKeyType`, you could just alias.  Assign a hash to
-# `teacup_assign`:
+# `teacup_handler`:
 #
-#     UIButton.teacup_assign returnKeyType: :returnkey
+#     UIButton.teacup_handler returnKeyType: :returnkey
 class UIView
 
   class << self
@@ -29,19 +29,22 @@ class UIView
       @teacup_handlers ||= {}
     end
 
-    def teacup_assign *stylenames, &block
+    def teacup_handler *stylenames, &block
       if stylenames.length == 0
-        raise TypeError.new "No style names assigned in Teacup::UIView##teacup_assign"
-      elsif stylenames.length == 1 and Hash === stylenames[0]
-        stylenames.each do |stylename, style_alias|
-          teacup_handlers[style_alias] = proc { |view, value|
-            teacup_apply view, style_name, value
-          }
-        end
+        raise TypeError.new "No style names assigned in Teacup::UIView##teacup_handler"
       else
         stylenames.each do |stylename|
           teacup_handlers[stylename] = block
         end
+      end
+      self
+    end
+
+    def teacup_alias aliases
+      aliases.each do |stylename, style_alias|
+        teacup_handlers[style_alias] = proc { |view, value|
+          teacup_apply view, style_name, value
+        }
       end
       self
     end
