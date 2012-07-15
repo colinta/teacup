@@ -404,6 +404,37 @@ jump into the project and offer suggestions for its future.
 
 And we're usually hanging out over at the `#teacuprb` channel on `irc.freenode.org`.
 
+The Dummy
+---------
+
+If you get an error that looks like this:
+
+    Objective-C stub for message `setHidesWhenStopped:' type `v@:c' not
+    precompiled. Make sure you properly link with the framework or library that
+    defines this message.
+
+You need to add your method to dummy.rb.  This is a compiler issue, nothing we
+can do about it except build up a huge dummy.rb file that has just about every
+method that you would want to style.
+
+Example
+=======
+
+The error above was from trying to style the
+`UIActivityIndicatorView#hidesWhenStopped` property.  Make a new `Dummy` class,
+subclass the class *where the method is defined* (not a subclass, please) and
+add that method to a `dummy` method.  You should assign it `nil` so that the
+method signature looks right.  And you should mark it private, too.
+
+```ruby
+class DummyActivityIndicatorView < UIActivityIndicatorView
+private
+  def dummy
+    setHidesWhenStopped(nil)
+  end
+end
+```
+
 Bugs
 ----
 

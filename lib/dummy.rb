@@ -1,34 +1,34 @@
-
 class DummyView < UIView
-
+private
   def dummy
     setFrame(nil)
     setOpaque(nil)
   end
-
 end
 
-
 class DummyScrollView < UIScrollView
-
+private
   def dummy
     setScrollEnabled(nil)
   end
-
 end
 
+class DummyActivityIndicatorView < UIActivityIndicatorView
+private
+  def dummy
+    setHidesWhenStopped(nil)
+  end
+end
 
 class DummyLabel < UILabel
-
+private
   def dummy
     setAdjustsFontSizeToFitWidth(nil)
   end
-
 end
 
-
 class DummyLayer < CALayer
-
+private
   def dummy
     setCornerRadius(nil)
     setTransform(nil)
@@ -42,5 +42,4 @@ class DummyLayer < CALayer
     setOpaque(nil)
     setTranslucent(nil)
   end
-
 end
