@@ -46,6 +46,35 @@ describe "Teacup::View" do
     end
   end
 
+  describe 'import' do
+    before do
+      @import_view = UIView.new
+
+      Teacup::Stylesheet.new :to_import do
+        style :view,
+          top: 20,
+          portrait: {
+            top: 30
+          }
+      end
+
+      @import_stylesheet = Teacup::Stylesheet.new do
+        import :to_import
+
+        style :view,
+          top: 40
+      end
+    end
+
+    it 'should always prefer more local styles' do
+      @import_view.stylename = :view
+      @import_view.stylesheet = @import_stylesheet
+
+      @import_view.restyle!(orientation=UIInterfaceOrientationPortrait)
+      @import_view.frame.origin.y.should == 40
+    end
+  end
+
   describe 'style' do
 
     it 'should assign any random property that works' do
