@@ -153,10 +153,11 @@ module Teacup
       this_rule = properties_for(stylename)
 
       if also_include = this_rule.delete(:extends)
-        query(also_include).update(this_rule)
-      else
-        this_rule
+        # we stick the extended Hash onto 'extends', which will get picked
+        # up by UIView#style, which handles precedence.
+        this_rule[:extends] = query(also_include)
       end
+      this_rule
     end
 
     # Add a set of properties for a given stylename or multiple stylenames.

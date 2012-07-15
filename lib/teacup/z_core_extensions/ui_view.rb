@@ -93,11 +93,17 @@ class UIView
     # convert top/left/width/height and orientation properties
     clean_properties properties, orientation
 
+    # check for `:extends` and merge those in
+    while extended_properties = properties.delete(:extends)
+      clean_properties extended_properties, orientation
+      teacup_merge properties, extended_properties
+    end
+
     if stylesheet
       self.class.ancestors.each do |ancestor|
-        if default_properties = stylesheet.query(ancestor)
-          clean_properties default_properties, orientation
-          properties = default_properties.merge properties
+        if extended_properties = stylesheet.query(ancestor)
+          clean_properties extended_properties, orientation
+          teacup_merge properties, extended_properties
         end
       end
     end
@@ -140,6 +146,11 @@ class UIView
       end
     end
     self.setNeedsDisplay
+  end
+
+  # merges two Hashs - it's a deep_merge.
+  def teacup_merge properties, extended_properties
+    extended_properties.update(properties)
   end
 
   # Merge definitions for 'frame' and orientation styles into one.
