@@ -41,7 +41,7 @@ class UIView
     end
 
     def teacup_alias aliases
-      aliases.each do |stylename, style_alias|
+      aliases.each do |style_alias, stylename|
         teacup_handlers[style_alias] = proc { |view, value|
           teacup_apply view, style_name, value
         }
