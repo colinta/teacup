@@ -79,7 +79,7 @@ describe "Teacup::View" do
     end
 
     it 'should merge and flatten orientation rules' do
-      @view.style({portrait: {text: "text"}, extends: { portrait: { text: "extended", tag: 1 } }}, UIInterfaceOrientationPortrait)
+      @view.style({portrait: {text: "text"}, extends: { portrait: { text: "ignored", tag: 1 } }}, UIInterfaceOrientationPortrait)
       @view.tag.should == 1
       @view.text.should == "text"
     end
