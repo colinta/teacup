@@ -173,7 +173,7 @@ module Teacup
     #       title: "Continue!",
     #       top: 50
     #   end
-    def style(*queries, &block)
+    def style(*queries)
       properties = {}
 
       # if the last argument is a Hash, include it
@@ -181,7 +181,7 @@ module Teacup
 
       # iterate over the style names and assign properties
       queries.each do |stylename|
-        styles[stylename].update(properties)
+        Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
       end
     end
 
@@ -223,7 +223,7 @@ module Teacup
         stylesheet.properties_for(stylename, so_far, seen)
       end
 
-      so_far.update(styles[stylename])
+      Teacup::merge_defaults styles[stylename], so_far, so_far
     end
 
     # The list of Stylesheets or names that have been imported into this one.

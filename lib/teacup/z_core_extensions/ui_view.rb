@@ -96,14 +96,14 @@ class UIView
     # check for `:extends` and merge those in
     while extended_properties = properties.delete(:extends)
       clean_properties extended_properties, orientation
-      teacup_merge properties, extended_properties
+      Teacup::merge_defaults!(properties, extended_properties)
     end
 
     if stylesheet
       self.class.ancestors.each do |ancestor|
         if extended_properties = stylesheet.query(ancestor)
           clean_properties extended_properties, orientation
-          teacup_merge properties, extended_properties
+          Teacup::merge_defaults!(properties, extended_properties)
         end
       end
     end
@@ -146,19 +146,6 @@ class UIView
       end
     end
     self.setNeedsDisplay
-  end
-
-  # merges two Hashes.  This is similar to `Hash#update`, except the values will
-  # be merged recursively (aka deep merge) when both values for a key are Hashes
-  def teacup_merge properties, extended_properties
-    extended_properties.each do |key, value|
-      if not properties.has_key? key
-        properties[key] = value
-      elsif Hash === value and Hash === properties[key]
-        teacup_merge properties[key], value
-      end
-    end
-    properties
   end
 
   # Merge definitions for 'frame' and orientation styles into one.

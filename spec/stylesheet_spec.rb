@@ -311,8 +311,8 @@ describe "Teacup::Stylesheet" do
           }
       end
 
-      stylesheet.query(:my_textfield)[:opacity].should == 0.5
-      stylesheet.query(:my_textfield)[:borderRadius].should == 10
+      stylesheet.query(:my_textfield)[:layer][:opacity].should == 0.5
+      stylesheet.query(:my_textfield)[:layer][:borderRadius].should == 10
     end
   end
 end
