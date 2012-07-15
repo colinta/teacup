@@ -294,5 +294,25 @@ describe "Teacup::Stylesheet" do
       stylesheet.query(:my_textfield)[:extends][:backgroundColor].should == :blue
       stylesheet.query(:my_textfield)[:borderRadius].should == 10
     end
+
+    it 'should import rules using a deep merge strategy' do
+      stylesheet = Teacup::Stylesheet.new do
+        import Teacup::Stylesheet.new{
+          style :my_textfield,
+            layer: {
+              borderRadius: 1,
+              opacity: 0.5
+            }
+        }
+
+        style :my_textfield,
+          layer: {
+            borderRadius: 10
+          }
+      end
+
+      stylesheet.query(:my_textfield)[:opacity].should == 0.5
+      stylesheet.query(:my_textfield)[:borderRadius].should == 10
+    end
   end
 end
