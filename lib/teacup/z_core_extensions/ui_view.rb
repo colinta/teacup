@@ -148,19 +148,14 @@ class UIView
     self.setNeedsDisplay
   end
 
-  # merges two Hashs.  When the value of the "lesser" Hash is a Hash, it will be
-  # merged into the "greater" Hash, or it will be assigned if the value is True
-  # or not assigned at all.
+  # merges two Hashes.  This is similar to `Hash#update`, except the values will
+  # be merged recursively (aka deep merge) when both values for a key are Hashes
   def teacup_merge properties, extended_properties
     extended_properties.each do |key, value|
       if not properties.has_key? key
         properties[key] = value
-      elsif Hash === value
-        if Hash === properties[key]
-          teacup_merge properties[key], value
-        elsif TrueClass === properties[key]
-          properties[key] = value
-        end
+      elsif Hash === value and Hash === properties[key]
+        teacup_merge properties[key], value
       end
     end
     properties
