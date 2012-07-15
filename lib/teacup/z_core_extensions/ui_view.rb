@@ -133,10 +133,7 @@ class UIView
       setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
     end
 
-    if key == :title && UIButton === target
-      NSLog "Setting #{key} = #{value.inspect}, forState:UIControlStateNormal" if target.respond_to? :debug and target.debug
-      target.setTitle(value, forState: UIControlStateNormal)
-    elsif assign and target.respond_to?(assign)
+    if assign and target.respond_to?(assign)
       NSLog "Setting #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
       target.send(assign, value)
     elsif target.respondsToSelector(setter)
