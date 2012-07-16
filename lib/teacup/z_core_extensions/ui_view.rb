@@ -74,6 +74,21 @@ class UIView
     UIView.commitAnimations
   end
 
+  # Animate a change to new styles
+  #
+  # This is equivalent to wrapping a call to .style() inside
+  # UIView.beginAnimations.
+  #
+  # @param Hash   the new styles and options for the animation
+  #
+  def animate_to_style(style)
+    UIView.beginAnimations(nil, context: nil)
+    UIView.setAnimationDuration(style[:duration]) if style[:duration]
+    UIView.setAnimationCurve(style[:curve]) if style[:curve]
+    style(style)
+    UIView.commitAnimations
+  end
+
   # Apply style properties to this element.
   #
   # Takes a hash of properties such as may have been read from a stylesheet
