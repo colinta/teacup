@@ -10,6 +10,7 @@ class DummyScrollView < UIScrollView
 private
   def dummy
     setScrollEnabled(nil)
+    setShowsVerticalScrollIndicator(nil)
   end
 end
 
