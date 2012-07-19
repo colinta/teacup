@@ -11,6 +11,11 @@ class UIView
         return view
       end
     end
+    subviews.each do |view|
+      if v = view[name]
+        return v
+      end
+    end
     nil
   end
 
