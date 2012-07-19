@@ -93,8 +93,10 @@ class UIViewController
   #   stylesheet = :ipadhorizontal
   def stylesheet=(new_stylesheet)
     @stylesheet = new_stylesheet
-    view.stylesheet = new_stylesheet
-    view.restyle!
+    if view
+      view.stylesheet = new_stylesheet
+      view.restyle!
+    end
   end
 
   def top_level_view
