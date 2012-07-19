@@ -28,6 +28,17 @@ private
   end
 end
 
+class DummyTextField < UITextField
+private
+  def dummy
+    setReturnKeyType(nil)
+    setEnablesReturnKeyAutomatically(nil)
+    setAutocapitalizationType(nil)
+    setAutocorrectionType(nil)
+    setSpellCheckingType(nil)
+  end
+end
+
 class DummyLayer < CALayer
 private
   def dummy
