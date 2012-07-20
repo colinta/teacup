@@ -32,7 +32,6 @@ class DummyTextField < UITextField
 private
   def dummy
     setReturnKeyType(nil)
-    setEnablesReturnKeyAutomatically(nil)
     setAutocapitalizationType(nil)
     setAutocorrectionType(nil)
     setSpellCheckingType(nil)
