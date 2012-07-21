@@ -26,6 +26,7 @@ class UIView
       if view.stylename == name
         r.push name
       end
+      r += view.viewsWithStylename name
     end
     r
   end
