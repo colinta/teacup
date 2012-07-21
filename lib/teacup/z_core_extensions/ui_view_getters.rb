@@ -25,7 +25,7 @@ class UIView
 
   # get stylesheets by stylename
   # my_view.all :button => [#<UIButton..>, #<UIButton...>]
-  def all name
+  def viewsWithStylename name
     r = []
     subviews.each do |view|
       if view.stylename == name
