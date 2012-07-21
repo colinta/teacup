@@ -5,6 +5,10 @@ class UIView
   # get one stylesheet by stylename
   # my_view[:button] :button => #<UIButton..>
   def [] name
+    if name.is_a? Fixnum
+      return self.subviews[name]
+    end
+
     r = []
     subviews.each do |view|
       if view.stylename == name
