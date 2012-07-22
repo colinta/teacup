@@ -1,5 +1,5 @@
 unless defined?(Motion::Project::Config)
-  raise "This file (teacup) must be required within a RubyMotion project Rakefile."
+  raise "The teacup gem must be required within a RubyMotion project Rakefile."
 end
 
 
