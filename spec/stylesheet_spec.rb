@@ -88,8 +88,8 @@ describe "Teacup::Stylesheet" do
 
     end
 
-    it 'should put extended properties into an "extends" Hash' do
-      @stylesheet.query(:left_label)[:extends][:font].should == "IMPACT"
+    it 'should put extended properties into an "extends" Array of Hashes' do
+      @stylesheet.query(:left_label)[:extends][0][:font].should == "IMPACT"
       @stylesheet.query(:left_label)[:left].should == 100
     end
 
@@ -99,10 +99,10 @@ describe "Teacup::Stylesheet" do
 
     it 'should follow a chain of extends' do
       @stylesheet.query(:how_much)[:backgroundColor].should == :red
-      @stylesheet.query(:how_much)[:extends][:backgroundColor].should == :green
-      @stylesheet.query(:how_much)[:extends][:extends][:backgroundColor].should == :blue
-      @stylesheet.query(:how_much)[:extends][:left] == 100
-      @stylesheet.query(:how_much)[:extends][:extends][:font] == "IMPACT"
+      @stylesheet.query(:how_much)[:extends][0][:backgroundColor].should == :green
+      @stylesheet.query(:how_much)[:extends][0][:extends][0][:backgroundColor].should == :blue
+      @stylesheet.query(:how_much)[:extends][0][:left] == 100
+      @stylesheet.query(:how_much)[:extends][0][:extends][0][:font] == "IMPACT"
     end
   end
 
@@ -291,7 +291,7 @@ describe "Teacup::Stylesheet" do
       end
 
       stylesheet.query(:my_textfield)[:text].should == "Imported"
-      stylesheet.query(:my_textfield)[:extends][:backgroundColor].should == :blue
+      stylesheet.query(:my_textfield)[:extends][0][:backgroundColor].should == :blue
       stylesheet.query(:my_textfield)[:borderRadius].should == 10
     end
 

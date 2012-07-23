@@ -152,10 +152,11 @@ module Teacup
     def query(stylename)
       this_rule = properties_for(stylename)
 
-      if also_include = this_rule.delete(:extends)
+      if also_includes = this_rule.delete(:extends)
+        also_includes = [also_includes] unless also_includes.is_a? Array
         # we stick the extended Hash onto 'extends', which will get picked
         # up by UIView#style, which handles precedence.
-        this_rule[:extends] = query(also_include)
+        this_rule[:extends] = also_includes.map {|also_include| query(also_include) }
       end
       this_rule
     end

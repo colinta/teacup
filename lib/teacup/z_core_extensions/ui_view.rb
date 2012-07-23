@@ -94,9 +94,13 @@ class UIView
     clean_properties properties, orientation
 
     # check for `:extends` and merge those in
-    while extended_properties = properties.delete(:extends)
-      clean_properties extended_properties, orientation
-      Teacup::merge_defaults!(properties, extended_properties)
+    while extended_properties_list = properties.delete(:extends)
+      extended_properties_list = [extended_properties_list] unless extended_properties_list.is_a? Array
+
+      extended_properties_list.each { |extended_properties|
+        clean_properties extended_properties, orientation
+        Teacup::merge_defaults!(properties, extended_properties)
+      }
     end
 
     if stylesheet

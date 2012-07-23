@@ -107,6 +107,12 @@ describe "Teacup::View" do
       @view.layer.borderWidth.should == 10
     end
 
+    it 'should merge multiple extends' do
+      @view.style({extends: [{layer: { borderWidth: 20 }}, {layer: { borderWidth: 10, opacity: 0.5 }}]}, UIInterfaceOrientationPortrait)
+      @view.layer.opacity.should == 0.5
+      @view.layer.borderWidth.should == 20
+    end
+
     it 'should merge and flatten orientation rules' do
       @view.style({portrait: {text: "text"}, extends: { portrait: { text: "ignored", tag: 1 } }}, UIInterfaceOrientationPortrait)
       @view.tag.should == 1
