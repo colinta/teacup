@@ -185,7 +185,8 @@ module Teacup
       if queries[-1].is_a? Hash
         properties = queries.pop
       else
-        raise "The last argument to Teacup::Stylesheet#style must be a Hash"
+        # empty style declarations are allowed
+        return
       end
 
       queries.each do |stylename|
