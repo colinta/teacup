@@ -21,7 +21,7 @@
 # the setter `setReturnKeyType`, you could just use an alias here instead.
 # Assign a hash to `Teacup.alias`:
 #
-#     Teacup.alias UIButton, returnKeyType: :returnkey
+#     Teacup.alias UIButton, :returnkey => :returnKeyType
 module Teacup
   module_function
 
