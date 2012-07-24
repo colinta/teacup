@@ -103,60 +103,13 @@ class UIView
   #
   # @param Hash  the properties to set.
   def style(properties, orientation=nil)
-    teacup_apply_hash self, properties
+    Teacup.apply_hash self, properties
     properties.each do |key, value|
-      teacup_apply self, key, value
+      Teacup.apply self, key, value
     end
 
     self.setNeedsDisplay
     self.setNeedsLayout
-  end
-
-  # applies a Hash of styles, and converts the frame styles (origin, size, top,
-  # left, width, height) into one frame property.
-  def teacup_apply_hash(target, properties)
-    properties.each do |key, value|
-      teacup_apply target, key, value
-    end
-  end
-
-  # Applies a single style to a target.  Delegates to a teacup_handler if one is
-  # found.
-  def teacup_apply(target, key, value)
-    # note about `debug`: not all objects in this method are a UIView instance,
-    # so don't assume that the object *has* a debug method.
-
-    target.class.ancestors.each do |ancestor|
-      if ancestor.respond_to? :teacup_handlers and ancestor.teacup_handlers.has_key? key
-        NSLog "#{ancestor.name} is Handling #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
-        ancestor.teacup_handlers[key].call(target, value)
-        return
-      end
-    end
-
-    # you can send methods to subviews (e.g. UIButton#titleLabel) and CALayers
-    # (e.g. UIView#layer) by assigning a hash to a style name.
-    if Hash === value
-      return teacup_apply_hash target.send(key), value
-    end
-
-    if key =~ /^set[A-Z]/
-      assign = nil
-      setter = key.to_s + ':'
-    else
-      assign = :"#{key}="
-      setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
-    end
-
-    if assign and target.respond_to?(assign)
-      NSLog "Setting #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
-      target.send(assign, value)
-    elsif target.respondsToSelector(setter)
-      NSLog "Calling target(#{key}, #{value.inspect})" if target.respond_to? :debug and target.debug
-      target.send(setter, value)
-    else
-      NSLog "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{target.inspect}"
-    end
   end
 
   def top_level_view

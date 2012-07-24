@@ -235,7 +235,7 @@ could break this out into a new feature.  **Handlers**.  Here is the `handler`
 for the `left` property:
 
 ```ruby
-UIView.teacup_handler :left { |view, x|
+Teacup.handler UIView, :left { |view, x|
   f = view.frame
   f.origin.x = x
   view.frame = f
@@ -245,18 +245,18 @@ UIView.teacup_handler :left { |view, x|
 How about setting the title of a `UIButton`?
 
 ```ruby
-UIButton.teacup_handler :title { |view, title|
+Teacup.handler UIButton, :title { |view, title|
   target.setTitle(title, forState: UIControlStateNormal)
 }
 ```
 
 You can also make aliases for long method names, or to shorten a style you use a
-lot.  You can alias two ways - give multiple names in a `teacup_handler` method,
-or use `teacup_alias`.
+lot.  You can alias two ways - give multiple names in a `Teacup.handler` method,
+or use `Teacup.alias`.
 
 ```ruby
 # the actual `left` handler offers an alias `x`
-UIView.teacup_handler :left, :x { |view, x|
+Teacup, handler UIView, :left, :x { |view, x|
   f = view.frame
   f.origin.x = x
   view.frame = f
@@ -264,7 +264,7 @@ UIView.teacup_handler :left, :x { |view, x|
 
 # but I speak japanese, and I want it to be called "hidari" instead, and I want
 # top to be "ue".
-UIView.teacup_alias :hidari => :left, :ue => :top
+Teacup.alias UIView, :hidari => :left, :ue => :top
 ```
 
 extends:
