@@ -360,26 +360,23 @@ Teacup::Stylesheet.new :register do
 end
 ```
 
-Soft Merging
-============
-
-As styles get extended and imported, they are merged into one Hash before
-getting applied.  The merging strategy we use is in a method called
-`Teacup::soft_merge`, and it works like this:
-
-1) Properties in the "bottom-most" `Hash` override properties in the
-   extended/imported `Hash`
-2) If both `Hash`es have a `Hash` for a given key, the hashes are merged.  The
-   exception is orientation hashes.
-
-Precedence
+Precedence, and Style
 ==========
 
-1) Within a `style` declaration, orientation-specific properties override generic properties
-2) Imported properties will be merged in, but no values from (1) will be overridden
-3) Extended styles will be merged in, but no values from (1) or (2) will be overridden
-4) Styles applied to an ancestor will be merged in, but no values from (1) or (2) or (3) will be overridden
+1. Within a `style` declaration, orientation-specific properties override generic properties
+2. Imported properties will be merged in, but no values from (1) will be overridden
+3. Extended styles will be merged in, but no values from (1) or (2) will be overridden
+4. Styles applied to an ancestor will be merged in, but no values from (1) or (2) or (3) will be overridden
 
+These rules are maintained in the `Style` class.  It starts by creating a Hash
+based on the `style` declaration, then merges the orientation styles, if
+applicable (orientation styles override).  Next it merges imports, then
+extends, and finally the class ancestors.  At each "merge" except orientation
+merges, it is a recursive-soft-merge, meaning that Hashes will be merged, but
+existing keys will be left alone.
+
+Unless you are going to be hacking on teacup, you do not need to understand the
+nitty-gritty - just remember the precedence rules.
 
 Development
 -----------
