@@ -36,7 +36,11 @@ module Teacup
         Overrides[orientation].each do |orientation_key|
           if override = properties.delete(orientation_key)
             # override is first, so it takes precedence
-            Teacup::merge_defaults override, properties, properties
+            if override.is_a? Hash
+              Teacup::merge_defaults override, properties, properties
+            elsif not properties.has_key? orientation_key
+              properties[orientation_key] = override
+            end
             properties.supports[orientation_key] = true
           end
         end
