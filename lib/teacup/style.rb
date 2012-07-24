@@ -10,6 +10,7 @@ module Teacup
 
     Orientations = [:portrait, :upside_up, :upside_down, :landscape, :landscape_left, :landscape_right]
     Overrides = {
+      0 => [:portrait, :upside_up],
       UIInterfaceOrientationPortrait => [:portrait, :upside_up],
       UIInterfaceOrientationPortraitUpsideDown => [:portrait, :upside_down],
       UIInterfaceOrientationLandscapeLeft => [:landscape, :landscape_left],
@@ -30,6 +31,9 @@ module Teacup
       properties = Style.new.update(self)
       properties.stylename = self.stylename
       properties.stylesheet = self.stylesheet
+
+      # at this point, we really DO need the orientation
+      orientation = UIDevice.currentDevice.orientation unless orientation
 
       # first, move orientation settings into properties "base" level.
       if orientation
