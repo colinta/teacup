@@ -152,11 +152,13 @@ module Teacup
     def query(stylename)
       this_rule = properties_for(stylename)
 
-      if also_include = this_rule.delete(:extends)
-        query(also_include).update(this_rule)
-      else
-        this_rule
+      if also_includes = this_rule.delete(:extends)
+        also_includes = [also_includes] unless also_includes.is_a? Array
+        # we stick the extended Hash onto 'extends', which will get picked
+        # up by UIView#style, which handles precedence.
+        this_rule[:extends] = also_includes.map {|also_include| query(also_include) }
       end
+      this_rule
     end
 
     # Add a set of properties for a given stylename or multiple stylenames.
@@ -172,7 +174,7 @@ module Teacup
     #       title: "Continue!",
     #       top: 50
     #   end
-    def style(*queries, &block)
+    def style(*queries)
       properties = {}
 
       # if the last argument is a Hash, include it
@@ -180,7 +182,7 @@ module Teacup
 
       # iterate over the style names and assign properties
       queries.each do |stylename|
-        styles[stylename].update(properties)
+        Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
       end
     end
 
@@ -207,6 +209,10 @@ module Teacup
     def properties_for(stylename, so_far={}, seen={})
       return so_far if seen[self]
 
+      # the block handed to Stylesheet#new is not run immediately - it is run
+      # the first time the stylesheet is queried.  This fixes bugs related to
+      # some resources (fonts) not available when the application is first
+      # started.
       if @block
         instance_eval &@block
         @block = nil
@@ -218,7 +224,7 @@ module Teacup
         stylesheet.properties_for(stylename, so_far, seen)
       end
 
-      so_far.update(styles[stylename])
+      Teacup::merge_defaults styles[stylename], so_far, so_far
     end
 
     # The list of Stylesheets or names that have been imported into this one.
@@ -235,10 +241,10 @@ module Teacup
       imported.map do |name_or_stylesheet|
         if Teacup::Stylesheet === name_or_stylesheet
           name_or_stylesheet
-        elsif Teacup::Stylesheet.stylesheets.key? name_or_stylesheet
+        elsif Teacup::Stylesheet.stylesheets.has_key? name_or_stylesheet
           Teacup::Stylesheet.stylesheets[name_or_stylesheet]
         else
-          raise "Teacup tried to import Stylesheet '#{name_or_stylesheet.inspect}' into Stylesheet[#{self.name}], but it didn't exist"
+          raise "Teacup tried to import Stylesheet #{name_or_stylesheet.inspect} into Stylesheet[#{self.name.inspect}], but it didn't exist"
         end
       end
     end
