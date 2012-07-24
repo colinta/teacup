@@ -1,4 +1,3 @@
-
 describe "Teacup::Stylesheet" do
 
   describe 'creation' do
@@ -31,7 +30,7 @@ describe "Teacup::Stylesheet" do
       end
     end
 
-    it 'should let you properties for a stylename' do
+    it 'should let you define properties for a stylename' do
       @stylesheet.query(:example_button)[:frame].should == [[0, 0], [100, 100]]
     end
 
@@ -50,11 +49,18 @@ describe "Teacup::Stylesheet" do
       @stylesheet = Teacup::Stylesheet.new do
         style :example_button,
           title: "Example!",
-          frame: [[0, 0], [100, 100]]
+          frame: [[0, 0], [100, 100]],
+          layer: {
+            borderRadius: 10,
+            opacity: 0.5
+          }
 
         style :example_button,
           backgroundColor: :blue,
-          frame: [[100, 100], [200, 200]]
+          frame: [[100, 100], [200, 200]],
+          layer: {
+            borderRadius: 20
+          }
       end
     end
 
@@ -65,6 +71,11 @@ describe "Teacup::Stylesheet" do
 
     it 'should give later properties precedence' do
       @stylesheet.query(:example_button)[:frame].should == [[100, 100], [200, 200]]
+    end
+
+    it 'should give merge hashes' do
+      @stylesheet.query(:example_button)[:layer][:borderRadius].should == 20
+      @stylesheet.query(:example_button)[:layer][:opacity].should == 0.5
     end
   end
 
@@ -88,12 +99,12 @@ describe "Teacup::Stylesheet" do
 
     end
 
-    it 'should union different properties' do
+    it 'should put extended properties into an "extends" Array of Hashes' do
       @stylesheet.query(:left_label)[:font].should == "IMPACT"
       @stylesheet.query(:left_label)[:left].should == 100
     end
 
-    it 'should given the raw properties precedence' do
+    it 'should give the "lowest" style properties precedence' do
       @stylesheet.query(:left_label)[:backgroundColor].should == :green
     end
 
@@ -126,18 +137,6 @@ describe "Teacup::Stylesheet" do
           backgroundColor: :blue
       end
 
-      # imported_anonymously = Teacup::Stylesheet.new do
-      #   style :label,
-      #     title: "Imported anonymously"
-      # end
-
-      # @anonymous_importer = Teacup::Stylesheet.new do
-      #   import imported_anonymously
-      #
-      #   style :label,
-      #     backgroundColor: :blue
-      # end
-
       Teacup::Stylesheet.new(:importrecursion) do
         import :importrecursion
 
@@ -168,11 +167,23 @@ describe "Teacup::Stylesheet" do
       @oo_name_importer.query(:label)[:backgroundColor].should == :blue
     end
 
-    # it 'should work with a value' do
-    #   @anonymous_importer.query(:label)
-    #   @anonymous_importer.query(:label)[:title].should == "Imported anonymously"
-    #   @oo_name_importer.query(:label)[:backgroundColor].should == :blue
-    # end
+    it 'should work with a value' do
+      imported_anonymously = Teacup::Stylesheet.new do
+        style :label,
+          title: "Imported anonymously"
+      end
+
+      anonymous_importer = Teacup::Stylesheet.new do
+        import imported_anonymously
+
+        style :label,
+          backgroundColor: :blue
+      end
+
+      anonymous_importer.query(:label)
+      anonymous_importer.query(:label)[:title].should == "Imported anonymously"
+      @oo_name_importer.query(:label)[:backgroundColor].should == :blue
+    end
 
     it 'should not explode if a cycle is created' do
       Teacup::Stylesheet[:importrecursion].query(:label)[:importtitle].should == "Import recursion"
@@ -241,18 +252,18 @@ describe "Teacup::Stylesheet" do
     it 'should give precedence to later imports' do
       stylesheet = Teacup::Stylesheet.new do
         import Teacup::Stylesheet.new{
-          style :label,
+          style :label_bla,
             text: "Imported first",
             backgroundColor: :blue
         }
 
         import Teacup::Stylesheet.new{
-          style :label,
+          style :label_bla,
             text: "Imported last"
         }
       end
-      stylesheet.query(:label)[:text].should == "Imported last"
-      stylesheet.query(:label)[:backgroundColor].should == :blue
+      stylesheet.query(:label_bla)[:text].should == "Imported last"
+      stylesheet.query(:label_bla)[:backgroundColor].should == :blue
     end
 
     it 'should give precedence to less-nested imports' do
@@ -271,6 +282,26 @@ describe "Teacup::Stylesheet" do
 
       stylesheet.query(:button)[:text].should == "Direct import"
       stylesheet.query(:button)[:backgroundColor].should == :blue
+    end
+
+    it 'should extend multiple entries, and prefer the first' do
+      stylesheet = Teacup::Stylesheet.new do
+        style :input,
+          origin: [0, 0],
+          backgroundColor: :white
+
+        style :textfield,
+          text: "Extended",
+          backgroundColor: :blue
+
+        style :my_textfield, extends: [:textfield, :input],
+          borderRadius: 10
+      end
+
+      stylesheet.query(:my_textfield)[:text].should == "Extended"
+      stylesheet.query(:my_textfield)[:backgroundColor].should == :blue
+      stylesheet.query(:my_textfield)[:origin].should == [0, 0]
+      stylesheet.query(:my_textfield)[:borderRadius].should == 10
     end
 
     it 'should give precedence to imported rules over extended rules' do
@@ -292,5 +323,26 @@ describe "Teacup::Stylesheet" do
       stylesheet.query(:my_textfield)[:backgroundColor].should == :blue
       stylesheet.query(:my_textfield)[:borderRadius].should == 10
     end
+
+    it 'should import rules using a deep merge strategy' do
+      stylesheet = Teacup::Stylesheet.new do
+        import Teacup::Stylesheet.new{
+          style :my_textfield,
+            layer: {
+              borderRadius: 1,
+              opacity: 0.5
+            }
+        }
+
+        style :my_textfield,
+          layer: {
+            borderRadius: 10
+          }
+      end
+
+      stylesheet.query(:my_textfield)[:layer][:opacity].should == 0.5
+      stylesheet.query(:my_textfield)[:layer][:borderRadius].should == 10
+    end
+
   end
 end

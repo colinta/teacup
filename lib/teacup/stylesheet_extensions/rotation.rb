@@ -10,17 +10,20 @@ module Teacup
       3.1415926
     end
 
-    # rotates the "up & down" direction
+    # rotates the "up & down" direction.  The bottom of the view will rotate
+    # towards the user as angle increases.
     def flip matrix, angle
       CATransform3DRotate(matrix, angle, 1, 0, 0)
     end
 
-    # rotates the "left & right" direction
+    # rotates the "left & right" direction.  The right side of the view will
+    # rotate towards the user as angle increases.
     def twist matrix, angle
       CATransform3DRotate(matrix, angle, 0, 1, 0)
     end
 
-    # spins, along the z axis
+    # spins, along the z axis.  This is probably the one you want, for
+    # "spinning" a view like you might a drink coaster or paper napkin.
     def spin matrix, angle
       CATransform3DRotate(matrix, angle, 0, 0, 1)
     end
