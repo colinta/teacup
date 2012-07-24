@@ -35,9 +35,21 @@ Teacup::Stylesheet.new(:first) do
     textColor:  UIColor.blueColor,
   })
 
+  style CustomView,
+    # for testing how styles override (this gets overridden by any property in
+    # a style block, regardless of whether it is in an orientation style)
+    portrait: {
+      alpha: 0.75
+    },
+    landscape: {
+      alpha: 0.75
+    }
+
   style(:background, {
+    alpha: 0.5,
     left: 10,
     top: 30,
+    backgroundColor:  UIColor.blackColor,
 
     portrait: {
       width:  300,
@@ -48,6 +60,7 @@ Teacup::Stylesheet.new(:first) do
     landscape: {
       width:  460,
       height: 280,
+      alpha: 0.8,
       backgroundColor:  UIColor.lightGrayColor,
     },
   })

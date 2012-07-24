@@ -138,31 +138,40 @@ module Teacup
       imported << name_or_stylesheet
     end
 
-    # Get the properties defined for the given stylename, in this Stylesheet and all
-    # those that have been imported.
+    # Get the properties defined for the given stylename, in this Stylesheet and
+    # all those that have been imported.
     #
-    # If the ':extends' property is set, we then repeat the process with the value
-    # of that, and include them into the result with lower precedence.
+    # The Style class handles precedence rules, and extending via `:extends` and
+    # `import`.  If needs the orientation in order to merge and remove the
+    # appropriate orientation styles.
     #
     # @param Symbol stylename, the stylename to look up.
     # @return Hash[Symbol, *] the resulting properties.
     # @example
     #   Teacup::Stylesheet[:ipadbase].query(:continue_button)
     #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
-    def query(stylename)
-      this_rule = properties_for(stylename)
+    def query(stylename, target=nil, orientation=nil, seen={})
+      return {} if seen[self]
 
-      if also_include = this_rule.delete(:extends)
-        query(also_include).update(this_rule)
-      else
-        this_rule
+      # the block handed to Stylesheet#new is not run immediately - it is run
+      # the first time the stylesheet is queried.  This fixes bugs related to
+      # some resources (fonts) not available when the application is first
+      # started.  The downside is that @instance variables and variables that
+      # should be closed over are not.
+      if @block
+        instance_eval &@block
+        @block = nil
       end
+      seen[self] = true
+
+      styles[stylename].build(target, orientation, seen)
     end
 
     # Add a set of properties for a given stylename or multiple stylenames.
     #
     # @param Symbol, *stylename
     # @param Hash[Symbol, Object], properties
+    #
     # @example
     #   Teacup::Stylesheet.new(:ipadbase) do
     #     style :pretty_button,
@@ -172,15 +181,16 @@ module Teacup
     #       title: "Continue!",
     #       top: 50
     #   end
-    def style(*queries, &block)
-      properties = {}
+    def style(*queries)
+      if queries[-1].is_a? Hash
+        properties = queries.pop
+      else
+        raise "The last argument to Teacup::Stylesheet#style must be a Hash"
+      end
 
-      # if the last argument is a Hash, include it
-      properties.update(queries.pop) if Hash === queries[-1]
-
-      # iterate over the style names and assign properties
       queries.each do |stylename|
-        styles[stylename].update(properties)
+        # merge into styles[stylename], new properties "win"
+        Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
       end
     end
 
@@ -188,38 +198,25 @@ module Teacup
     #
     # @return String
     def inspect
-      "Teacup::Stylesheet[#{name.inspect}] = #{@styles.inspect}"
+      "Teacup::Stylesheet[#{name.inspect}] = #{styles.inspect}"
+    end
+
+    # The array of Stylesheets that have been imported into this one.
+    #
+    # @return Array[Stylesheet]
+    def imported_stylesheets
+      imported.map do |name_or_stylesheet|
+        if name_or_stylesheet.is_a? Teacup::Stylesheet
+          name_or_stylesheet
+        elsif Teacup::Stylesheet.stylesheets.has_key? name_or_stylesheet
+          Teacup::Stylesheet.stylesheets[name_or_stylesheet]
+        else
+          raise "Teacup tried to import Stylesheet #{name_or_stylesheet.inspect} into Stylesheet[#{self.name.inspect}], but it didn't exist"
+        end
+      end
     end
 
     protected
-
-    # Get the properties for a given stylename, including any properties
-    # defined on stylesheets that have been imported into this one, but not
-    # resolving ':extends' inheritance.
-    #
-    # @param Symbol stylename, the stylename to search for.
-    # @param Hash so_far, the properties already found in stylesheets with
-    #                     lower precedence than this one.
-    # @param Hash seen, the Stylesheets that we've already visited, this is
-    #                   to avoid pathological cases where stylesheets
-    #                   have been imported recursively.
-    # @return Hash
-    def properties_for(stylename, so_far={}, seen={})
-      return so_far if seen[self]
-
-      if @block
-        instance_eval &@block
-        @block = nil
-      end
-
-      seen[self] = true
-
-      imported_stylesheets.each do |stylesheet|
-        stylesheet.properties_for(stylename, so_far, seen)
-      end
-
-      so_far.update(styles[stylename])
-    end
 
     # The list of Stylesheets or names that have been imported into this one.
     #
@@ -228,26 +225,16 @@ module Teacup
       @imported ||= []
     end
 
-    # The array of Stylesheets that have been imported into this one.
-    #
-    # @return Array[Stylesheet]
-    def imported_stylesheets
-      imported.map do |name_or_stylesheet|
-        if Teacup::Stylesheet === name_or_stylesheet
-          name_or_stylesheet
-        elsif Teacup::Stylesheet.stylesheets.key? name_or_stylesheet
-          Teacup::Stylesheet.stylesheets[name_or_stylesheet]
-        else
-          raise "Teacup tried to import Stylesheet '#{name_or_stylesheet.inspect}' into Stylesheet[#{self.name}], but it didn't exist"
-        end
-      end
-    end
-
     # The actual contents of this stylesheet as a Hash from stylename to properties.
     #
     # @return Hash[Symbol, Hash]
     def styles
-      @styles ||= Hash.new{ |h, k| h[k] = {} }
+      @styles ||= Hash.new{ |_styles, stylename|
+        @styles[stylename] = Style.new
+        @styles[stylename].stylename = stylename
+        @styles[stylename].stylesheet = self
+        @styles[stylename]
+      }
     end
 
   end

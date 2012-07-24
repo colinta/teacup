@@ -93,8 +93,10 @@ class UIViewController
   #   stylesheet = :ipadhorizontal
   def stylesheet=(new_stylesheet)
     @stylesheet = new_stylesheet
-    view.stylesheet = new_stylesheet
-    view.restyle!
+    if view
+      view.stylesheet = new_stylesheet
+      view.restyle!
+    end
   end
 
   def top_level_view
@@ -138,30 +140,30 @@ class UIViewController
   # the teacup developers apologize for any inconvenience. :-)
   def autorotateToOrientation(orientation)
     if view.stylesheet and view.stylename
-      properties = view.stylesheet.query(view.stylename)
+      properties = view.stylesheet.query(view.stylename, self, orientation)
 
       # check for orientation-specific properties
       case orientation
       when UIInterfaceOrientationPortrait
         # portrait is "on" by default, must be turned off explicitly
-        if not properties.has_key? :portrait and not properties.has_key? :upside_up
+        if properties.supports?(:portrait) == nil and properties.supports?(:upside_up) == nil
           return true
         end
 
-        return true if properties[:portrait] or properties[:upside_up]
+        return (properties.supports?(:portrait) or properties.supports?(:upside_up))
       when UIInterfaceOrientationPortraitUpsideDown
         if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
           # iphone must have an explicit upside-down style, otherwise this returns
           # false
-          return true if properties[:upside_down]
+          return properties.supports?(:upside_down)
         else
           # ipad can just have a portrait style
-          return true if properties[:portrait] or properties[:upside_down]
+          return (properties.supports?(:portrait) or properties.supports?(:upside_down))
         end
       when UIInterfaceOrientationLandscapeLeft
-        return true if properties[:landscape] or properties[:landscape_left]
+        return (properties.supports?(:landscape) or properties.supports?(:landscape_left))
       when UIInterfaceOrientationLandscapeRight
-        return true if properties[:landscape] or properties[:landscape_right]
+        return (properties.supports?(:landscape) or properties.supports?(:landscape_right))
       end
 
       return false

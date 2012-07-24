@@ -21,6 +21,7 @@ module Teacup
   #     end
   #   end
   module Layout
+    attr_accessor :stylesheet
 
     # Alter the layout of a view
     #
