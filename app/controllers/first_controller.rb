@@ -4,7 +4,7 @@ class FirstController < UIViewController
   stylesheet :first
 
   layout :root do
-    subview(UIView, :background) do
+    subview(CustomView, :background) do
       @welcome = subview(UILabel, :welcome)
       subview(UILabel, :footer)
       @button = subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :next_message)

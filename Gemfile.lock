@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    teacup (0.0.1)
+    teacup (0.2.5)
       rake
 
 GEM

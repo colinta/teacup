@@ -47,7 +47,7 @@ class UIView
   end
 
   def restyle!(orientation=nil)
-    style(stylesheet.query(@stylename)) if @stylesheet
+    style(stylesheet.query(stylename, self, orientation)) if stylesheet
     subviews.each{ |subview| subview.restyle!(orientation) }
   end
 
@@ -84,102 +84,51 @@ class UIView
   # a warning message will be emitted.
   #
   # @param Hash  the properties to set.
-  def style(properties, orientation=nil)
-    if stylesheet
-      self.class.ancestors.each do |ancestor|
-        if default_properties = stylesheet.query(ancestor)
-          properties = default_properties.merge properties
-        end
-      end
-    end
-
-    # orientation-specific properties
-    portrait = properties.delete(:portrait)
-    upside_up = properties.delete(:upside_up)
-    upside_down = properties.delete(:upside_down)
-
-    landscape = properties.delete(:landscape)
-    landscape_left = properties.delete(:landscape_left)
-    landscape_right = properties.delete(:landscape_right)
-
-    if orientation.nil?
-      orientation = UIApplication.sharedApplication.statusBarOrientation
-    end
-
-    case orientation
-    when UIInterfaceOrientationPortrait
-      properties.update(portrait) if Hash === portrait
-      properties.update(upside_up) if Hash === upside_up
-    when UIInterfaceOrientationPortraitUpsideDown
-      properties.update(portrait) if Hash === portrait
-      properties.update(upside_down) if Hash === upside_down
-    when UIInterfaceOrientationLandscapeLeft
-      properties.update(landscape) if Hash === landscape
-      properties.update(landscape_left) if Hash === landscape_left
-    when UIInterfaceOrientationLandscapeRight
-      properties.update(landscape) if Hash === landscape
-      properties.update(landscape_right) if Hash === landscape_right
-    end
-
-    # convert top/left/width/height to frame values
-    clean_properties properties
-
+  def style(properties)
     if layer_properties = properties.delete(:layer)
       layer_properties.each do |key, value|
         assign = :"#{key}="
         setter = ('set' + key.to_s.sub(/^./) {|c| c.capitalize}).to_sym
         if layer.respond_to?(assign)
-          # puts "Setting layer.#{key} = #{value.inspect}"
+          # NSLog "Setting layer.#{key} = #{value.inspect}"
           layer.send(assign, value)
         elsif layer.respond_to?(setter)
-          # puts "Calling layer(#{key}, #{value.inspect})"
+          # NSLog "Calling layer(#{key}, #{value.inspect})"
           layer.send(setter, value)
-      else
-        puts "Teacup WARN: Can't apply #{key} to #{self.layer.inspect}"
+        else
+          NSLog "Teacup WARN: Can't apply #{key} to #{self.layer.inspect}"
         end
       end
     end
 
     properties.each do |key, value|
-      assign = :"#{key}="
-      setter = ('set' + key.to_s.sub(/^./) {|c| c.capitalize}).to_sym
+      if key =~ /^set[A-Z]/
+        assign = nil
+        setter = key.to_s + ':'
+      else
+        assign = :"#{key}="
+        setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
+      end
+
       if key == :title && UIButton === self
+        # NSLog "Setting #{key} = #{value.inspect}, forState:UIControlStateNormal"
         setTitle(value, forState: UIControlStateNormal)
-      elsif respond_to?(assign)
-        # puts "Setting #{key} = #{value.inspect}"
+      # elsif key == :normal && UIButton === self
+      #   setImage(value, forState: UIControlStateNormal)
+      # elsif key == :highlighted && UIButton === self
+      #   setImage(value, forState: UIControlStateHighlighted)
+      elsif assign and respond_to?(assign)
+        # NSLog "Setting #{key} = #{value.inspect}"
         send(assign, value)
-      elsif respond_to?(setter)
-        # puts "Calling self(#{key}, #{value.inspect})"
+      elsif respondsToSelector(setter)
+        # NSLog "Calling self(#{key}, #{value.inspect})"
         send(setter, value)
       else
-        puts "Teacup WARN: Can't apply #{key} to #{self.inspect}"
+        NSLog "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{self.inspect}"
       end
     end
     self.setNeedsDisplay
-  end
-
-  # merge definitions for 'frame' into one.
-  #
-  # To support 'extends' more nicely it's convenient to split left, top, width
-  # and height out of frame. Unfortunately that means we have to write ugly
-  # code like this to reassemble them into what the user actually meant.
-  #
-  # WARNING: this method *mutates* its parameter.
-  #
-  # @param Hash
-  # @return Hash
-  def clean_properties(properties)
-    return unless [:frame, :left, :top, :width, :height].any?(&properties.method(:key?))
-
-    frame = properties.delete(:frame) || self.frame
-
-    frame[0][0] = properties.delete(:left) || frame[0][0]
-    frame[0][1] = properties.delete(:top) || frame[0][1]
-    frame[1][0] = properties.delete(:width) || frame[1][0]
-    frame[1][1] = properties.delete(:height) || frame[1][1]
-
-    properties[:frame] = frame
-    properties
+    self.setNeedsLayout
   end
 
   def top_level_view

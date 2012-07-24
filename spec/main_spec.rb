@@ -1,4 +1,4 @@
-describe "Application 'Scorrerest'" do
+describe "Application 'Teacup'" do
   before do
     UIDevice.currentDevice.beginGeneratingDeviceOrientationNotifications
     @app = UIApplication.sharedApplication
@@ -16,7 +16,7 @@ describe "Application 'Scorrerest'" do
   it "should have a root view" do
     view_ctrlr_view = @view_ctrlr.view
     view_ctrlr_view.subviews.length.should == 1
-    view_ctrlr_view.subviews[0].class.should == UIView
+    view_ctrlr_view.subviews[0].class.should == CustomView
   end
 
   describe "view controller" do
@@ -66,6 +66,14 @@ describe "Application 'Scorrerest'" do
       @background.subviews[0].class.should == UILabel
       @background.subviews[1].class.should == UILabel
       @background.subviews[2].class.ancestors.include?(UIButton).should == true
+    end
+
+    it "should not have styles overridden by base classes" do
+      @background.alpha.should == 0.5
+    end
+
+    it "should have styles overridden orientation styles" do
+      @background.backgroundColor.should == UIColor.darkGrayColor
     end
 
     describe "background subviews" do
@@ -138,6 +146,14 @@ describe "Application 'Scorrerest'" do
       @background.frame.origin.y.should == 30
       @background.frame.size.width.should == 460
       @background.frame.size.height.should == 280
+      @background.backgroundColor.should == UIColor.lightGrayColor
+    end
+
+    it "should not have styles overridden by base classes" do
+      @background.alpha.should == 0.8
+    end
+
+    it "should have styles overridden orientation styles" do
       @background.backgroundColor.should == UIColor.lightGrayColor
     end
 
