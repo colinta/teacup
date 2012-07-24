@@ -45,7 +45,7 @@ module Teacup
             elsif not properties.has_key? orientation_key
               properties[orientation_key] = override
             end
-            properties.supports[orientation_key] = true
+            properties.supports[orientation_key] = properties[orientation_key] ? true : false
           end
         end
       end

@@ -19,14 +19,16 @@ describe "Teacup::Style" do
     style[:portrait] = {
       name: :portrait_name,
     }
-    style[:upside_up] = {
-      name: :upside_up_name,
+    style[:upside_down] = {
+      name: :upside_down_name,
     }
-    # no orientation
-    style.build()[:name].should == :default
+    # no orientation, which ends up being portrait anyway.
+    style.build()[:name].should == :portrait_name
     # landscape
     style.build(nil, UIInterfaceOrientationLandscapeLeft)[:name].should == :landscape_name
-    style.build(nil, UIInterfaceOrientationPortrait)[:name].should == :upside_up_name
+
+    # upside down
+    style.build(nil, UIInterfaceOrientationPortraitUpsideDown)[:name].should == :upside_down_name
   end
 
   it "should look in extends" do
