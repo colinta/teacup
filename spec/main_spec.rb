@@ -1,4 +1,4 @@
-describe "Application 'Scorrerest'" do
+describe "Application 'Teacup'" do
   before do
     UIDevice.currentDevice.beginGeneratingDeviceOrientationNotifications
     @app = UIApplication.sharedApplication

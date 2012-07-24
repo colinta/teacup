@@ -47,7 +47,7 @@ class UIView
   end
 
   def restyle!(orientation=nil)
-    style(stylesheet.query(@stylename), orientation) if @stylesheet
+    style(stylesheet.query(stylename, self, orientation)) if stylesheet
     subviews.each{ |subview| subview.restyle!(orientation) }
   end
 
@@ -84,34 +84,7 @@ class UIView
   # a warning message will be emitted.
   #
   # @param Hash  the properties to set.
-  def style(properties, orientation=nil)
-    # the order of assigning to properties is muy importante here.  We want
-    # the orientation styles to override what is in the "default" styles, but
-    # when we import styles from ancestors, we don't want those to override what
-    # we already set.
-
-    # convert top/left/width/height and orientation properties
-    clean_properties properties, orientation
-
-    # check for `:extends` and merge those in
-    while extended_properties_list = properties.delete(:extends)
-      extended_properties_list = [extended_properties_list] unless extended_properties_list.is_a? Array
-
-      extended_properties_list.each { |extended_properties|
-        clean_properties extended_properties, orientation
-        Teacup::merge_defaults!(properties, extended_properties)
-      }
-    end
-
-    if stylesheet
-      self.class.ancestors.each do |ancestor|
-        if extended_properties = stylesheet.query(ancestor)
-          clean_properties extended_properties, orientation
-          Teacup::merge_defaults!(properties, extended_properties)
-        end
-      end
-    end
-
+  def style(properties)
     if layer_properties = properties.delete(:layer)
       layer_properties.each do |key, value|
         assign = :"#{key}="
@@ -150,64 +123,6 @@ class UIView
       end
     end
     self.setNeedsDisplay
-  end
-
-  # Merge definitions for 'frame' and orientation styles into one.
-  #
-  # To support 'extends' more nicely it's convenient to split left, top, width
-  # and height out of frame. Unfortunately that means we have to write ugly
-  # code like this to reassemble them into what the user actually meant.
-  #
-  # WARNING: this method *mutates* its parameter.
-  #
-  # @param Hash
-  # @return Hash
-  def clean_properties(properties, orientation=nil)
-    if [:portrait, :upside_up, :upside_down,
-        :landscape, :landscape_left, :landscape_right
-        ].any?(&properties.method(:has_key?))
-      # orientation-specific properties
-      portrait = properties.delete(:portrait)
-      upside_up = properties.delete(:upside_up)
-      upside_down = properties.delete(:upside_down)
-
-      landscape = properties.delete(:landscape)
-      landscape_left = properties.delete(:landscape_left)
-      landscape_right = properties.delete(:landscape_right)
-
-      if orientation.nil?
-        orientation = UIApplication.sharedApplication.statusBarOrientation
-      end
-
-      case orientation
-      when UIInterfaceOrientationPortrait
-        properties.update(portrait) if Hash === portrait
-        properties.update(upside_up) if Hash === upside_up
-      when UIInterfaceOrientationPortraitUpsideDown
-        properties.update(portrait) if Hash === portrait
-        properties.update(upside_down) if Hash === upside_down
-      when UIInterfaceOrientationLandscapeLeft
-        properties.update(landscape) if Hash === landscape
-        properties.update(landscape_left) if Hash === landscape_left
-      when UIInterfaceOrientationLandscapeRight
-        properties.update(landscape) if Hash === landscape
-        properties.update(landscape_right) if Hash === landscape_right
-      end
-    end
-
-    # this has to come *after* orientation merges
-    if [:frame, :left, :top, :width, :height].any?(&properties.method(:has_key?))
-      frame = properties.delete(:frame) || self.frame
-
-      frame[0][0] = properties.delete(:left) || frame[0][0]
-      frame[0][1] = properties.delete(:top) || frame[0][1]
-      frame[1][0] = properties.delete(:width) || frame[1][0]
-      frame[1][1] = properties.delete(:height) || frame[1][1]
-
-      properties[:frame] = frame
-    end
-
-    properties
   end
 
   def top_level_view

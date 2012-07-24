@@ -1,4 +1,3 @@
-
 module Teacup
   module_function
 
@@ -11,11 +10,6 @@ module Teacup
   # creating a new Hash.  Usually used with `merge_defaults!`, which merges values
   # from `right` into `left`.
   def merge_defaults(left, right, target={})
-    if target == left
-    elsif target == right
-    else
-    end
-
     if target != left
       left.each do |key, value|
         if target.has_key? key and value.is_a?(Hash) and target[key].is_a?(Hash)
