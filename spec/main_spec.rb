@@ -220,7 +220,7 @@ describe "Stylesheet 'first'" do
 
   it "should union the next_message styles" do
     @stylesheet.query(:next_message)[:title].should == "Next Message..."
-    @stylesheet.query(:next_message)[:portrait].empty?.should == false
+    (@stylesheet.query(:next_message)[:portrait] ? true : false).should == false
   end
 
 end
