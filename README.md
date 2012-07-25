@@ -13,27 +13,21 @@ to create interfaces programmatically.
 
 #### Installation
 
-First get the teacup library into your local project using git submodules:
+**Quick Install**
 
 ```bash
-$ git submodule add https://github.com/rubymotion/teacup vendor/teacup
+> gem install teacup
 ```
 
-Then add the teacup library to your Rakefile:
+**Better Install**
 
-```
-  Motion::Project::App.setup do |app|
-    # ...
-    app.files.unshift(*Dir['vendor/teacup/lib/**/*.rb'])
-  end
-```
+However, it is recommended that you use [Bundler][] and [rvm][] to manage your
+gems on a per-project basis, using a gemset.  See the
+[Installation wiki page][Installation] for more help on doing that.
 
-You can run the test suite or compile the test app:
-
-```bash
-$ cd vendor/teacup
-$ rake spec  # or just rake, to run the app.
-```
+[Bundler]: http://gembundler.com/
+[rvm]: https://rvm.io/
+[Installation]: https://github.com/rubymotion/teacup/wiki/Installation
 
 #### Showdown
 
