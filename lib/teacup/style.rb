@@ -23,8 +23,9 @@ module Teacup
       @supports ||= {}
     end
 
+    # returns the value - `nil` has special meaning when querying :portrait or :upside_up
     def supports? orientation_key
-      supports.has_key? orientation_key
+      supports[orientation_key]
     end
 
     def build(target=nil, orientation=nil, seen={})
