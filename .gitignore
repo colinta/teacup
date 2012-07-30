@@ -3,3 +3,4 @@ build
 resources/*.nib
 resources/*.momd
 resources/*.storyboardc
+teacup-*.gem
