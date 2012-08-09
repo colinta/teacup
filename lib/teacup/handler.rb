@@ -42,13 +42,13 @@ module Teacup
     target.class.ancestors.each do |ancestor|
       handled = false
       if Teacup.handlers[ancestor].has_key? key
-        NSLog "#{ancestor.name} is handling #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
+        NSLog "#{ancestor.name} is handling #{key} = #{value.inspect}" # if target.respond_to? :debug and target.debug
         Teacup.handlers[ancestor][key].call(target, value)
         handled = true
         break
       end
-      return if handled
     end
+    return if handled
 
     # you can send methods to subviews (e.g. UIButton#titleLabel) and CALayers
     # (e.g. UIView#layer) by assigning a hash to a style name.
