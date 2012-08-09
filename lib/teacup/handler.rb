@@ -40,11 +40,14 @@ module Teacup
     # so don't assume that the object *has* a debug method.
 
     target.class.ancestors.each do |ancestor|
+      handled = false
       if Teacup.handlers[ancestor].has_key? key
         NSLog "#{ancestor.name} is handling #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
         Teacup.handlers[ancestor][key].call(target, value)
-        return
+        handled = true
+        break
       end
+      return if handled
     end
 
     # you can send methods to subviews (e.g. UIButton#titleLabel) and CALayers
