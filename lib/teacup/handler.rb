@@ -39,10 +39,10 @@ module Teacup
     # note about `debug`: not all objects in this method are a UIView instance,
     # so don't assume that the object *has* a debug method.
 
+    handled = false
     target.class.ancestors.each do |ancestor|
-      handled = false
       if Teacup.handlers[ancestor].has_key? key
-        NSLog "#{ancestor.name} is handling #{key} = #{value.inspect}" # if target.respond_to? :debug and target.debug
+        NSLog "#{ancestor.name} is handling #{key} = #{value.inspect}"  if target.respond_to? :debug and target.debug
         Teacup.handlers[ancestor][key].call(target, value)
         handled = true
         break
