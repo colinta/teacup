@@ -1,4 +1,3 @@
-
 module Teacup
   # Teacup::Layout defines a layout and subview function that can be used to
   # declare and configure the layout of views and the view hierarchy in your
@@ -56,9 +55,9 @@ module Teacup
     # image to a carousel:
     #
     # @example
-    #   layout(carousel) {
+    #   layout(carousel) do
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
-    #   }
+    #   end
     #
     def layout(view, name_or_properties=nil, properties_or_nil=nil, &block)
       name = nil
@@ -110,7 +109,7 @@ module Teacup
     #
     # @example
     #   MyViewController < UIViewController
-    #     heirarchy(:my_view) do
+    #     layout(:my_view) do
     #       subview(UILabel, text: 'Test')
     #       subview(UILabel, :styled_label)
     #     end
@@ -119,9 +118,9 @@ module Teacup
     # If you need to add a new image at runtime, you can also do that:
     #
     # @example
-    #   layout(carousel) {
+    #   layout(carousel) do
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
-    #   }
+    #   end
     #
     def subview(class_or_instance, *args, &block)
       if Class === class_or_instance
