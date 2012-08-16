@@ -5,16 +5,15 @@ class UIView
   # get one stylesheet by stylename
   # my_view[:button] :button => #<UIButton..>
   def viewWithStylename name
-    subviews.each do |view|
-      if view.stylename == name
-        return view
-      end
-    end
-    subviews.each do |view|
-      if v = view.viewWithStylename(name)
-        return v
-      end
-    end
+    view = subviews.find {|view| view.stylename == name}
+    return view if view
+
+    # found_subview will get assigned to the view we want, but the subview is
+    # what is returned.
+    found_subview = nil
+    view = subviews.find {|subview| found_subview = subview.viewWithStylename(name) }
+    return found_subview if view
+
     nil  # couldn't find it
   end
 
