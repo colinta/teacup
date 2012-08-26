@@ -59,7 +59,9 @@ module Teacup
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
     #   end
     #
-    def layout(view, name_or_properties=nil, properties_or_nil=nil, &block)
+    def layout(view_or_class, name_or_properties=nil, properties_or_nil=nil, &block)
+      view = to_instance(view_or_class)
+
       name = nil
       properties = properties_or_nil
 
@@ -123,16 +125,7 @@ module Teacup
     #   end
     #
     def subview(class_or_instance, *args, &block)
-      if Class === class_or_instance
-        unless class_or_instance <= UIView
-          raise "Expected subclass of UIView, got: #{class_or_instance.inspect}"
-        end
-        instance = class_or_instance.new
-      elsif UIView === class_or_instance
-        instance = class_or_instance
-      else
-        raise "Expected a UIView, got: #{class_or_instance.inspect}"
-      end
+      instance = to_instance(class_or_instance)
 
       (superview_chain.last || top_level_view).addSubview(instance)
 
@@ -142,6 +135,19 @@ module Teacup
     end
 
     protected
+
+    def to_instance(class_or_instance)
+      if Class === class_or_instance
+        unless class_or_instance <= UIView
+          raise "Expected subclass of UIView, got: #{class_or_instance.inspect}"
+        end
+        return class_or_instance.new
+      elsif class_or_instance.is_a?(UIView)
+        return class_or_instance
+      else
+        raise "Expected a UIView, got: #{class_or_instance.inspect}"
+      end
+    end
 
     # Get's the current stack of views in nested calls to layout.
     #
