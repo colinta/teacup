@@ -13,6 +13,12 @@ Teacup.handler UIView, :right { |view, r|
   view.frame = f
 }
 
+Teacup.handler UIView, :center_x, :middle_x { |view, x|
+  c = view.center
+  c.x = x
+  view.center = c
+}
+
 Teacup.handler UIView, :top, :y { |view, y|
   f = view.frame
   f.origin.y = y
@@ -23,6 +29,12 @@ Teacup.handler UIView, :bottom { |view, b|
   f = view.frame
   f.origin.y = b - f.size.height
   view.frame = f
+}
+
+Teacup.handler UIView, :center_y, :middle_y { |view, y|
+  c = view.center
+  c.y = y
+  view.center = c
 }
 
 Teacup.handler UIView, :width { |view, w|
