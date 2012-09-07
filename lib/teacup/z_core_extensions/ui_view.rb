@@ -45,8 +45,13 @@ class UIView
   # @param Teacup::Stylesheet  stylesheet.
   def stylesheet=(new_stylesheet)
     @stylesheet = new_stylesheet
+    subviews.each{ |subview| subview.set_stylesheet_quietly(new_stylesheet) }
     restyle!
-    subviews.each{ |subview| subview.stylesheet = new_stylesheet }
+  end
+
+  def set_stylesheet_quietly(new_stylesheet)
+    @stylesheet = new_stylesheet
+    subviews.each{ |subview| subview.set_stylesheet_quietly(new_stylesheet) }
   end
 
   def restyle!(orientation=nil)
