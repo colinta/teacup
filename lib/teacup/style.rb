@@ -34,7 +34,9 @@ module Teacup
       properties.stylesheet = self.stylesheet
 
       # at this point, we really DO need the orientation
-      orientation = UIApplication.sharedApplication.statusBarOrientation unless orientation
+      unless orientation
+        orientation = UIApplication.sharedApplication.statusBarOrientation
+      end
 
       # first, move orientation settings into properties "base" level.
       if orientation
