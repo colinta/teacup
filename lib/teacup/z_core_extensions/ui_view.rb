@@ -16,7 +16,7 @@ class UIView
   # is loaded lazily, so that assignment can occur before the Stylesheet has
   # been created.
   def stylesheet
-    if Symbol === @stylesheet
+    if @stylesheet.is_a? Symbol
       @stylesheet = Teacup::Stylesheet[@stylesheet]
     end
 
