@@ -43,7 +43,11 @@ module Teacup
     target.class.ancestors.each do |ancestor|
       if Teacup.handlers[ancestor].has_key? key
         NSLog "#{ancestor.name} is handling #{key} = #{value.inspect}"  if target.respond_to? :debug and target.debug
-        Teacup.handlers[ancestor][key].call(target, value)
+        if Teacup.handlers[ancestor][key].arity == 1
+          target.instance_exec(value, &Teacup.handlers[ancestor][key])
+        else
+          Teacup.handlers[ancestor][key].call(target, value)
+        end
         handled = true
         break
       end
