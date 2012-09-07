@@ -45,17 +45,18 @@ class UIView
   # @param Teacup::Stylesheet  stylesheet.
   def stylesheet=(new_stylesheet)
     @stylesheet = new_stylesheet
-    subviews.each{ |subview| subview.set_stylesheet_quietly(new_stylesheet) }
-    restyle!
+    subviews.each{ |subview| subview.set_stylesheet_quickly(new_stylesheet) }
   end
 
-  def set_stylesheet_quietly(new_stylesheet)
+  def set_stylesheet_quickly(new_stylesheet)
     @stylesheet = new_stylesheet
-    subviews.each{ |subview| subview.set_stylesheet_quietly(new_stylesheet) }
+    subviews.each{ |subview| subview.set_stylesheet_quickly(new_stylesheet) }
   end
 
   def restyle!(orientation=nil)
-    style(stylesheet.query(stylename, self, orientation)) if stylesheet
+    if stylesheet
+      style(stylesheet.query(stylename, self, orientation)) if stylesheet
+    end
     subviews.each{ |subview| subview.restyle!(orientation) }
   end
 

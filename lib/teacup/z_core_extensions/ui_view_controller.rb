@@ -93,9 +93,8 @@ class UIViewController
   #   stylesheet = :ipadhorizontal
   def stylesheet=(new_stylesheet)
     @stylesheet = new_stylesheet
-    if view
-      view.stylesheet = new_stylesheet
-      view.restyle!
+    if self.view
+      self.view.stylesheet = new_stylesheet
     end
   end
 
@@ -111,16 +110,21 @@ class UIViewController
   def viewDidLoad
     # look for a layout_definition in the list of ancestors
     layout_definition = nil
+    my_stylesheet = self.stylesheet
     parent_class = self.class
-    while parent_class != NSObject and not (layout_definition && self.stylesheet)
-      if not self.stylesheet and parent_class.respond_to?(:stylesheet)
-        self.stylesheet = parent_class.stylesheet
+    while parent_class != NSObject and not (layout_definition && my_stylesheet)
+      if not my_stylesheet and parent_class.respond_to?(:stylesheet)
+        my_stylesheet = parent_class.stylesheet
       end
 
       if not layout_definition and parent_class.respond_to?(:layout_definition)
         layout_definition = parent_class.layout_definition
       end
       parent_class = parent_class.superclass
+    end
+
+    if my_stylesheet and not self.stylesheet
+      self.stylesheet = my_stylesheet
     end
 
     if layout_definition
