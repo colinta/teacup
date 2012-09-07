@@ -151,7 +151,7 @@ module Teacup
     protected
 
     def to_instance(class_or_instance)
-      if Class === class_or_instance
+      if class_or_instance.is_a? Class
         unless class_or_instance <= UIView
           raise "Expected subclass of UIView, got: #{class_or_instance.inspect}"
         end
