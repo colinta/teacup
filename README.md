@@ -40,7 +40,7 @@ class SomeController < UIViewController
 
     @field = UITextField.new
     @field.frame = [[10, 10], [200, 50]]
-    @search.textColor = UIColor.redColor
+    @field.textColor = UIColor.redColor
     view.addSubview(@field)
 
     @search = UITextField.new
