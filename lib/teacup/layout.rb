@@ -72,30 +72,25 @@ module Teacup
         name = name_or_properties.to_sym
       end
 
+      # prevents the calling of restyle! until we return to this method
+      should_restyle = Teacup.should_restyle_and_block
+
       view.stylesheet = stylesheet
       view.stylename = name
       if properties
         view.style(properties) if properties
       end
 
-      # prevent the calling of restyle! until we return to this method
-      # @@dont_restyle starts out life as nil, restyle as true
-      # but future calls will have @@dont_restyle as true, and restyle as false
-      @@dont_restyle ||= nil
-      should_restyle = ! @@dont_restyle
-      # becomes true no matter what
-      @@dont_restyle = true
       if block_given?
         superview_chain << view
         instance_exec(view, &block) if block_given?
         superview_chain.pop
       end
-      # restore to whatever it was, either nil or true
-      # only the first call to layout() will restore it to nil
-      @@dont_restyle = ! should_restyle
 
       if should_restyle
         view.restyle!
+        # restore to whatever it was, either nil or true
+        Teacup.should_restyle!
       end
       view
     end

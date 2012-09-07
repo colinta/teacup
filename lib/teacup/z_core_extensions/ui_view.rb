@@ -30,6 +30,7 @@ class UIView
   # @param Symbol  stylename
   def stylename=(new_stylename)
     @stylename = new_stylename
+    restyle! if Teacup.should_restyle?
   end
 
   # Alter the stylesheet of this view.
@@ -43,8 +44,15 @@ class UIView
   #
   # @param Teacup::Stylesheet  stylesheet.
   def stylesheet=(new_stylesheet)
+    should_restyle = Teacup.should_restyle_and_block
+
     @stylesheet = new_stylesheet
     subviews.each{ |subview| subview.set_stylesheet_quickly(new_stylesheet) }
+
+    if should_restyle
+      restyle!
+      Teacup.should_restyle!
+    end
   end
 
   def set_stylesheet_quickly(new_stylesheet)
@@ -53,10 +61,12 @@ class UIView
   end
 
   def restyle!(orientation=nil)
-    if stylesheet
-      style(stylesheet.query(stylename, self, orientation)) if stylesheet
+    if Teacup.should_restyle?
+      if stylesheet
+        style(stylesheet.query(stylename, self, orientation))
+      end
+      subviews.each{ |subview| subview.restyle!(orientation) }
     end
-    subviews.each{ |subview| subview.restyle!(orientation) }
   end
 
   # Animate a change to a new stylename.
