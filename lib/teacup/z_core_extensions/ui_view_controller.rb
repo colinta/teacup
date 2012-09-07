@@ -109,12 +109,22 @@ class UIViewController
   # If you want to use Teacup in your controller, please hook into layoutDidLoad,
   # not viewDidLoad.
   def viewDidLoad
-    if not self.stylesheet
-      self.stylesheet = self.class.stylesheet
+    # look for a layout_definition in the list of ancestors
+    layout_definition = nil
+    parent_class = self.class
+    while parent_class != NSObject and not (layout_definition && self.stylesheet)
+      if not self.stylesheet and parent_class.respond_to?(:stylesheet)
+        self.stylesheet = parent_class.stylesheet
+      end
+
+      if not layout_definition and parent_class.respond_to?(:layout_definition)
+        layout_definition = parent_class.layout_definition
+      end
+      parent_class = parent_class.superclass
     end
 
-    if self.class.layout_definition
-      stylename, properties, block = self.class.layout_definition
+    if layout_definition
+      stylename, properties, block = layout_definition
       layout(view, stylename, properties, &block)
     end
 
