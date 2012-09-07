@@ -22,10 +22,10 @@ describe "Application 'Teacup'" do
   describe "view controller" do
 
     it "should be able to rotate" do
-      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIDeviceOrientationPortrait).should == true
-      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIDeviceOrientationLandscapeLeft).should == true
-      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIDeviceOrientationLandscapeRight).should == true
-      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIDeviceOrientationPortraitUpsideDown).should == false
+      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIInterfaceOrientationPortrait).should == true
+      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIInterfaceOrientationLandscapeRight).should == true
+      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIInterfaceOrientationLandscapeLeft).should == true
+      @view_ctrlr.shouldAutorotateToInterfaceOrientation(UIInterfaceOrientationPortraitUpsideDown).should == nil
     end
   end
 
@@ -131,7 +131,7 @@ describe "Application 'Teacup'" do
     before do
       @background = @app.windows[0].subviews[0].subviews[0]
       @view_ctrlr.landscape_only
-      UIApplication.sharedApplication.setStatusBarOrientation(UIDeviceOrientationLandscapeLeft, animated:false)
+      UIApplication.sharedApplication.setStatusBarOrientation(UIInterfaceOrientationLandscapeLeft, animated:false)
     end
 
     it "should be in landscape" do

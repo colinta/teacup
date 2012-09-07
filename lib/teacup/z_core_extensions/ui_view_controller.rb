@@ -66,8 +66,8 @@ class UIViewController
   # @example
   #
   #  def stylesheet
-  #    if [UIDeviceOrientationLandscapeLeft,
-  #        UIDeviceOrientationLandscapeRight].include?(UIDevice.currentDevice.orientation)
+  #    if [UIInterfaceOrientationLandscapeLeft,
+  #        UIInterfaceOrientationLandscapeRight].include?(UIInterface.currentDevice.orientation)
   #      Teacup::Stylesheet[:ipad]
   #    else
   #      Teacup::Stylesheet[:ipadvertical]

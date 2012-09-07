@@ -6,7 +6,7 @@ class LandscapeOnlyController < UIViewController
   end
 
   def shouldAutorotateToInterfaceOrientation(orientation)
-    if orientation == UIDeviceOrientationLandscapeLeft or orientation == UIDeviceOrientationLandscapeRight
+    if orientation == UIInterfaceOrientationLandscapeLeft or orientation == UIInterfaceOrientationLandscapeRight
       true
     else
       false

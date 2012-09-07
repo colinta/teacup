@@ -54,7 +54,7 @@ class SomeController < UIViewController
 
   # code to enable orientation changes
   def shouldAutorotateToInterfaceOrientation(orientation)
-    if orientation == UIDeviceOrientationPortraitUpsideDown
+    if orientation == UIInterfaceOrientationPortraitUpsideDown
       return false
     end
     true
@@ -63,7 +63,7 @@ class SomeController < UIViewController
   # perform the frame changes depending on orientation
   def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
     case orientation
-    when UIDeviceOrientationLandscapeLeft, UIDeviceOrientationLandscapeRight
+    when UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight
       @field.frame = [[10, 10], [360, 50]]
       @search.frame = [[10, 70], [360, 50]]
     else

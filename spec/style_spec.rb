@@ -23,7 +23,11 @@ describe "Teacup::Style" do
       name: :upside_down_name,
     }
     # no orientation, which ends up being portrait anyway.
-    style.build()[:name].should == :portrait_name
+    if UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationPortrait
+      style.build()[:name].should == :portrait_name
+    else
+      style.build()[:name].should == :landscape_name
+    end
     # landscape
     style.build(nil, UIInterfaceOrientationLandscapeLeft)[:name].should == :landscape_name
 
