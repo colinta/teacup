@@ -1,69 +1,87 @@
 ##|
 ##|  UIView.frame
 ##|
-Teacup.handler UIView, :left, :x { |view, x|
-  f = view.frame
+Teacup.handler UIView, :left, :x { |x|
+  f = self.frame
   f.origin.x = x
-  view.frame = f
+  self.frame = f
 }
 
-Teacup.handler UIView, :right { |view, r|
-  f = view.frame
+Teacup.handler UIView, :right { |r|
+  f = self.frame
   f.origin.x = r - f.size.width
-  view.frame = f
+  self.frame = f
 }
 
-Teacup.handler UIView, :center_x, :middle_x { |view, x|
-  c = view.center
+Teacup.handler UIView, :center_x, :middle_x { |x|
+  c = self.center
   c.x = x
-  view.center = c
+  self.center = c
 }
 
-Teacup.handler UIView, :top, :y { |view, y|
-  f = view.frame
+Teacup.handler UIView, :top, :y { |y|
+  f = self.frame
   f.origin.y = y
-  view.frame = f
+  self.frame = f
 }
 
-Teacup.handler UIView, :bottom { |view, b|
-  f = view.frame
+Teacup.handler UIView, :bottom { |b|
+  f = self.frame
   f.origin.y = b - f.size.height
-  view.frame = f
+  self.frame = f
 }
 
-Teacup.handler UIView, :center_y, :middle_y { |view, y|
-  c = view.center
+Teacup.handler UIView, :center_y, :middle_y { |y|
+  c = self.center
   c.y = y
-  view.center = c
+  self.center = c
 }
 
-Teacup.handler UIView, :width { |view, w|
-  f = view.frame
+Teacup.handler UIView, :width { |w|
+  f = self.frame
   f.size.width = w
-  view.frame = f
+  self.frame = f
 }
 
-Teacup.handler UIView, :height { |view, h|
-  f = view.frame
+Teacup.handler UIView, :height { |h|
+  f = self.frame
   f.size.height = h
-  view.frame = f
+  self.frame = f
 }
 
-Teacup.handler UIView, :origin { |view, origin|
-  f = view.frame
+Teacup.handler UIView, :origin { |origin|
+  f = self.frame
   f.origin = origin
-  view.frame = f
+  self.frame = f
 }
 
-Teacup.handler UIView, :size { |view, size|
-  f = view.frame
+Teacup.handler UIView, :size { |size|
+  if Symbol === size && size == :full
+    if self.superview
+      size = Size(self.superview.bounds.size)
+    else
+      size = self.frame.size
+    end
+  end
+  f = self.frame
   f.size = size
-  view.frame = f
+  self.frame = f
+}
+
+Teacup.handler UIView, :frame { |frame|
+  if Symbol === frame && frame == :full
+    if self.superview
+      frame = Rect(self.superview.bounds)
+    else
+      frame = self.frame
+    end
+  end
+  self.frame = frame
 }
 
 ##|
 ##|  UIButton
 ##|
-Teacup.handler UIButton, :title { |view, title|
-  view.setTitle(title, forState: UIControlStateNormal)
+Teacup.handler UIButton, :title { |title|
+  self.setTitle(title, forState: UIControlStateNormal)
 }
