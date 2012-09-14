@@ -102,7 +102,7 @@ module Teacup
       if name
         @name = name.to_sym
         if Teacup::Stylesheet[@name]
-          NSLog("WARNING: A stylesheet with the name #{@name.inspect} has already been created.")
+          NSLog("TEACUP WARNING: A stylesheet with the name #{@name.inspect} has already been created.")
         end
         Teacup::Stylesheet[@name] = self
       end

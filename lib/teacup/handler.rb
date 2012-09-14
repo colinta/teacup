@@ -75,7 +75,7 @@ module Teacup
       NSLog "Calling target(#{key}, #{value.inspect})" if target.respond_to? :debug and target.debug
       target.send(setter, value)
     else
-      NSLog "Teacup WARN: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{target.inspect}"
+      NSLog "TEACUP WARNING: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{target.inspect}"
     end
   end
 
