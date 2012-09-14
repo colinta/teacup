@@ -85,3 +85,14 @@ Teacup.handler UIView, :frame { |frame|
 Teacup.handler UIButton, :title { |title|
   self.setTitle(title, forState: UIControlStateNormal)
 }
+
+
+Teacup.handler UIButton, :titleColor { |color|
+  self.setTitleColor(color.uicolor, forState: UIControlStateNormal)
+}
+
+
+Teacup.handler UIButton, :titleFont { |font|
+  font = font.uifont
+  self.titleLabel.font = font
+}
