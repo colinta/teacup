@@ -13,13 +13,7 @@ class FirstController < UIViewController
     @button.addTarget(self, action: :next_message, forControlEvents:UIControlEventTouchUpInside)
   end
 
-  # used in testing
-  def landscape_only
-    UIApplication.sharedApplication.windows[0].rootViewController = LandscapeOnlyController.alloc.init
-  end
-
   def next_view
-    landscape_only
   end
 
   def next_message

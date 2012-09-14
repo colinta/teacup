@@ -1,6 +1,8 @@
 class AppDelegate
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
+    return true if RUBYMOTION_ENV == 'test'
+
     application.setStatusBarStyle(UIStatusBarStyleBlackTranslucent)
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
