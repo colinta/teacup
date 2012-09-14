@@ -6,6 +6,13 @@ private
   end
 end
 
+class DummyButton < UIButton
+private
+  def dummy
+    setTitleEdgeInsets(nil)
+  end
+end
+
 class DummyScrollView < UIScrollView
 private
   def dummy
