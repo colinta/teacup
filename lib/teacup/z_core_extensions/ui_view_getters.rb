@@ -4,14 +4,18 @@ class UIView
 
   # get one stylesheet by stylename
   # my_view[:button] :button => #<UIButton..>
-  def viewWithStylename name
-    view = subviews.find {|view| view.stylename == name}
+  def viewWithStylename name_or_class
+    if name_or_class.is_a? Class
+      view = subviews.find { |view| view.is_a? name_or_class }
+    else
+      view = subviews.find { |view| view.stylename == name_or_class }
+    end
     return view if view
 
     # found_subview will get assigned to the view we want, but the subview is
     # what is returned.
     found_subview = nil
-    view = subviews.find {|subview| found_subview = subview.viewWithStylename(name) }
+    view = subviews.find {|subview| found_subview = subview.viewWithStylename(name_or_class) }
     return found_subview if view
 
     nil  # couldn't find it
@@ -19,13 +23,17 @@ class UIView
 
   # get stylesheets by stylename
   # my_view.all :button => [#<UIButton..>, #<UIButton...>]
-  def viewsWithStylename name
+  def viewsWithStylename name_or_class
     r = []
     subviews.each do |view|
-      if view.stylename == name
-        r.push name
+      if name_or_class.is_a? Class
+        if view.is_a? name_or_class
+          r << view
+        end
+      else view.stylename == name_or_class
+        r << view
       end
-      r += view.viewsWithStylename name
+      r += view.viewsWithStylename name_or_class
     end
     r
   end
