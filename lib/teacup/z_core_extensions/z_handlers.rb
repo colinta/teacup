@@ -56,7 +56,8 @@ Teacup.handler UIView, :origin { |origin|
 }
 
 Teacup.handler UIView, :size { |size|
-  if size.is_a? Symbol && size == :full
+  # odd... if I changed these to .is_a?, weird errors happen.  Use ===
+  if Symbol === size && size == :full
     if self.superview
       size = Size(self.superview.bounds.size)
     else
@@ -69,7 +70,8 @@ Teacup.handler UIView, :size { |size|
 }
 
 Teacup.handler UIView, :frame { |frame|
-  if frame.is_a? Symbol && frame == :full
+  # odd... if I changed these to .is_a?, weird errors happen.  Use ===
+  if Symbol === frame && frame == :full
     if self.superview
       frame = Rect(self.superview.bounds)
     else
