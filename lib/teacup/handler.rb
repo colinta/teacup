@@ -56,7 +56,7 @@ module Teacup
 
     # you can send methods to subviews (e.g. UIButton#titleLabel) and CALayers
     # (e.g. UIView#layer) by assigning a hash to a style name.
-    if Hash === value
+    if value.is_a? Hash
       return Teacup.apply_hash target.send(key), value
     end
 

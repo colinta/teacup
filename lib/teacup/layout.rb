@@ -65,7 +65,7 @@ module Teacup
       name = nil
       properties = properties_or_nil
 
-      if Hash === name_or_properties
+      if name_or_properties.is_a? Hash
         name = nil
         properties = name_or_properties
       elsif name_or_properties

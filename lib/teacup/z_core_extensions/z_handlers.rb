@@ -56,7 +56,7 @@ Teacup.handler UIView, :origin { |origin|
 }
 
 Teacup.handler UIView, :size { |size|
-  if Symbol === size && size == :full
+  if size.is_a? Symbol && size == :full
     if self.superview
       size = Size(self.superview.bounds.size)
     else
@@ -69,7 +69,7 @@ Teacup.handler UIView, :size { |size|
 }
 
 Teacup.handler UIView, :frame { |frame|
-  if Symbol === frame && frame == :full
+  if frame.is_a? Symbol && frame == :full
     if self.superview
       frame = Rect(self.superview.bounds)
     else
