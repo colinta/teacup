@@ -16,7 +16,7 @@ module Teacup
     end
 
     def device
-      this_device = 0;
+      this_device = 0
       if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
         this_device |= iPhone
         if UIScreen.mainScreen.respondsToSelector(:scale)
