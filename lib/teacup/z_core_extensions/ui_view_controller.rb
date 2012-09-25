@@ -185,6 +185,45 @@ class UIViewController
     return orientation == UIInterfaceOrientationPortrait
   end
 
+  def autorotateMask
+    if view.stylesheet and view.stylename
+      properties = view.stylesheet.query(view.stylename, self, orientation)
+      device = UIDevice.currentDevice.userInterfaceIdiom
+      device == UIUserInterfaceIdiomPhone
+
+      orientations = 0
+      if properties.supports?(:portrait) or properties.supports?(:upside_up)
+        orientations |= UIInterfaceOrientationPortrait
+      end
+
+      if device == UIUserInterfaceIdiomPhone
+        # :portrait does not imply upside_down on the iphone
+        if properties.supports?(:upside_down)
+          orientations |= UIInterfaceOrientationPortraitUpsideDown
+        end
+      else
+        # but does on the ipad
+        if properties.supports?(:portrait) or properties.supports?(:upside_down)
+          orientations |= UIInterfaceOrientationPortraitUpsideDown
+        end
+      end
+
+      if properties.supports?(:landscape) or properties.supports?(:landscape_left)
+        orientations |= UIInterfaceOrientationLandscapeLeft
+      end
+
+      if properties.supports?(:landscape) or properties.supports?(:landscape_right)
+        orientations |= UIInterfaceOrientationLandscapeRight
+      end
+
+      if orientations == 0
+        orientations |= UIInterfaceOrientationPortrait
+      end
+      return orientations
+    end
+    return UIInterfaceOrientationPortrait
+  end
+
   def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
     view.restyle!(orientation)
   end
