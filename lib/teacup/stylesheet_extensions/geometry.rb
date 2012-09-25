@@ -19,7 +19,7 @@ module Teacup
       this_device = 0
       if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
         this_device |= iPhone
-        if UIScreen.mainScreen.respondsToSelector(:scale)
+        if UIScreen.mainScreen.respond_to? :scale
           this_device |= iPhoneRetina
           if UIScreen.mainScreen.bounds.size.height == 568
             this_device |= iPhone5
@@ -27,7 +27,7 @@ module Teacup
         end
       else
         this_device |= iPad
-        if UIScreen.mainScreen.respondsToSelector(:scale)
+        if UIScreen.mainScreen.respond_to? :scale
           this_device |= iPadRetina
         end
       end
