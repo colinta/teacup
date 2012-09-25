@@ -6,15 +6,17 @@ module Teacup
     def iPad         ; 1 << 4 ; end
     def iPadRetina   ; 1 << 5 ; end
 
-
+    # returns the device size in points, regardless of status bar
     def screen_size
       UIScreen.mainScreen.bounds.size
     end
 
+    # returns the application frame, which takes the status bar into account
     def app_size
       UIScreen.mainScreen.applicationFrame.size
     end
 
+    # returns a bit-wise OR of the device masks
     def device
       this_device = 0
       if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
