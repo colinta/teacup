@@ -1,7 +1,7 @@
 
 module Teacup
-
   class Stylesheet
+
     def identity
       [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
     end
@@ -34,5 +34,4 @@ module Teacup
     end
 
   end
-
 end
