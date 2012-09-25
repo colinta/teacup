@@ -2,8 +2,9 @@
 # Kinda similar to jQuery-style $().find('stylename')
 class UIView
 
-  # get one stylesheet by stylename
-  # my_view[:button] :button => #<UIButton..>
+  # get one subview by stylename or class
+  # my_view.viewWithStylename :button => #<UIButton..>
+  # my_view.viewWithStylename UIButton => #<UIButton..>
   def viewWithStylename name_or_class
     if name_or_class.is_a? Class
       view = subviews.find { |view| view.is_a? name_or_class }
@@ -21,8 +22,9 @@ class UIView
     nil  # couldn't find it
   end
 
-  # get stylesheets by stylename
-  # my_view.all :button => [#<UIButton..>, #<UIButton...>]
+  # get all subviews by stylename or class
+  # my_view.viewsWithStylename :button => [#<UIButton..>, #<UIButton...>]
+  # my_view.viewsWithStylename UIButton => [#<UIButton..>, #<UIButton...>]
   def viewsWithStylename name_or_class
     r = []
     subviews.each do |view|
