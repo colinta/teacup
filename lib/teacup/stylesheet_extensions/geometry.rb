@@ -63,5 +63,9 @@ module Teacup
       return this_device
     end
 
+    def device?(this_device)
+      return device&this_device > 0
+    end
+
   end
 end
