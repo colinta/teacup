@@ -1,3 +1,29 @@
+# Example:
+#     Teacup::Stylesheet.new :main do
+#       style :root,
+#         origin: [0, 0]
+#
+#       # device returns a bitmask of devices,
+#       # device? expects a device bitmask, and returns true if it is present in
+#       # device (the conditions below are equivalent)
+#       if 0 < device & iPhone || device? iPhone
+#         style :root, width: 320
+#
+#         if 0 < device & iPhone5 || device? iPhone5
+#           style :root, height: 548
+#         elsif 0 < device & iPhone || device? iPhone
+#           style :root, height: 460
+#         end
+#       elsif 0 < device & iPad || device? iPad
+#         style :root,
+#           width: 768,
+#           height: 1004
+#       end
+#
+#       # that's a mess!  and this does the same thing anyway:
+#       style :root,
+#         frame: [[0, 0], app_size]
+#     end
 module Teacup
   class Stylesheet
     def iPhone       ; 1 << 1 ; end
