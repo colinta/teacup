@@ -9,6 +9,31 @@ class UIView
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
 
+  # position: absolute or relative
+  attr_accessor :position
+
+  # display: inline, block, none
+  attr_accessor :display
+
+  LEFT = 0
+  RIGHT = 1
+  TOP = 2
+  BOTTOM = 3
+
+  # four part array with margins in it
+  attr_accessor :margins
+
+  # four part array with borders in it
+  attr_accessor :paddings
+
+  # min and max widths
+  attr_accessor :min_width
+  attr_accessor :max_width
+
+  # min and max heights
+  attr_accessor :min_height
+  attr_accessor :max_height
+
   # Enable debug messages for this object
   attr_accessor :debug
 
@@ -53,6 +78,34 @@ class UIView
       restyle!
       Teacup.should_restyle!
     end
+  end
+
+  def position
+    @position || :absolute 
+  end
+  
+  def display
+    @display || :block
+  end
+
+  def margins
+    @margins || [0,0,0,0]
+  end
+
+  def margin_right
+    margins[RIGHT]
+  end
+
+  def margin_left
+    margins[LEFT]
+  end
+
+  def margin_top
+    margins[TOP]
+  end
+
+  def margin_bottom
+    margins[BOTTOM]
   end
 
   def set_stylesheet_quickly(new_stylesheet)

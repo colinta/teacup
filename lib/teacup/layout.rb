@@ -140,6 +140,8 @@ module Teacup
 
       layout(instance, *args, &block)
 
+      Flower.new(instance.subviews.select{|sv| sv.position == :relative}, instance.bounds.size).flow
+
       instance
     end
 

@@ -94,9 +94,9 @@ describe "Teacup::View" do
       @view.layer.borderWidth.should == 10
     end
 
-    it 'should warn about unknown thingies' do
-      @view.style(partyTime: :excellent)
-    end
+    #it 'should warn about unknown thingies' do
+    #  @view.style(partyTime: :excellent)
+    #end
 
   end
 
