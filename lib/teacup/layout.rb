@@ -11,16 +11,57 @@ module Teacup
   #
   # @example
   #   class MyViewController < UIViewController
+  #     stylesheet :logo
+  #
   #     layout(:my_view) do
   #       layout UIImage, :logo
   #     end
-  #
-  #     def stylesheet
-  #       Teacup::Stylesheet[:logo]
-  #     end
   #   end
   module Layout
-    attr_accessor :stylesheet
+    # Assign a Stylesheet or Stylesheet name (Symbol)
+    #
+    # @return val
+    #
+    # @example
+    #
+    #   stylesheet = Stylesheet.new do
+    #                  style :root, backgroundColor: UIColor.blueColor
+    #                end
+    #   controller.stylesheet = stylesheet
+    #   # or use a stylename
+    #   view.stylesheet = :stylesheet_name
+    #
+    def stylesheet= val
+      @stylesheet = val
+    end
+
+    # Returns a stylesheet to use to style the contents of this controller's
+    # view.  You can also assign a stylesheet to {stylesheet=}, which will in
+    # turn call {restyle!}.
+    #
+    # This method will be queried each time {restyle!} is called, and also
+    # implicitly whenever Teacup needs to draw your layout (currently only at
+    # view load time).
+    #
+    # @return Teacup::Stylesheet
+    #
+    # @example
+    #
+    #  def stylesheet
+    #    if [UIInterfaceOrientationLandscapeLeft,
+    #        UIInterfaceOrientationLandscapeRight].include?(UIInterface.currentDevice.orientation)
+    #      Teacup::Stylesheet[:ipad]
+    #    else
+    #      Teacup::Stylesheet[:ipadvertical]
+    #    end
+    #  end
+    def stylesheet
+      if @stylesheet.is_a? Symbol
+        @stylesheet = Teacup::Stylesheet[@stylesheet]
+      end
+
+      @stylesheet
+    end
 
     # Alter the layout of a view
     #

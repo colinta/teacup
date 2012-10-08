@@ -12,17 +12,6 @@ class UIView
   # Enable debug messages for this object
   attr_accessor :debug
 
-  # The current stylesheet will be looked at when properties are needed.  It
-  # is loaded lazily, so that assignment can occur before the Stylesheet has
-  # been created.
-  def stylesheet
-    if @stylesheet.is_a? Symbol
-      @stylesheet = Teacup::Stylesheet[@stylesheet]
-    end
-
-    @stylesheet
-  end
-
   # Alter the stylename of this view.
   #
   # This will cause new styles to be applied from the stylesheet.
