@@ -60,7 +60,7 @@ module Teacup
 
       # now we can merge extends, and importing.  before merging, these will go
       # through the same process that we just finished on the local style
-      if stylesheet
+      if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         stylesheet.imported_stylesheets.reverse.each do |stylesheet|
           imported_properties = stylesheet.query(self.stylename, target, orientation, seen)
           Teacup::merge_defaults! properties, imported_properties
