@@ -51,7 +51,7 @@ class UIView
 
   def restyle!(orientation=nil)
     if Teacup.should_restyle?
-      if stylesheet
+      if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         style(stylesheet.query(stylename, self, orientation))
       end
       subviews.each{ |subview| subview.restyle!(orientation) }
