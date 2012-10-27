@@ -129,9 +129,8 @@ module Teacup
       end
 
       if should_restyle
-        view.restyle!
-        # restore to whatever it was, either nil or true
         Teacup.should_restyle!
+        view.restyle!
       end
       view
     end
