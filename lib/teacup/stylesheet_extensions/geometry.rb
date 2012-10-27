@@ -44,23 +44,25 @@ module Teacup
 
     # returns a bit-wise OR of the device masks
     def device
-      this_device = 0
+      return @@this_device if @@this_device.defined?
+
+      @@this_device = 0
       if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
-        this_device |= iPhone
+        @@this_device |= iPhone
         if UIScreen.mainScreen.respond_to? :scale
-          this_device |= iPhoneRetina
+          @@this_device |= iPhoneRetina
           if UIScreen.mainScreen.bounds.size.height == 568
-            this_device |= iPhone5
+            @@this_device |= iPhone5
           end
         end
       else
-        this_device |= iPad
+        @@this_device |= iPad
         if UIScreen.mainScreen.respond_to? :scale
-          this_device |= iPadRetina
+          @@this_device |= iPadRetina
         end
       end
 
-      return this_device
+      return @@this_device
     end
 
     def device?(this_device)
