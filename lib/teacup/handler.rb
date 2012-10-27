@@ -68,7 +68,7 @@ module Teacup
       assign = nil
       setter = key.to_s + ':'
     else
-      assign = :"#{key}="
+      assign = key.to_s + '='
       setter = 'set' + key.to_s.sub(/^./) {|c| c.capitalize} + ':'
     end
 
