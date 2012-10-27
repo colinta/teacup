@@ -162,6 +162,46 @@ Any method that accepts a single value can be assigned here.  Please don't abuse
 this by hiding application logic in your stylesheets - these are meant for
 *design*, not behavior.  That said, if you're coding by yourself - go for it! ;)
 
+Stylesheets
+===========
+
+The `Teacup::Stylesheet` class has methods that create a micro-DSL in the
+context of a `style` declaration.  You can view the source (most of them are
+very short methods) in `lib/teacup/stylesheet_extensions/*.rb`.
+
+```ruby
+# autoresizingMask
+style :spinner,
+  center: [320, 460],
+  autoresizingMask: flexible_left|flexible_right|flexible_top|flexible_bottom
+
+
+# device-specific geometries - app_size, screen_size, and device/device? methods
+style :root,
+  origin: [0, 0],
+  size: app_size  # doesn't include the status bar - screen_size does
+
+if device? iPhone
+  style :image, image: UIImage.imageNamed "my iphone image"
+elsif device? iPad
+  style :image, image: UIImage.imageNamed "my ipad image"
+end
+
+# the device method can be OR'd with the devices.  The return value is always a
+# number, so make sure to compare to 0
+if device|iPhone > 0
+  # ...
+end
+# so yeah, you might as well use `device? iPhone`, in my opinion.
+
+
+# rotations - use the identity and pi methods
+style :button,
+  layer: {
+    transform: spin identity, 2*pi
+  }
+```
+
 Orientations
 ============
 
