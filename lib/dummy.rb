@@ -46,6 +46,13 @@ private
   end
 end
 
+class DummyPickerView < UIPickerView
+private
+  def dummy
+    setShowsSelectionIndicator(nil)
+  end
+end
+
 class DummyLayer < CALayer
 private
   def dummy
