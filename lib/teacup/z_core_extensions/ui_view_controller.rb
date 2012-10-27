@@ -139,7 +139,7 @@ class UIViewController
   #
   # the teacup developers apologize for any inconvenience. :-)
   def autorotateToOrientation(orientation)
-    if view.stylesheet and view.stylename
+    if view.stylesheet and view.stylesheet.is_a?(Teacup::Stylesheet) and view.stylename
       properties = view.stylesheet.query(view.stylename, self, orientation)
 
       # check for orientation-specific properties
@@ -173,7 +173,7 @@ class UIViewController
   end
 
   def autorotateMask
-    if view.stylesheet and view.stylename
+    if view.stylesheet and view.stylesheet.is_a?(Teacup::Stylesheet) and view.stylename
       properties = view.stylesheet.query(view.stylename, self, orientation)
       device = UIDevice.currentDevice.userInterfaceIdiom
       device == UIUserInterfaceIdiomPhone
