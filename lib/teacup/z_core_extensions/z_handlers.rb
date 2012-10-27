@@ -94,7 +94,7 @@ Teacup.handler UIButton, :titleColor { |color|
 }
 
 
-Teacup.handler UIButton, :titleFont { |font|
+Teacup.handler UIButton, :titleFont, :font { |font|
   font = font.uifont
   self.titleLabel.font = font
 }
