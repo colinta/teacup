@@ -108,9 +108,6 @@ class UIView
   # @param Hash  the properties to set.
   def style(properties, orientation=nil)
     Teacup.apply_hash self, properties
-    properties.each do |key, value|
-      Teacup.apply self, key, value
-    end
 
     self.setNeedsDisplay
     self.setNeedsLayout
