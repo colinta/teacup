@@ -107,6 +107,51 @@ class UIView
   #
   # @param Hash  the properties to set.
   def style(properties, orientation=nil)
+    if properties.key?(:constraints)
+
+      new_constraints = add_unig_constraints(properties.delete(:constraints))
+
+      self.setTranslatesAutoresizingMaskIntoConstraints(false) unless new_constraints.empty?
+      new_constraints.each do |constraint|
+        constraint_copy = constraint.copy
+        window = UIApplication.sharedApplication.keyWindow
+
+        case constraint.target
+        when :self
+          constraint_copy.target = self
+        when :superview
+          constraint_copy.target = self.superview
+        when Symbol
+          constraint_copy.target = window.viewWithStylename(constraint.target)
+        end
+
+        case constraint.relative_to
+        when :self
+          constraint_copy.relative_to = self
+        when :superview
+          constraint_copy.relative_to = self.superview
+        when Symbol, String
+          constraint_copy.relative_to = window.viewWithStylename(constraint.relative_to)
+        end
+
+        if constraint_copy.target.isDescendantOfView(constraint_copy.relative_to)
+          constraint_copy.relative_to.addConstraint(constraint_copy.nslayoutconstraint)
+        elsif constraint_copy.relative_to.isDescendantOfView(constraint_copy.target)
+          constraint_copy.target.addConstraint(constraint_copy.nslayoutconstraint)
+        else
+          parent = relative_to.superview
+          while parent
+            if constraint_copy.target.isDescendantOfView(parent)
+              parent.addConstraint(constraint_copy.nslayoutconstraint)
+              parent = nil
+            else
+              parent = parent.superview
+            end
+          end
+        end
+      end
+    end
+
     Teacup.apply_hash self, properties
 
     self.setNeedsDisplay
@@ -115,6 +160,32 @@ class UIView
 
   def top_level_view
     return self
+  end
+
+  def add_unig_constraints(constraint)
+    @constrain_just_once ||= {}
+
+    if constraint.is_a? Array
+      constraint.map{|constraint| add_unig_constraints(constraint) }.flatten
+    elsif constraint.is_a? Hash
+      constraint.select{|sym, relative_to|
+        @constrain_just_once[sym].nil?
+      }.map{|sym, relative_to|
+        @constrain_just_once[sym] = true
+        Teacup::Constraint.from_sym(sym, relative_to)
+      }
+    else
+      if @constrain_just_once[constraint]
+        []
+      else
+        @constrain_just_once[constraint] = true
+        if constraint.is_a? Symbol
+          [Teacup::Constraint.from_sym(constraint)]
+        else
+          [constraint]
+        end
+      end
+    end
   end
 
 end
