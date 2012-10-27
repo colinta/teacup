@@ -111,8 +111,19 @@ class UIViewController
     layoutDidLoad
   end
 
+  alias old_viewWillAppear viewWillAppear
+
   def viewWillAppear(animated)
-    self.view.restyle!
+    old_viewWillAppear(animated)
+    self.view.restyle! unless @teacup_view_appeared
+    @teacup_view_appeared = true
+  end
+
+  alias old_viewDidDisappear viewDidDisappear
+
+  def viewDidDisappear(animated)
+    old_viewDidDisappear(animated)
+    @teacup_view_appeared = false
   end
 
   def layoutDidLoad
