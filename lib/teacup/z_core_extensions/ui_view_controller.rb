@@ -105,7 +105,9 @@ class UIViewController
 
     if layout_definition
       stylename, properties, block = layout_definition
+      should_restyle = Teacup.should_restyle_and_block
       layout(view, stylename, properties, &block)
+      Teacup.should_restyle! if should_restyle
     end
 
     layoutDidLoad
