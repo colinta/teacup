@@ -121,8 +121,12 @@ class UIView
           constraint_copy.target = self
         when :superview
           constraint_copy.target = self.superview
-        when Symbol
-          constraint_copy.target = window.viewWithStylename(constraint.target)
+        when Symbol, String
+          container = self
+          while container.superview
+            container = container.superview
+          end
+          constraint_copy.target = container.viewWithStylename(constraint.target)
         end
 
         case constraint.relative_to
@@ -131,7 +135,11 @@ class UIView
         when :superview
           constraint_copy.relative_to = self.superview
         when Symbol, String
-          constraint_copy.relative_to = window.viewWithStylename(constraint.relative_to)
+          container = self
+          while container.superview
+            container = container.superview
+          end
+          constraint_copy.relative_to = container.viewWithStylename(constraint.relative_to)
         end
 
         if constraint_copy.target.isDescendantOfView(constraint_copy.relative_to)
@@ -139,13 +147,15 @@ class UIView
         elsif constraint_copy.relative_to.isDescendantOfView(constraint_copy.target)
           constraint_copy.target.addConstraint(constraint_copy.nslayoutconstraint)
         else
-          parent = relative_to.superview
+          parent = constraint_copy.relative_to.superview
           while parent
             if constraint_copy.target.isDescendantOfView(parent)
               parent.addConstraint(constraint_copy.nslayoutconstraint)
               parent = nil
-            else
+            elsif parent.superview
               parent = parent.superview
+            else
+              raise "The two views #{constraint.target} and #{constraint.relative_to} do not have a common ancestor"
             end
           end
         end
