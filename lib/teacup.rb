@@ -21,4 +21,6 @@ Motion::Project::App.setup do |app|
   Dir.glob(File.join(File.dirname(__FILE__), 'teacup/**/*.rb')).reverse.each do |file|
     app.files.insert(insert_point, file)
   end
+
+  app.vendor_project File.join(File.dirname(__FILE__), '../vendor/TeacupDummy'), :static
 end

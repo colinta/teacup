@@ -1,4 +1,5 @@
 .repl_history
+*.bridgesupport
 build
 resources/*.nib
 resources/*.momd
