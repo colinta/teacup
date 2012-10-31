@@ -6,6 +6,8 @@
 class UIView
   include Teacup::Layout
 
+  MAX_SIZE = 9999
+
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
 
@@ -106,6 +108,48 @@ class UIView
 
   def margin_bottom
     margins[BOTTOM]
+  end
+
+  def size=(size)
+    if size[0].is_a?(Array)
+      @min_width = width = size[0][0]
+      @max_width = size[0][1]
+    else
+      width = size[0]
+    end
+ 
+    if size[1].is_a?(Array)
+      @min_height = height = size[1][0]
+      @max_height = size[1][1]
+    else
+      height = size[1]
+    end
+ 
+    self.frame = [[0,0],[width, height]]
+  end
+
+  def horz_stretchable?
+    @min_width != @max_width
+  end
+
+  def min_width
+    @min_width || self.bounds.size.width
+  end
+
+  def max_width
+    @max_width || self.bounds.size.width
+  end
+
+  def vert_stretchable?
+    @min_height != @max_height
+  end
+
+  def min_height
+    @min_height || self.bounds.size.height
+  end
+
+  def max_height
+    @max_height || self.bounds.size.height
   end
 
   def set_stylesheet_quickly(new_stylesheet)
