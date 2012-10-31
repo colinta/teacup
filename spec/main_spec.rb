@@ -22,7 +22,7 @@ describe "Application 'Teacup'" do
     controller.shouldAutorotateToInterfaceOrientation(UIInterfaceOrientationPortraitUpsideDown).should == nil
   end
 
-  it "root view should be styled as 'root'" do
+  it "root view should be styled as :root" do
     @root_view.stylename.should == :root
     @root_view.frame.origin.x.should == 0
     @root_view.frame.origin.y.should == 0
