@@ -39,8 +39,8 @@ class UIView
     subviews.each{ |subview| subview.set_stylesheet_quickly(new_stylesheet) }
 
     if should_restyle
-      restyle!
       Teacup.should_restyle!
+      restyle!
     end
   end
 
