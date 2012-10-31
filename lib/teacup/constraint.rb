@@ -72,22 +72,22 @@ module Teacup
         [
           Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
         ]
-      when :topleft
+      when :top_left
         [
           Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
           Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
         ]
-      when :topright
+      when :top_right
         [
           Teacup::Constraint.new(:self, :right).equals(relative_to, :right),
           Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
         ]
-      when :bottomright
+      when :bottom_right
         [
           Teacup::Constraint.new(:self, :right).equals(relative_to, :right),
           Teacup::Constraint.new(:self, :bottom).equals(relative_to, :bottom),
         ]
-      when :bottomleft
+      when :bottom_left
         [
           Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
           Teacup::Constraint.new(:self, :bottom).equals(relative_to, :bottom),
