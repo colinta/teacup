@@ -92,6 +92,7 @@ module Teacup
         # restore to whatever it was, either nil or true
         Teacup.should_restyle!
       end
+
       view
     end
 
@@ -139,8 +140,6 @@ module Teacup
       (superview_chain.last || top_level_view).addSubview(instance)
 
       layout(instance, *args, &block)
-
-      Flower.new(instance.subviews.select{|sv| sv.position == :relative}, instance.bounds.size).flow
 
       instance
     end

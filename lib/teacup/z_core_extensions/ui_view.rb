@@ -7,6 +7,8 @@ class UIView
   include Teacup::Layout
 
   MAX_SIZE = 9999
+  MAX_DIMENSION = [0, MAX_SIZE]
+  MAX_DIMENSIONS = [MAX_DIMENSION, MAX_DIMENSION]
 
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
@@ -110,7 +112,7 @@ class UIView
     margins[BOTTOM]
   end
 
-  def size=(size)
+  def dimensions=(size)
     if size[0].is_a?(Array)
       @min_width = width = size[0][0]
       @max_width = size[0][1]

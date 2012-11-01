@@ -137,6 +137,15 @@ class UIViewController
 
   def viewWillAppear(animated)
     self.view.restyle!
+
+    flow_views(self.view)
+  end
+
+  def flow_views(the_view)
+    Flower.new(the_view.subviews.select{|sv| sv.position == :relative}, the_view.bounds.size).flow
+    the_view.subviews.each do |subview|
+      flow_views(subview)
+    end
   end
 
   def layoutDidLoad
@@ -187,6 +196,9 @@ class UIViewController
 
   def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
     view.restyle!(orientation)
+debug_this do
+    flow_views(self.view)
+end
   end
 
 end

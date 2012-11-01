@@ -2,22 +2,25 @@
 class FirstController < UIViewController
 
   stylesheet :first
-
   layout :root do
     subview(CustomView, :background) do
       @welcome = subview(UILabel, :welcome)
       subview(UILabel, :footer)
       @button = subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :next_message)
+
 =begin
       @label1 = subview(UILabel, text: "label1", height: 20, width: 100, position: :relative, margins: [0, 0, 10, 30])
-      subview(UIView, height: 100, width: 320, position: :relative) do
-        @label2 = subview(UILabel, text: "label2", height: 20, width: 100, position: :relative, margins: [10, 0, 10, 0])
-        @label3 = subview(UILabel, text: "label3", height: 20, width: 100, position: :relative, display: :inline, margins: [10, 0, 10, 0])
-
-        @label4 = subview(UILabel, text: "label4", x: 0, y: 0, width: 100, height: 20)
+      #subview(UIView, height: 100, width: 320, position: :relative) do
+      subview(UIView, dimensions: UIView::MAX_DIMENSIONS, position: :relative, backgroundColor: UIColor.blackColor) do
+        @label2 = subview(UILabel, text: "label2", height: 20, width: 100, position: :relative, margins: [10, 0, 10, 0], backgroundColor: UIColor.blueColor)
+        @label3 = subview(UILabel, text: "label3", height: 20, width: 100, position: :relative, display: :inline, margins: [10, 0, 10, 0], backgroundColor: UIColor.redColor)
+        @label4 = subview(UILabel, text: "label4", x: 0, y: 0, width: 100, height: 20, backgroundColor: UIColor.greenColor)
+        #@label2 = subview(UILabel, text: "label2", dimensions: [UIView::MAX_DIMENSION, 40], position: :relative, backgroundColor: UIColor.blueColor)
+        #@label3 = subview(UILabel, text: "label3", dimensions: UIView::MAX_DIMENSIONS, position: :relative, backgroundColor: UIColor.whiteColor)
+        #@label4 = subview(UILabel, text: "label4", dimensions: [UIView::MAX_DIMENSION, 60], position: :relative, backgroundColor: UIColor.greenColor)
       end
-=end
     end
+=end
 
     @button.addTarget(self, action: :next_message, forControlEvents:UIControlEventTouchUpInside)
   end
@@ -70,5 +73,4 @@ class FirstController < UIViewController
   def shouldAutorotateToInterfaceOrientation(orientation)
     autorotateToOrientation(orientation)
   end
-
 end
