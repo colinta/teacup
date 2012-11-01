@@ -93,7 +93,6 @@ class Flower
       end
       debug "new frame = #{frame.inspect}"
     end
-    end
   end
 
   def flow
@@ -131,7 +130,7 @@ class Flower
           x += view.margin_left
         end
           
-        debug "after, x = #{x}, y = #{y}, min_width = #{view.min_width}, min_height = #{view.min_height}"
+        #debug "after, x = #{x}, y = #{y}, min_width = #{view.min_width}, min_height = #{view.min_height}"
         view.frame = [[x,y], [view.min_width, view.min_height]]
 
         if new_line || index == @views.size - 1
