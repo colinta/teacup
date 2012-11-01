@@ -19,8 +19,8 @@ class FirstController < UIViewController
         #@label3 = subview(UILabel, text: "label3", dimensions: UIView::MAX_DIMENSIONS, position: :relative, backgroundColor: UIColor.whiteColor)
         #@label4 = subview(UILabel, text: "label4", dimensions: [UIView::MAX_DIMENSION, 60], position: :relative, backgroundColor: UIColor.greenColor)
       end
-    end
 =end
+    end
 
     @button.addTarget(self, action: :next_message, forControlEvents:UIControlEventTouchUpInside)
   end
