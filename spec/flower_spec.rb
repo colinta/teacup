@@ -110,13 +110,12 @@ describe "Flower" do
       bottom_view = UIView.new
       bottom_view.position = :relative
       bottom_view.display = :block
-      bottom_view.dimensions = [100.0, 20.0]
+      bottom_view.dimensions = [UIView::MAX_DIMENSION, 20.0]
       Flower.new([top_view, bottom_view], CGSize.new(320, 480)).flow
 
       top_view.frame.should == CGRect.new([0.0, 0.0], [20.0, 460.0])
-      bottom_view.frame.should == CGRect.new([0.0, 460.0], [100.0, 20.0])
+      bottom_view.frame.should == CGRect.new([0.0, 460.0], [320.0, 20.0])
     end
-
 
     it 'make the middle view stretch between the top and bottom views of fixed size' do
       top_view = UIView.new
