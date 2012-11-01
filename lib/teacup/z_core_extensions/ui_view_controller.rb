@@ -196,9 +196,7 @@ class UIViewController
 
   def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
     view.restyle!(orientation)
-debug_this do
     flow_views(self.view)
-end
   end
 
 end
