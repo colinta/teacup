@@ -30,25 +30,25 @@ class Flower
   end
 
   def distribute_horz_remainder(stretchable_views, remaining_width)
-    debug "remaining_width = #{remaining_width}, stretchable_views = #{stretchable_views.inspect}"
+    #debug "remaining_width = #{remaining_width}, stretchable_views = #{stretchable_views.inspect}"
     return if remaining_width == 0.0
     return if stretchable_views.to_a.empty?
 
     width_per_stretchable_view = remaining_width / stretchable_views.num_stretchable
     added_width_so_far = 0.0
-    debug "width_per_stretchable_view = #{width_per_stretchable_view}"
+    #debug "width_per_stretchable_view = #{width_per_stretchable_view}"
     stretchable_views.to_a.each do |view|
-      debug "for view #{view.inspect}"
+      #debug "for view #{view.inspect}"
       if view.horz_stretchable?
         frame = view.frame
         frame.origin.x += added_width_so_far
         if width_per_stretchable_view + frame.size.width > view.max_width
           added_width = width_per_stretchable_view + frame.size.width - view.max_width
-          debug "added width goes beyond max width"
+          #debug "added width goes beyond max width"
         else
           added_width = width_per_stretchable_view
         end
-        debug "added_width = #{added_width}"
+        #debug "added_width = #{added_width}"
         frame.size.width += added_width
         view.frame = frame
         added_width_so_far += added_width
@@ -62,25 +62,25 @@ class Flower
   end
 
   def distribute_vert_remainder(stretchable_views, remaining_height)
-    debug "remaining_height = #{remaining_height}, stretchable_views = #{stretchable_views.inspect}"
+    #debug "remaining_height = #{remaining_height}, stretchable_views = #{stretchable_views.inspect}"
     return if remaining_height == 0.0
     return if stretchable_views.to_a.empty?
 
     height_per_stretchable_view = remaining_height / stretchable_views.num_stretchable
     added_height_so_far = 0.0
-    debug "height_per_stretchable_view = #{height_per_stretchable_view}"
+    #debug "height_per_stretchable_view = #{height_per_stretchable_view}"
     stretchable_views.to_a.each do |view|
-      debug "for view #{view.inspect}"
+      #debug "for view #{view.inspect}"
       if view.vert_stretchable?
         frame = view.frame
         frame.origin.y += added_height_so_far
         if height_per_stretchable_view + frame.size.height > view.max_height
           added_height = height_per_stretchable_view + frame.size.height - view.max_height
-          debug "added height goes beyond max height"
+          #debug "added height goes beyond max height"
         else
           added_height = height_per_stretchable_view
         end
-        debug "added_height = #{added_height}"
+        #debug "added_height = #{added_height}"
         frame.size.height += added_height
         view.frame = frame
         added_height_so_far += added_height
@@ -94,17 +94,17 @@ class Flower
   end
 
   def flow
-    debug("")
-    debug("ENTER flow container size = #{@container_size.inspect}")
+    #debug("")
+    #debug("ENTER flow container size = #{@container_size.inspect}")
     x = 0; y = 0
     max_height = 0
     @horz_stretch_views = StretchableViews.new(:horz_stretchable?)
     @vert_stretch_views = StretchableViews.new(:vert_stretchable?)
 
     @views.each_with_index do |view, index|
-      debug "view size = [[#{view.min_width},#{view.max_width}],[#{view.min_height}, #{view.max_height}]], margins = #{view.margins.inspect}"
-      debug "max_height = #{max_height}, margin_top = #{view.margin_top}"
-      debug "before, x = #{x}, y = #{y}"
+      #debug "view size = [[#{view.min_width},#{view.max_width}],[#{view.min_height}, #{view.max_height}]], margins = #{view.margins.inspect}"
+      #debug "max_height = #{max_height}, margin_top = #{view.margin_top}"
+      #debug "before, x = #{x}, y = #{y}"
       if view.position == :relative
         @vert_stretch_views.push(view)
 
@@ -128,7 +128,7 @@ class Flower
           x += view.margin_left
         end
           
-        debug "after, x = #{x}, y = #{y}"
+        #debug "after, x = #{x}, y = #{y}"
         view.frame = [[x,y], [view.min_width, view.min_height]]
 
         if new_line || index == @views.size - 1
@@ -143,7 +143,7 @@ class Flower
 
         # don't include top margin because y is already includes top margin
         total_height = view.min_height + view.margin_bottom
-        debug "total_height = #{total_height}, min_height = #{view.min_height}"
+        #debug "total_height = #{total_height}, min_height = #{view.min_height}"
         max_height = total_height if total_height > max_height
       end
 
@@ -155,6 +155,6 @@ class Flower
 
     #distribute_horz_remainder(@horz_stretch_views, @container_size.width - x)
     distribute_vert_remainder(@vert_stretch_views, @container_size.height - y)
-    debug("EXIT flow")
+    #debug("EXIT flow")
   end
 end
