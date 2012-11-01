@@ -7,6 +7,7 @@ class AppDelegate
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     @window.rootViewController = FirstController.new
+    #@window.rootViewController = MyController.new
     @window.rootViewController.wantsFullScreenLayout = true
     @window.makeKeyAndVisible
 
