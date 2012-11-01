@@ -58,6 +58,7 @@ class Flower
         frame.origin.x += added_width_so_far
         view.frame = frame
       end
+      debug "new frame = #{frame.inspect}"
     end
   end
 
@@ -90,6 +91,8 @@ class Flower
         frame.origin.y += added_height_so_far
         view.frame = frame
       end
+      debug "new frame = #{frame.inspect}"
+    end
     end
   end
 
@@ -128,7 +131,7 @@ class Flower
           x += view.margin_left
         end
           
-        debug "after, x = #{x}, y = #{y}"
+        debug "after, x = #{x}, y = #{y}, min_width = #{view.min_width}, min_height = #{view.min_height}"
         view.frame = [[x,y], [view.min_width, view.min_height]]
 
         if new_line || index == @views.size - 1
