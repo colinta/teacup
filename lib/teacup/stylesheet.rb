@@ -114,6 +114,31 @@ module Teacup
       @block = block
     end
 
+    # The stylesheet_cache stores "compiled" styles.  It is reset whenever the
+    # stylesheet imports a new Stylesheet, and when a style entry is added or
+    # changed (then only that entry is removed)
+    #
+    # This method builds the gnarly hash that stores this stuff - the get/set
+    # methods use this method to ensure the object exists, in other places the
+    # @stylesheet_cache object is manipulated directly (to invalidate entries,
+    # or the entire cache)
+    def stylesheet_cache
+      @stylesheet_cache ||= Hash.new { |cache,_stylename|
+        cache[_stylename] = Hash.new { |_target,_orientation|
+          _target[_orientation] = {}
+        }
+      }
+    end
+
+    def get_stylesheet_cache(stylename, target, orientation)
+      stylesheet_cache[stylename][target][orientation]
+    end
+
+    def set_stylesheet_cache(stylename, target, orientation, value)
+      stylesheet_cache(stylename, target, orientation)
+      @stylesheet_cache[stylename][target][orientation] = value
+    end
+
     # Include another Stylesheet into this one, the rules defined
     # within it will have lower precedence than those defined here
     # in the case that they share the same keys.
@@ -138,6 +163,7 @@ module Teacup
     #   @stylesheet.import(base_stylesheet)
     #
     def import(name_or_stylesheet)
+      @stylesheet_cache = nil
       imported << name_or_stylesheet
     end
 
@@ -155,19 +181,25 @@ module Teacup
     #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
     def query(stylename, target=nil, orientation=nil, seen={})
       return {} if seen[self]
+      return {} unless stylename
 
-      # the block handed to Stylesheet#new is not run immediately - it is run
-      # the first time the stylesheet is queried.  This fixes bugs related to
-      # some resources (fonts) not available when the application is first
-      # started.  The downside is that @instance variables and variables that
-      # should be closed over are not.
-      if @block
-        instance_eval &@block
-        @block = nil
+      unless get_stylesheet_cache(stylename, target, orientation)
+        # the block handed to Stylesheet#new is not run immediately - it is run
+        # the first time the stylesheet is queried.  This fixes bugs related to
+        # some resources (fonts) not available when the application is first
+        # started.  The downside is that @instance variables and variables that
+        # should be closed over are not.
+        if @block
+          instance_eval &@block
+          @block = nil
+        end
+        seen[self] = true
+
+        set_stylesheet_cache(stylename, target, orientation, styles[stylename].build(target, orientation, seen))
       end
-      seen[self] = true
 
-      styles[stylename].build(target, orientation, seen)
+      # mutable hashes could mess with our cache, so return a duplicate
+      get_stylesheet_cache(stylename, target, orientation).dup
     end
 
     # Add a set of properties for a given stylename or multiple stylenames.
@@ -193,6 +225,9 @@ module Teacup
       end
 
       queries.each do |stylename|
+        # reset the stylesheet_cache for this stylename
+        @stylesheet_cache.delete(stylename) if @stylesheet_cache
+
         # merge into styles[stylename], new properties "win"
         Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
       end
