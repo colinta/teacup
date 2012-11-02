@@ -135,8 +135,7 @@ module Teacup
     end
 
     def set_stylesheet_cache(stylename, target, orientation, value)
-      stylesheet_cache(stylename, target, orientation)
-      @stylesheet_cache[stylename][target][orientation] = value
+      self.stylesheet_cache[stylename][target][orientation] = value
     end
 
     # Include another Stylesheet into this one, the rules defined
