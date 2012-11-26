@@ -34,11 +34,18 @@ module Teacup
     end
 
     def constrain_width(width)
-      Teacup::Constraint.new(:self, :right).equals(:self, :left).plus(width)
+      Teacup::Constraint.new(:self, :width).equals(width)
     end
 
     def constrain_height(height)
-      Teacup::Constraint.new(:self, :bottom).equals(:self, :top).plus(height)
+      Teacup::Constraint.new(:self, :height).equals(height)
+    end
+
+    def constrain_size(width, height)
+      [
+        Teacup::Constraint.new(:self, :right).equals(:self, :left).plus(width),
+        Teacup::Constraint.new(:self, :bottom).equals(:self, :top).plus(height),
+      ]
     end
 
     ##|
