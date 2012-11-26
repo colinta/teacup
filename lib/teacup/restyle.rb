@@ -15,8 +15,15 @@ module Teacup
     return should_restyle
   end
 
-  def should_restyle!
-    @dont_restyle = nil
+  def should_restyle! &block
+    if block
+      _dont_restyle = dont_restyle?
+      @dont_restyle = nil
+      yield
+      @dont_restyle = _dont_restyle
+    else
+      @dont_restyle = nil
+    end
   end
 
 end
