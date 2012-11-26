@@ -32,10 +32,10 @@ class UIView
         if view.is_a? name_or_class
           r << view
         end
-      else view.stylename == name_or_class
+      elsif view.stylename == name_or_class
         r << view
       end
-      r += view.viewsWithStylename name_or_class
+      r.concat view.viewsWithStylename name_or_class
     end
     r
   end
