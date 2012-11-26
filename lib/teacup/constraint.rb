@@ -7,14 +7,21 @@ module Teacup
     attr_accessor :attribute2
     attr_accessor :multiplier
     attr_accessor :constant
+    attr_accessor :priority
 
     if defined? NSLayoutRelationEqual
+      Priorities = {
+        required: 1000,  # NSLayoutPriorityRequired
+        high: 750,  # NSLayoutPriorityDefaultHigh
+        low: 250,  # NSLayoutPriorityDefaultLow
+      }
       Relationships = {
         equal: NSLayoutRelationEqual,
         lte: NSLayoutRelationLessThanOrEqual,
         gte: NSLayoutRelationGreaterThanOrEqual,
       }
       Attributes = {
+        none: NSLayoutAttributeNotAnAttribute,
         left: NSLayoutAttributeLeft,
         right: NSLayoutAttributeRight,
         top: NSLayoutAttributeTop,
@@ -50,6 +57,14 @@ module Teacup
         [
           Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
           Teacup::Constraint.new(:self, :height).equals(relative_to, :height),
+        ]
+      when :center_x
+        [
+          Teacup::Constraint.new(:self, :center_x).equals(:superview, :center_x),
+        ]
+      when :center_y
+        [
+          Teacup::Constraint.new(:self, :center_y).equals(:superview, :center_y),
         ]
       when :centered
         [
@@ -102,28 +117,35 @@ module Teacup
       self.attribute = attribute
       self.constant = 0
       self.multiplier = 1
+      self.priority = :high
     end
 
-    def equals(relative_to, attribute2)
-      self.relative_to = relative_to
-      self.attribute2 = attribute2
-      self.relationship = NSLayoutRelationEqual
-
-      self
+    def equals(relative_to, attribute2=nil)
+      self.set_relationship(NSLayoutRelationEqual, relative_to, attribute2)
     end
 
-    def lte(relative_to, attribute2)
-      self.relative_to = relative_to
-      self.attribute2 = attribute2
-      self.relationship = NSLayoutRelationLessThanOrEqual
-
-      self
+    def lte(relative_to, attribute2=nil)
+      self.set_relationship(NSLayoutRelationLessThanOrEqual, relative_to, attribute2)
     end
+    alias at_most lte
+    alias is_at_most lte
 
-    def gte(relative_to, attribute2)
-      self.relative_to = relative_to
-      self.attribute2 = attribute2
-      self.relationship = NSLayoutRelationGreaterThanOrEqual
+    def gte(relative_to, attribute2=nil)
+      self.set_relationship(NSLayoutRelationGreaterThanOrEqual, relative_to, attribute2)
+    end
+    alias at_least gte
+    alias is_at_least gte
+
+    def set_relationship(relation, relative_to, attribute2)
+      if attribute2.nil?
+        self.constant = relative_to
+        self.relative_to = nil
+        self.attribute2 = :none
+      else
+        self.relative_to = relative_to
+        self.attribute2 = attribute2
+      end
+      self.relationship = relation
 
       self
     end
@@ -154,6 +176,13 @@ module Teacup
       plus -constant
     end
 
+    def priority(priority=nil)
+      return @priority if priority.nil?
+
+      self.priority = priority
+      self
+    end
+
     def copy
       copy = Teacup::Constraint.new(self.target, self.attribute)
       copy.relationship = self.relationship
@@ -161,6 +190,7 @@ module Teacup
       copy.attribute2 = self.attribute2
       copy.multiplier = self.multiplier
       copy.constant = self.constant
+      copy.priority = self.priority
       copy
     end
 
@@ -184,14 +214,28 @@ module Teacup
                                   attribute: self.attribute2,
                                  multiplier: self.multiplier,
                                    constant: self.constant
-                                           )
+                                           ) .tap do |nsconstraint|
+        nsconstraint.priority = priority_lookup self.priority
+      end
     end
 
 private
     def attribute_lookup(attribute)
       return attribute if attribute.is_a? Fixnum
-      raise "Unsupported attribute #{attribute.nil}" unless Attributes.key? attribute
+      raise "Unsupported attribute #{attribute.inspect}" unless Attributes.key? attribute
       Attributes[attribute]
+    end
+
+    def priority_lookup(priority)
+      return priority if priority.is_a? Fixnum
+      raise "Unsupported priority #{priority.inspect}" unless Priorities.key? priority
+      Priorities[priority]
+    end
+
+    def relationship_lookup(relationship)
+      return relationship if relationship.is_a? Fixnum
+      raise "Unsupported relationship #{relationship.inspect}" unless Relationships.key? relationship
+      Relationships[relationship]
     end
 
     def attribute_reverse(attribute)
