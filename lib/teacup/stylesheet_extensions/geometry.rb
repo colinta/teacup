@@ -44,7 +44,8 @@ module Teacup
 
     # returns a bit-wise OR of the device masks
     def device
-      return @@this_device if @@this_device.defined?
+      @@this_device ||= nil
+      return @@this_device if @@this_device
 
       @@this_device = 0
       if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
@@ -65,8 +66,9 @@ module Teacup
       return @@this_device
     end
 
-    def device?(this_device)
-      return device&this_device > 0
+    def device_is?(this_device)
+      this_device = self.send(this_device) if this_device.is_a? Symbol
+      return device & this_device > 0
     end
 
   end
