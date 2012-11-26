@@ -205,5 +205,6 @@ module Teacup
     def superview_chain
       @superview_chain ||= []
     end
+
   end
 end
