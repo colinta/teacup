@@ -1,5 +1,5 @@
 module Teacup
 
-  VERSION = '0.3.13'
+  VERSION = '1.0.0'
 
 end
