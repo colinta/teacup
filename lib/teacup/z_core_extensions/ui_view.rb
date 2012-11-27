@@ -51,6 +51,8 @@ class UIView
 
   def restyle!(orientation=nil)
     if Teacup.should_restyle?
+      resetTeacupConstraints
+
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         style(stylesheet.query(stylename, self, orientation))
       end
@@ -108,56 +110,70 @@ class UIView
   # @param Hash  the properties to set.
   def style(properties, orientation=nil)
     if properties.key?(:constraints)
-
-      new_constraints = add_unig_constraints(properties.delete(:constraints))
+      new_constraints = add_uniq_constraints(properties.delete(:constraints))
 
       self.setTranslatesAutoresizingMaskIntoConstraints(false) unless new_constraints.empty?
-      new_constraints.each do |constraint|
-        constraint_copy = constraint.copy
-        window = UIApplication.sharedApplication.keyWindow
 
-        case constraint.target
+      @teacup_added_constraints ||= []
+      new_constraints.each do |original_constraint|
+        constraint = original_constraint.copy
+
+        case original_constraint.target
         when :self
-          constraint_copy.target = self
+          constraint.target = self
         when :superview
-          constraint_copy.target = self.superview
+          constraint.target = self.superview
         when Symbol, String
           container = self
-          while container.superview
+          constraint.target = nil
+          while container.superview && constraint.target == nil
+            constraint.target = container.viewWithStylename(original_constraint.target)
             container = container.superview
           end
-          constraint_copy.target = container.viewWithStylename(constraint.target)
         end
 
-        case constraint.relative_to
+        case original_constraint.relative_to
         when :self
-          constraint_copy.relative_to = self
+          constraint.relative_to = self
         when :superview
-          constraint_copy.relative_to = self.superview
+          constraint.relative_to = self.superview
         when Symbol, String
+          # TODO: this re-checks lots of views - everytime it goes up to the
+          # superview, it checks all the leaves again.
           container = self
-          while container.superview
+          constraint.relative_to = nil
+          while container.superview && constraint.relative_to == nil
+            constraint.relative_to = container.viewWithStylename(original_constraint.relative_to)
             container = container.superview
           end
-          constraint_copy.relative_to = container.viewWithStylename(constraint.relative_to)
         end
 
-        if constraint_copy.target.isDescendantOfView(constraint_copy.relative_to)
-          constraint_copy.relative_to.addConstraint(constraint_copy.nslayoutconstraint)
-        elsif constraint_copy.relative_to.isDescendantOfView(constraint_copy.target)
-          constraint_copy.target.addConstraint(constraint_copy.nslayoutconstraint)
+        add_constraint_to = nil
+        if constraint.target == constraint.relative_to || constraint.relative_to.nil?
+          add_constraint_to = constraint.target.superview
+        elsif constraint.target.isDescendantOfView(constraint.relative_to)
+          add_constraint_to = constraint.relative_to
+        elsif constraint.relative_to.isDescendantOfView(constraint.target)
+          add_constraint_to = constraint.target
         else
-          parent = constraint_copy.relative_to.superview
+          parent = constraint.relative_to.superview
           while parent
-            if constraint_copy.target.isDescendantOfView(parent)
-              parent.addConstraint(constraint_copy.nslayoutconstraint)
+            if constraint.target.isDescendantOfView(parent)
+              add_constraint_to = parent
               parent = nil
             elsif parent.superview
               parent = parent.superview
-            else
-              raise "The two views #{constraint.target} and #{constraint.relative_to} do not have a common ancestor"
             end
           end
+        end
+
+        if add_constraint_to
+          ns_constraint = constraint.nslayoutconstraint
+
+          @teacup_added_constraints << { target: add_constraint_to, constraint: ns_constraint }
+          add_constraint_to.addConstraint(ns_constraint)
+        else
+          raise "The two views #{original_constraint.target} and #{original_constraint.relative_to} do not have a common ancestor"
         end
       end
     end
@@ -172,30 +188,46 @@ class UIView
     return self
   end
 
-  def add_unig_constraints(constraint)
-    @constrain_just_once ||= {}
+  def teacup_added_constraints ; @teacup_added_constraints ; end
+
+  def resetTeacupConstraints
+    if @teacup_added_constraints
+      @teacup_added_constraints.each do |added_constraint|
+        target = added_constraint[:target]
+        constraint = added_constraint[:constraint]
+        target.removeConstraint(constraint)
+      end
+    end
+    @teacup_added_constraints = nil
+    @teacup_constrain_just_once = nil
+  end
+
+  def add_uniq_constraints(constraint)
+    @teacup_constrain_just_once ||= {}
 
     if constraint.is_a? Array
-      constraint.map{|constraint| add_unig_constraints(constraint) }.flatten
+      new_consraints = constraint.map{|constraint| add_uniq_constraints(constraint) }.flatten
     elsif constraint.is_a? Hash
-      constraint.select{|sym, relative_to|
-        @constrain_just_once[sym].nil?
+      new_consraints = constraint.select{|sym, relative_to|
+        @teacup_constrain_just_once[sym].nil?
       }.map{|sym, relative_to|
-        @constrain_just_once[sym] = true
+        @teacup_constrain_just_once[sym] = true
         Teacup::Constraint.from_sym(sym, relative_to)
       }
     else
-      if @constrain_just_once[constraint]
-        []
+      if @teacup_constrain_just_once[constraint]
+        new_consraints = []
       else
-        @constrain_just_once[constraint] = true
+        @teacup_constrain_just_once[constraint] = true
         if constraint.is_a? Symbol
-          [Teacup::Constraint.from_sym(constraint)]
+          new_consraints = [Teacup::Constraint.from_sym(constraint)]
         else
-          [constraint]
+          new_consraints = [constraint]
         end
       end
     end
+
+    return new_consraints
   end
 
 end
