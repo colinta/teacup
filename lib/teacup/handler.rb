@@ -98,7 +98,7 @@ module Teacup
   end
 
   def alias klass, aliases
-    aliases.each do |style_alias, stylename|
+    aliases.each do |style_alias, style_name|
       Teacup.handlers[klass][style_alias] = proc { |view, value|
         Teacup.apply view, style_name, value
       }
