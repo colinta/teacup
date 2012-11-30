@@ -51,12 +51,93 @@ class UIView
 
   def restyle!(orientation=nil)
     if Teacup.should_restyle?
-      resetTeacupConstraints
-
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         style(stylesheet.query(stylename, self, orientation))
       end
       subviews.each{ |subview| subview.restyle!(orientation) }
+    end
+  end
+
+  def get_ns_constraints
+    # gets the array of Teacup::Constraint objects
+    my_constraints = (@teacup_constraints || []).map { |constraint, relative_to|
+      if constraint.is_a?(Teacup::Constraint)
+        constraint
+      else
+        if relative_to == true
+          Teacup::Constraint.from_sym(constraint)
+        else
+          Teacup::Constraint.from_sym(constraint, relative_to)
+        end
+      end
+    }.flatten.tap{ |my_constraints|
+      unless my_constraints.empty?
+        self.setTranslatesAutoresizingMaskIntoConstraints(false)
+      end
+    }.map do |original_constraint|
+      constraint = original_constraint.copy
+
+      case original_constraint.target
+      when UIView
+        constraint.target = original_constraint.target
+      when :self
+        constraint.target = self
+      when :superview
+        constraint.target = self.superview
+      when Symbol, String
+        container = self
+        constraint.target = nil
+        while container.superview && constraint.target == nil
+          constraint.target = container.viewWithStylename(original_constraint.target)
+          container = container.superview
+        end
+      end
+
+      case original_constraint.relative_to
+      when UIView
+        constraint.relative_to = original_constraint.relative_to
+      when :self
+        constraint.relative_to = self
+      when :superview
+        constraint.relative_to = self.superview
+      when Symbol, String
+        # TODO: this re-checks lots of views - everytime it goes up to the
+        # superview, it checks all the leaves again.
+        container = self
+        constraint.relative_to = nil
+        while container.superview && constraint.relative_to == nil
+          constraint.relative_to = container.viewWithStylename(original_constraint.relative_to)
+          container = container.superview
+        end
+      end
+
+      # the return value, for the map
+      constraint.nslayoutconstraint
+    end
+
+    # now add all che child constraints
+    subviews.each do |subview|
+      my_constraints.concat(subview.get_ns_constraints)
+    end
+
+    my_constraints
+  end
+
+  def apply_constraints
+    if @teacup_added_constraints
+      @teacup_added_constraints.each do |constraint|
+        self.removeConstraint(constraint)
+      end
+    end
+    @teacup_added_constraints = nil
+    all_constraints = get_ns_constraints
+
+    return if all_constraints.empty?
+
+    @teacup_added_constraints = []
+    all_constraints.each do |ns_constraint|
+      @teacup_added_constraints << ns_constraint
+      self.addConstraint(ns_constraint)
     end
   end
 
@@ -110,72 +191,7 @@ class UIView
   # @param Hash  the properties to set.
   def style(properties, orientation=nil)
     if properties.key?(:constraints)
-      new_constraints = add_uniq_constraints(properties.delete(:constraints))
-
-      self.setTranslatesAutoresizingMaskIntoConstraints(false) unless new_constraints.empty?
-
-      @teacup_added_constraints ||= []
-      new_constraints.each do |original_constraint|
-        constraint = original_constraint.copy
-
-        case original_constraint.target
-        when :self
-          constraint.target = self
-        when :superview
-          constraint.target = self.superview
-        when Symbol, String
-          container = self
-          constraint.target = nil
-          while container.superview && constraint.target == nil
-            constraint.target = container.viewWithStylename(original_constraint.target)
-            container = container.superview
-          end
-        end
-
-        case original_constraint.relative_to
-        when :self
-          constraint.relative_to = self
-        when :superview
-          constraint.relative_to = self.superview
-        when Symbol, String
-          # TODO: this re-checks lots of views - everytime it goes up to the
-          # superview, it checks all the leaves again.
-          container = self
-          constraint.relative_to = nil
-          while container.superview && constraint.relative_to == nil
-            constraint.relative_to = container.viewWithStylename(original_constraint.relative_to)
-            container = container.superview
-          end
-        end
-
-        add_constraint_to = nil
-        if constraint.target == constraint.relative_to || constraint.relative_to.nil?
-          add_constraint_to = constraint.target.superview
-        elsif constraint.target.isDescendantOfView(constraint.relative_to)
-          add_constraint_to = constraint.relative_to
-        elsif constraint.relative_to.isDescendantOfView(constraint.target)
-          add_constraint_to = constraint.target
-        else
-          parent = constraint.relative_to.superview
-          while parent
-            if constraint.target.isDescendantOfView(parent)
-              add_constraint_to = parent
-              parent = nil
-            elsif parent.superview
-              parent = parent.superview
-            end
-          end
-        end
-
-        if add_constraint_to
-          ns_constraint = constraint.nslayoutconstraint
-
-          @teacup_added_constraints << { target: add_constraint_to, constraint: ns_constraint }
-          add_constraint_to.addConstraint(ns_constraint)
-        else
-          raise "The two views #{original_constraint.target} and #{original_constraint.relative_to} do not have a common ancestor"
-        end
-      end
+      add_uniq_constraints(properties.delete(:constraints))
     end
 
     Teacup.apply_hash self, properties
@@ -188,46 +204,22 @@ class UIView
     return self
   end
 
-  def teacup_added_constraints ; @teacup_added_constraints ; end
-
-  def resetTeacupConstraints
-    if @teacup_added_constraints
-      @teacup_added_constraints.each do |added_constraint|
-        target = added_constraint[:target]
-        constraint = added_constraint[:constraint]
-        target.removeConstraint(constraint)
-      end
-    end
-    @teacup_added_constraints = nil
-    @teacup_constrain_just_once = nil
-  end
-
   def add_uniq_constraints(constraint)
-    @teacup_constrain_just_once ||= {}
+    @teacup_constraints ||= {}
 
     if constraint.is_a? Array
-      new_consraints = constraint.map{|constraint| add_uniq_constraints(constraint) }.flatten
-    elsif constraint.is_a? Hash
-      new_consraints = constraint.select{|sym, relative_to|
-        @teacup_constrain_just_once[sym].nil?
-      }.map{|sym, relative_to|
-        @teacup_constrain_just_once[sym] = true
-        Teacup::Constraint.from_sym(sym, relative_to)
+      constraint.each { |constraint|
+        add_uniq_constraints(constraint)
       }
+    elsif constraint.is_a? Hash
+      constraint.each { |sym, relative_to|
+        @teacup_constraints[sym] = relative_to
+      }
+    elsif constraint.is_a? Teacup::Constraint or constraint.is_a? Symbol
+      @teacup_constraints[constraint] = true
     else
-      if @teacup_constrain_just_once[constraint]
-        new_consraints = []
-      else
-        @teacup_constrain_just_once[constraint] = true
-        if constraint.is_a? Symbol
-          new_consraints = [Teacup::Constraint.from_sym(constraint)]
-        else
-          new_consraints = [constraint]
-        end
-      end
+      raise "Unsupported constraint: #{constraint.inspect}"
     end
-
-    return new_consraints
   end
 
 end
