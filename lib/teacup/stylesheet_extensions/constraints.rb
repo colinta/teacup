@@ -50,19 +50,23 @@ module Teacup
 
     ##|
     def constrain_below(relative_to, margin=0)
+      margin = 8 if margin == :auto
       Teacup::Constraint.new(:self, :top).equals(relative_to, :bottom).plus(margin)
     end
 
     def constrain_above(relative_to, margin=0)
+      margin = 8 if margin == :auto
       Teacup::Constraint.new(:self, :bottom).equals(relative_to, :top).plus(margin)
     end
 
-    def constrain_to_left(relative_to, margin=0)
-      Teacup::Constraint.new(:self, :right).equals(relative_to, :left).plus(margin)
+    def constrain_to_right(relative_to, margin=0)
+      margin = 20 if margin == :auto
+      Teacup::Constraint.new(:self, :left).equals(relative_to, :right).plus(margin)
     end
 
-    def constrain_to_right(relative_to, margin=0)
-      Teacup::Constraint.new(:self, :left).equals(relative_to, :right).plus(margin)
+    def constrain_to_left(relative_to, margin=0)
+      margin = 20 if margin == :auto
+      Teacup::Constraint.new(:self, :right).equals(relative_to, :left).minus(margin)
     end
 
   end
