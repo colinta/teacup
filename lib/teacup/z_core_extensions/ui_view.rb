@@ -87,7 +87,7 @@ class UIView
       when Symbol, String
         container = self
         constraint.target = nil
-        while container.superview && constraint.target == nil
+        while container && constraint.target == nil
           constraint.target = container.viewWithStylename(original_constraint.target)
           container = container.superview
         end
@@ -105,7 +105,7 @@ class UIView
         # superview, it checks all the leaves again.
         container = self
         constraint.relative_to = nil
-        while container.superview && constraint.relative_to == nil
+        while container && constraint.relative_to == nil
           constraint.relative_to = container.viewWithStylename(original_constraint.relative_to)
           container = container.superview
         end
