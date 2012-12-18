@@ -111,6 +111,17 @@ class UIView
         end
       end
 
+      unless constraint.relative_to
+        puts "Could not find #{original_constraint.relative_to}"
+        container = self
+        tab = '  '
+        while container && constraint.relative_to.nil?
+          tab << '->'
+          puts "#{tab} #{container.stylename.inspect}"
+          container = container.superview
+        end
+      end
+
       # the return value, for the map
       constraint.nslayoutconstraint
     end
