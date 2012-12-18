@@ -9,5 +9,4 @@ Motion::Project::App.setup do |app|
   app.name = 'teacup'
   app.identifier = 'com.rubymotion.teacup'
   app.vendor_project 'vendor/TeacupDummy', :static
-  app.detect_dependencies = false
 end
