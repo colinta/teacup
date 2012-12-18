@@ -1,22 +1,21 @@
 # Methods to retrieve a subview using the stylename as a key
-# Kinda similar to jQuery-style $().find('stylename')
+# Kinda similar to jQuery-style $(el).find('stylename')
 class UIView
 
-  # get one subview by stylename or class
+  # get one subview by stylename or class.  If the receiver matches, it will be
+  # returned
   # my_view.viewWithStylename :button => #<UIButton..>
   # my_view.viewWithStylename UIButton => #<UIButton..>
   def viewWithStylename name_or_class
-    if name_or_class.is_a? Class
-      view = subviews.find { |view| view.is_a? name_or_class }
-    else
-      view = subviews.find { |view| view.stylename == name_or_class }
-    end
+    return self if self._teacup_check_stylename(name_or_class)
+
+    view = subviews.find { |view| view._teacup_check_stylename(name_or_class) }
     return view if view
 
     # found_subview will get assigned to the view we want, but the subview is
     # what is returned.
     found_subview = nil
-    view = subviews.find {|subview| found_subview = subview.viewWithStylename(name_or_class) }
+    view = subviews.find { |subview| found_subview = subview.viewWithStylename(name_or_class) }
     return found_subview if view
 
     nil  # couldn't find it
@@ -27,17 +26,21 @@ class UIView
   # my_view.viewsWithStylename UIButton => [#<UIButton..>, #<UIButton...>]
   def viewsWithStylename name_or_class
     r = []
+    r << self if self._teacup_check_stylename(name_or_class)
+
     subviews.each do |view|
-      if name_or_class.is_a? Class
-        if view.is_a? name_or_class
-          r << view
-        end
-      elsif view.stylename == name_or_class
-        r << view
-      end
+      r << view if view._teacup_check_stylename(name_or_class)
       r.concat view.viewsWithStylename name_or_class
     end
     r
+  end
+
+  def _teacup_check_stylename(name_or_class)
+    if name_or_class.is_a? Class
+      self.is_a? name_or_class
+    else
+      self.stylename == name_or_class
+    end
   end
 
 end
