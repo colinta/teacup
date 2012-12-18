@@ -168,6 +168,7 @@ class UIView
     # TODO: This should be in a style-sheet!
     UIView.setAnimationDuration(options[:duration]) if options[:duration]
     UIView.setAnimationCurve(options[:curve]) if options[:curve]
+    UIView.setAnimationDelay(options[:delay]) if options[:delay]
     self.stylename = stylename
     UIView.commitAnimations
   end
@@ -183,6 +184,7 @@ class UIView
     UIView.beginAnimations(nil, context: nil)
     UIView.setAnimationDuration(style[:duration]) if style[:duration]
     UIView.setAnimationCurve(style[:curve]) if style[:curve]
+    UIView.setAnimationDelay(options[:delay]) if options[:delay]
     style(style)
     UIView.commitAnimations
   end
