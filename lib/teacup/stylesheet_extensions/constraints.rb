@@ -56,7 +56,7 @@ module Teacup
 
     def constrain_above(relative_to, margin=0)
       margin = 8 if margin == :auto
-      Teacup::Constraint.new(:self, :bottom).equals(relative_to, :top).plus(margin)
+      Teacup::Constraint.new(:self, :bottom).equals(relative_to, :top).minus(margin)
     end
 
     def constrain_to_right(relative_to, margin=0)
