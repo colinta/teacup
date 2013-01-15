@@ -126,7 +126,13 @@ module Teacup
 
       if block_given?
         superview_chain << view
-        instance_exec(view, &block) if block_given?
+        begin
+          instance_exec(view, &block) if block_given?
+        rescue NoMethodError => e
+          NSLog("Exception executing layout(#{view.inspect}) in #{self.inspect} (stylesheet=#{stylesheet})")
+          raise e
+        end
+
         superview_chain.pop
       end
 
