@@ -69,8 +69,8 @@ class UIViewController
   #   stylesheet = :ipadhorizontal
   def stylesheet=(new_stylesheet)
     @stylesheet = new_stylesheet
-    if self.view
-      self.view.stylesheet = new_stylesheet
+    if self.viewLoaded?
+      self.view.restyle!
     end
   end
 
@@ -99,11 +99,12 @@ class UIViewController
       parent_class = parent_class.superclass
     end
 
+    should_restyle = Teacup.should_restyle_and_block
+
     if my_stylesheet and not self.stylesheet
       self.stylesheet = my_stylesheet
     end
 
-    should_restyle = Teacup.should_restyle_and_block
     if layout_definition
       stylename, properties, block = layout_definition
       layout(view, stylename, properties, &block)
