@@ -103,14 +103,17 @@ class UIViewController
       self.stylesheet = my_stylesheet
     end
 
+    should_restyle = Teacup.should_restyle_and_block
     if layout_definition
       stylename, properties, block = layout_definition
-      should_restyle = Teacup.should_restyle_and_block
       layout(view, stylename, properties, &block)
-      Teacup.should_restyle! if should_restyle
     end
 
-    self.view.restyle!
+    if should_restyle
+      Teacup.should_restyle!
+      self.view.restyle!
+    end
+
     if defined? NSLayoutConstraint
       self.view.apply_constraints
     end
