@@ -94,6 +94,8 @@ class UIView
       end
 
       case original_constraint.relative_to
+      when nil
+        constraint.relative_to = nil
       when UIView
         constraint.relative_to = original_constraint.relative_to
       when :self
@@ -111,8 +113,8 @@ class UIView
         end
       end
 
-      unless constraint.relative_to
-        puts "Could not find #{original_constraint.relative_to}"
+      if original_constraint.relative_to && ! constraint.relative_to
+        puts "Could not find #{original_constraint.relative_to.inspect}"
         container = self
         tab = '  '
         while container && constraint.relative_to.nil?
