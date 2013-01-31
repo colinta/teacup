@@ -36,7 +36,6 @@ class UIView
     should_restyle = Teacup.should_restyle_and_block
 
     @stylesheet = new_stylesheet
-    subviews.each{ |subview| subview.set_stylesheet_quickly(new_stylesheet) }
 
     if should_restyle
       Teacup.should_restyle!
@@ -44,9 +43,9 @@ class UIView
     end
   end
 
-  def set_stylesheet_quickly(new_stylesheet)
-    @stylesheet = new_stylesheet
-    subviews.each{ |subview| subview.set_stylesheet_quickly(new_stylesheet) }
+  def stylesheet
+    super
+    @stylesheet || superview && superview.stylesheet
   end
 
   def restyle!(orientation=nil)
