@@ -177,4 +177,27 @@ describe "Teacup::Style" do
     built[:baz].should == 'baz'
   end
 
+  it 'should not apply default styles when orientation is specified ' do
+    sheet = Teacup::Stylesheet.new do
+      style :style1,
+        top: 10,
+        left: 8,
+        landscape: { width: 100 },
+        portrait: { width: 100 }
+      style :style2,
+        top: 10,
+        left: 8,
+        landscape: { width: 100 },
+        portrait: { width: 100 }
+    end
+
+    style3 = Teacup::Style.new
+    style3.stylesheet = sheet
+
+    built = style3.build(UIInterfaceOrientationPortrait)
+    built[:top].should == nil
+    built[:left].should == nil
+    built[:width].should == nil
+  end
+
 end
