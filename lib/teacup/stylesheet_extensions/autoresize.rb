@@ -2,7 +2,7 @@
 #     Teacup::Stylesheet.new :main do
 #       style :root,
 #         # stays centered and grows in height
-#         autoresizingMask: left|right|height
+#         autoresizingMask: flexible_left|flexible_right|flexible_height
 #     end
 module Teacup
   class Stylesheet
