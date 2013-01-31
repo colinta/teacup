@@ -25,9 +25,9 @@ describe "Application 'Teacup'" do
   it "root view should be styled as :root" do
     @root_view.stylename.should == :root
     @root_view.frame.origin.x.should == 0
-    @root_view.frame.origin.y.should == 0
+    @root_view.frame.origin.y.should == 20
     @root_view.frame.size.width.should == 320
-    @root_view.frame.size.height.should == 480
+    @root_view.frame.size.height.should == 460
     @root_view.backgroundColor.should == UIColor.yellowColor
   end
 
