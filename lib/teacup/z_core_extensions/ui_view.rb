@@ -19,7 +19,7 @@ class UIView
   # @param Symbol  stylename
   def stylename=(new_stylename)
     @stylename = new_stylename
-    restyle! if Teacup.should_restyle?
+    restyle!
   end
 
   # Alter the stylesheet of this view.
