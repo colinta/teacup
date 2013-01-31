@@ -136,6 +136,7 @@ describe "Teacup::Style" do
   it 'should respect precedence rules' do
     sheet = Teacup::Stylesheet.new do
       style :style1,
+        landscape: { tag: 1 },
         portrait: { text: "extended", tag: 1 }
     end
 
@@ -144,9 +145,13 @@ describe "Teacup::Style" do
     style2[:text] = "text"
     style2[:extends] = :style1
 
+    built = style2.build(nil)
+    built[:tag].should == 1
+    built[:text].should == 'text'
+
     built = style2.build(nil, UIInterfaceOrientationPortrait)
     built[:tag].should == 1
-    built[:text].should == "text"
+    built[:text].should == nil
   end
 
   it 'should respect merge based on class inheritance' do
