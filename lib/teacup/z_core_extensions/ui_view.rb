@@ -45,7 +45,7 @@ class UIView
 
   def stylesheet
     super
-    @stylesheet || superview && superview.stylesheet
+    @stylesheet || nextResponder && nextResponder.stylesheet
   end
 
   def restyle!(orientation=nil)

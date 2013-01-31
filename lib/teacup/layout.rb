@@ -116,9 +116,6 @@ module Teacup
       # prevents the calling of restyle! until we return to this method
       should_restyle = Teacup.should_restyle_and_block
 
-      unless view.stylesheet
-        view.stylesheet = stylesheet
-      end
       view.stylename = name
       if properties
         view.style(properties) if properties
