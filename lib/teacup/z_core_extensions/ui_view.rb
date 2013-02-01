@@ -9,6 +9,10 @@ class UIView
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
 
+  # Any class that includes Teacup::Layout gets a `layout` method, which assigns
+  # itself as the 'teacup_next_responder'.
+  attr_accessor :teacup_next_responder
+
   # Enable debug messages for this object
   attr_accessor :debug
 
@@ -45,7 +49,23 @@ class UIView
 
   def stylesheet
     super
-    @stylesheet || nextResponder && nextResponder.stylesheet
+    # is a stylesheet assigned explicitly?
+    retval = @stylesheet
+
+    # the 'teacup_next_responder' is assigned in the `layout` method, and links
+    # any views created there to the custom class (could be a controller, could
+    # be any class that includes Teacup::Layout).  That responder is checked
+    # next, but only if it wouldn't result in a circular loop.
+    if ! retval && @teacup_next_responder && teacup_next_responder != self
+      retval = @teacup_next_responder.stylesheet
+    end
+
+    # lastly, go up the chain; either a controller or superview
+    if ! retval && nextResponder
+      retval = nextResponder.stylesheet
+    end
+
+    return retval
   end
 
   def restyle!(orientation=nil)

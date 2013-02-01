@@ -116,6 +116,9 @@ module Teacup
       # prevents the calling of restyle! until we return to this method
       should_restyle = Teacup.should_restyle_and_block
 
+      # assign the 'teacup_next_responder', which is queried for a stylesheet if
+      # one is not explicitly assigned to the view
+      view.teacup_next_responder = self
       view.stylename = name
       if properties
         view.style(properties) if properties
