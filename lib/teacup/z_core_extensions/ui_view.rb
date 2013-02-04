@@ -223,7 +223,7 @@ class UIView
   # a warning message will be emitted.
   #
   # @param Hash  the properties to set.
-  def style(properties, orientation=nil)
+  def style(properties)
     if properties.key?(:constraints)
       add_uniq_constraints(properties.delete(:constraints))
     end
