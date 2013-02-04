@@ -29,6 +29,45 @@ gems on a per-project basis, using a gemset.  See the
 [rvm]: https://rvm.io/
 [Installation]: https://github.com/rubymotion/teacup/wiki/Installation
 
+#### 10 second primer
+
+1.  Create a `UIViewController` subclass:
+
+    ```ruby
+    class MyController < UIViewController
+    ```
+2.  Assign a stylesheet name:
+
+    ```ruby
+    class MyController < UIViewController
+      stylesheet :main_screen
+    ```
+3.  Create a layout:
+
+    ```ruby
+    class MyController < UIViewController
+      stylesheet :main_screen
+
+      layout do
+        subview(UIButton, :finished_button)
+      end
+    end
+    ```
+4.  Create the stylesheet
+
+    ```ruby
+    Teacup::Stylesheet.new :main_screen do
+      style :finished_button,
+        origin: [10, 10],
+        title: 'Hi!'
+    end
+    ```
+
+Teacup implements the `viewDidLoad` method and instantiates any views you
+declare in the `layout` block.  Make sure to call `super` if you implement
+`viewDidLoad`, or you can use the "teacup-esque" `layoutDidLoad` method.
+
+
 #### Showdown
 
 Cocoa
