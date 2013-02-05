@@ -12,6 +12,12 @@ private
   end
 end
 
+ class DummyTableView < UITableView
+   def allowsSelection=(value)
+     setAllowSelection value
+   end
+ end
+
 class DummyButton < UIButton
 private
   def dummy
