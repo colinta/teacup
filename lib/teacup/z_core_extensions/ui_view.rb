@@ -205,7 +205,7 @@ class UIView
     UIView.beginAnimations(nil, context: nil)
     UIView.setAnimationDuration(style[:duration]) if style[:duration]
     UIView.setAnimationCurve(style[:curve]) if style[:curve]
-    UIView.setAnimationDelay(options[:delay]) if options[:delay]
+    UIView.setAnimationDelay(style[:delay]) if style[:delay]
     style(style)
     UIView.commitAnimations
   end
