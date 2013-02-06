@@ -93,6 +93,27 @@ Teacup.handler UIView, :frame { |frame|
   self.frame = frame
 }
 
+Teacup.handler UIView, :gradient { |gradient|
+  gradient_layer = self.instance_variable_get(:@gradient_layer) || begin
+    gradient_layer = CAGradientLayer.layer
+    gradient_layer.frame = self.bounds
+    self.layer.insertSublayer(gradient_layer, atIndex:0)
+    gradient_layer
+  end
+
+  gradient.each do |key, value|
+    case key.to_s
+    when 'colors'
+      colors = [value].flatten.collect { |color| color.is_a?(UIColor) ? color.CGColor : color }
+      gradient_layer.colors = colors
+    else
+      gradient_layer.send("#{key}=", value)
+    end
+  end
+
+  self.instance_variable_set(:@gradient_layer, gradient_layer)
+}
+
 ##|
 ##|  UIButton
 ##|
