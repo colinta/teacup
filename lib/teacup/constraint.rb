@@ -13,6 +13,7 @@ module Teacup
       Priorities = {
         required: 1000,  # NSLayoutPriorityRequired
         high: 750,  # NSLayoutPriorityDefaultHigh
+        medium: 500,
         low: 250,  # NSLayoutPriorityDefaultLow
       }
       Relationships = {
