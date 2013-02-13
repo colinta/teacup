@@ -1,5 +1,6 @@
 module Teacup
-  class Limelight < Stylesheet
+  class Limelight
+    include StylesheetExtension
     attr :styles
 
     def initialize(&block)

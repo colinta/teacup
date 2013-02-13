@@ -25,7 +25,7 @@
 #         frame: [[0, 0], app_size]
 #     end
 module Teacup
-  class Stylesheet
+  module StylesheetExtension
     def iPhone       ; 1 << 1 ; end
     def iPhoneRetina ; 1 << 2 ; end
     def iPhone4      ; 1 << 3 ; end

@@ -7,7 +7,7 @@
 #         autoresizingMask: autoresize { flexible_left | flexible_right | flexible_height }
 #     end
 module Teacup
-  class Stylesheet
+  module StylesheetExtension
 
     def autoresize &block
       @@autoresize ||= Autoresize.new

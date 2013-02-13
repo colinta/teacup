@@ -1,6 +1,6 @@
 
 module Teacup
-  class Stylesheet
+  module StylesheetExtension
 
     def pi
       Math::PI

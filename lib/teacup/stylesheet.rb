@@ -65,6 +65,8 @@ module Teacup
   # a second phase, the ':extends' chain is flattened.
   #
   class Stylesheet
+    include StylesheetExtension
+
     attr_reader :name
 
     class << self

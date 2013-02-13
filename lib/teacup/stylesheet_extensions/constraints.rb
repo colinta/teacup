@@ -1,5 +1,5 @@
 module Teacup
-  class Stylesheet
+  module StylesheetExtension
 
     def constrain(target, attribute=nil)
       if attribute.nil?
