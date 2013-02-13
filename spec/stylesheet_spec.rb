@@ -73,7 +73,7 @@ describe "Teacup::Stylesheet" do
       @stylesheet.query(:example_button)[:frame].should == [[100, 100], [200, 200]]
     end
 
-    it 'should give merge hashes' do
+    it 'should merge hashes' do
       @stylesheet.query(:example_button)[:layer][:borderRadius].should == 20
       @stylesheet.query(:example_button)[:layer][:opacity].should == 0.5
     end
@@ -225,6 +225,12 @@ describe "Teacup::Stylesheet" do
           title: "Most specific",
           font: "IMPACT"
       end
+    end
+
+    after do
+      Teacup::Stylesheet.stylesheets.delete(:most_generic)
+      Teacup::Stylesheet.stylesheets.delete(:stylesheet)
+      Teacup::Stylesheet.stylesheets.delete(:most_specific)
     end
 
     it 'should union different properties for the same rule' do
