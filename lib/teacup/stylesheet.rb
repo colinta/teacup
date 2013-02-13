@@ -249,6 +249,7 @@ module Teacup
       end
 
       queries.each do |stylename|
+
         # reset the stylesheet_cache for this stylename
         @stylesheet_cache.delete(stylename) if @stylesheet_cache
 
@@ -317,6 +318,13 @@ module Teacup
         next if exclude_instance_vars.include? var
         self.instance_variable_set(var, from_stylesheet.instance_variable_get(var))
       end
+    end
+
+    # supports the 'new-style' stylesheet syntax.
+    # @example
+    def method_missing(stylename, &styles)
+      properties = Limelight.new(&styles).styles
+      style(stylename, properties)
     end
 
 protected

@@ -25,8 +25,10 @@ describe "Teacup::Stylesheet" do
         style :example_button,
           frame: [[0, 0], [100, 100]]
 
-        style :example_label, :example_textfield,
+        style :example_label,
           backgroundColor: :blue
+
+        style :example_textfield, extends: :example_label
       end
     end
 
