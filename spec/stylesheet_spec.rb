@@ -51,7 +51,7 @@ describe "Teacup::Stylesheet" do
           title: "Example!",
           frame: [[0, 0], [100, 100]],
           layer: {
-            borderRadius: 10,
+            borderWidth: 10,
             opacity: 0.5
           }
 
@@ -59,7 +59,7 @@ describe "Teacup::Stylesheet" do
           backgroundColor: :blue,
           frame: [[100, 100], [200, 200]],
           layer: {
-            borderRadius: 20
+            borderWidth: 20
           }
       end
     end
@@ -74,7 +74,7 @@ describe "Teacup::Stylesheet" do
     end
 
     it 'should merge hashes' do
-      @stylesheet.query(:example_button)[:layer][:borderRadius].should == 20
+      @stylesheet.query(:example_button)[:layer][:borderWidth].should == 20
       @stylesheet.query(:example_button)[:layer][:opacity].should == 0.5
     end
   end
@@ -122,12 +122,19 @@ describe "Teacup::Stylesheet" do
         import :importedbyname
 
         style :label,
-          backgroundColor: :blue
+          backgroundColor: :blue,
+          layer: {
+            borderWidth: 2,
+          }
       end
 
       Teacup::Stylesheet.new(:importedbyname) do
         style :label,
-          title: "Imported by name"
+          title: "Imported by name",
+          layer: {
+            borderWidth: 1,
+            borderColor: :red,
+          }
       end
 
       @name_importer = Teacup::Stylesheet.new do
@@ -165,6 +172,11 @@ describe "Teacup::Stylesheet" do
     it 'should work with a name even if defined out of order' do
       @oo_name_importer.query(:label)[:title].should == "Imported by name"
       @oo_name_importer.query(:label)[:backgroundColor].should == :blue
+    end
+
+    it 'should merge properties' do
+      @oo_name_importer.query(:label)[:layer][:borderWidth].should == 2
+      @oo_name_importer.query(:label)[:layer][:borderColor].should == :red
     end
 
     it 'should work with a value' do
@@ -214,7 +226,7 @@ describe "Teacup::Stylesheet" do
         import :most_generic
 
         style :label,
-          borderRadius: 10,
+          borderWidth: 10,
           title: "Stylesheet"
       end
 
@@ -235,7 +247,7 @@ describe "Teacup::Stylesheet" do
 
     it 'should union different properties for the same rule' do
       @stylesheet.query(:label)[:backgroundColor].should == :blue
-      @stylesheet.query(:label)[:borderRadius] == 10
+      @stylesheet.query(:label)[:borderWidth] == 10
     end
 
     it 'should give the importer precedence' do
@@ -245,7 +257,7 @@ describe "Teacup::Stylesheet" do
     it 'should follow chains of imports' do
       @most_specific.query(:label)[:title].should == "Most specific"
       @most_specific.query(:label)[:font].should == "IMPACT"
-      @most_specific.query(:label)[:borderRadius].should == 10
+      @most_specific.query(:label)[:borderWidth].should == 10
       @most_specific.query(:label)[:backgroundColor].should == :blue
     end
 
@@ -301,13 +313,13 @@ describe "Teacup::Stylesheet" do
           backgroundColor: :blue
 
         style :my_textfield, extends: [:textfield, :input],
-          borderRadius: 10
+          borderWidth: 10
       end
 
       stylesheet.query(:my_textfield)[:text].should == "Extended"
       stylesheet.query(:my_textfield)[:backgroundColor].should == :blue
       stylesheet.query(:my_textfield)[:origin].should == [0, 0]
-      stylesheet.query(:my_textfield)[:borderRadius].should == 10
+      stylesheet.query(:my_textfield)[:borderWidth].should == 10
     end
 
     it 'should give precedence to imported rules over extended rules' do
@@ -317,7 +329,7 @@ describe "Teacup::Stylesheet" do
           backgroundColor: :blue
 
         style :my_textfield, extends: :textfield,
-          borderRadius: 10
+          borderWidth: 10
 
         import Teacup::Stylesheet.new{
           style :my_textfield,
@@ -327,7 +339,7 @@ describe "Teacup::Stylesheet" do
 
       stylesheet.query(:my_textfield)[:text].should == "Imported"
       stylesheet.query(:my_textfield)[:backgroundColor].should == :blue
-      stylesheet.query(:my_textfield)[:borderRadius].should == 10
+      stylesheet.query(:my_textfield)[:borderWidth].should == 10
     end
 
     it 'should import rules using a deep merge strategy' do
@@ -335,19 +347,19 @@ describe "Teacup::Stylesheet" do
         import Teacup::Stylesheet.new{
           style :my_textfield,
             layer: {
-              borderRadius: 1,
+              borderWidth: 1,
               opacity: 0.5
             }
         }
 
         style :my_textfield,
           layer: {
-            borderRadius: 10
+            borderWidth: 10
           }
       end
 
       stylesheet.query(:my_textfield)[:layer][:opacity].should == 0.5
-      stylesheet.query(:my_textfield)[:layer][:borderRadius].should == 10
+      stylesheet.query(:my_textfield)[:layer][:borderWidth].should == 10
     end
 
   end
