@@ -26,10 +26,6 @@ module Teacup
 
     right.each do |key, value|
       if not target.has_key? key
-        if value.is_a?(Hash)
-          # make a copy of the Hash
-          value = Teacup::merge_defaults!({}, value)
-        end
         target[key] = value
       elsif value.is_a?(Hash) and left[key].is_a?(Hash)
         target[key] = Teacup::merge_defaults(left[key], value, (left==target ? left[key] : {}))
