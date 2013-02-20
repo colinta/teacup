@@ -25,7 +25,7 @@ module Teacup
       Teacup::Constraint.new(:self, :right).equals(:superview, :right).plus(x)
     end
 
-    def constrain_center_x(x)
+    def constrain_center_x(x=0)
       Teacup::Constraint.new(:self, :center_x).equals(:superview, :center_x).plus(x)
     end
 
@@ -37,7 +37,7 @@ module Teacup
       Teacup::Constraint.new(:self, :bottom).equals(:superview, :bottom).plus(y)
     end
 
-    def constrain_center_y(y)
+    def constrain_center_y(y=0)
       Teacup::Constraint.new(:self, :center_y).equals(:superview, :center_y).plus(y)
     end
 
