@@ -28,9 +28,15 @@ module Teacup
   class Stylesheet
     def iPhone       ; 1 << 1 ; end
     def iPhoneRetina ; 1 << 2 ; end
-    def iPhone5      ; 1 << 3 ; end
-    def iPad         ; 1 << 4 ; end
-    def iPadRetina   ; 1 << 5 ; end
+    def iPhone4      ; 1 << 3 ; end
+    def iPhone35     ; 1 << 4 ; end
+    def iPad         ; 1 << 5 ; end
+    def iPadRetina   ; 1 << 6 ; end
+
+    def iPhone5
+      NSLog('TEACUP WARNING: iPhone5 method is deprecated in lieu of size-based method names (iPhone4, iPhone35)')
+      1 << 3
+    end
 
     # returns the device size in points, regardless of status bar
     def screen_size
@@ -50,11 +56,15 @@ module Teacup
       @@this_device = 0
       if UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
         @@this_device |= iPhone
-        if UIScreen.mainScreen.respond_to? :scale
+
+        if UIScreen.mainScreen.respond_to?(:scale) && UIScreen.mainScreen.scale == 2
           @@this_device |= iPhoneRetina
-          if UIScreen.mainScreen.bounds.size.height == 568
-            @@this_device |= iPhone5
-          end
+        end
+
+        if UIScreen.mainScreen.bounds.size.height == 568
+          @@this_device |= iPhone4
+        else
+          @@this_device |= iPhone35
         end
       else
         @@this_device |= iPad
