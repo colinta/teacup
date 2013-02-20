@@ -61,7 +61,7 @@ class UIView
     end
 
     # lastly, go up the chain; either a controller or superview
-    if ! retval && nextResponder
+    if ! retval && nextResponder && nextResponder.respond_to?(:stylesheet)
       retval = nextResponder.stylesheet
     end
 
