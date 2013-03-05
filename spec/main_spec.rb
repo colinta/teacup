@@ -103,6 +103,9 @@ describe "background view in landscape" do
   end
 
   it "should be in landscape" do
+    if UIApplication.sharedApplication.statusBarOrientation != UIInterfaceOrientationLandscapeLeft
+      NSLog("\n=====\n  The device orientation is not changing to `landscape`!\n=====\n")
+    end
     UIApplication.sharedApplication.statusBarOrientation.should == UIInterfaceOrientationLandscapeLeft
   end
 
