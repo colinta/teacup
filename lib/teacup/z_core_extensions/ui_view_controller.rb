@@ -53,8 +53,7 @@ class UIViewController
 
   end # class << self
 
-  # Assigning a new stylesheet triggers {restyle!}, so do this during a
-  # rotation to get your different layouts applied.
+  # Assigning a new stylesheet triggers {restyle!}.
   #
   # Assigning a stylesheet is an *alternative* to returning a Stylesheet in
   # the {stylesheet} method. Note that {restyle!} calls {stylesheet}, so while
@@ -68,7 +67,7 @@ class UIViewController
   #   stylesheet = Teacup::Stylesheet[:ipadhorizontal]
   #   stylesheet = :ipadhorizontal
   def stylesheet=(new_stylesheet)
-    @stylesheet = new_stylesheet
+    super
     if self.viewLoaded?
       self.view.restyle!
     end

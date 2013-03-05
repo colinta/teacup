@@ -81,3 +81,11 @@ private
     setTranslucent(nil)
   end
 end
+
+class DummySwitch < UISwitch
+private
+  def dummy
+    on?
+    setOn(true)
+  end
+end
