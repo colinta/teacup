@@ -227,7 +227,8 @@ module Teacup
         # reset the stylesheet_cache for this stylename
         @stylesheet_cache.delete(stylename) if @stylesheet_cache
 
-        # merge into styles[stylename], new properties "win"
+        # merge into styles[stylename] (an instance of Teacup::Style). new
+        # properties "win" over existing properties.
         Teacup::merge_defaults(properties, styles[stylename], styles[stylename])
       end
     end
