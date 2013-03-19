@@ -89,3 +89,10 @@ private
     setOn(true)
   end
 end
+
+class DummyUIImageView < UIImageView
+private
+  def dummy
+    setUserInteractionEnabled(nil)
+  end
+end
