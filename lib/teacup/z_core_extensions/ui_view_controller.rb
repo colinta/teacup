@@ -210,4 +210,33 @@ class UIViewController
     view.restyle!(orientation)
   end
 
+  ##|
+  ##|  Motion-Layout support
+  ##|
+  def motion_layout(layout_view=self.view, layout_subviews={}, &layout_block)
+    Teacup.get_subviews(self.view).each do |view|
+      if view.stylename && ! layout_subviews[view.stylename]
+        layout_subviews[view.stylename] = view
+      end
+    end
+
+    Motion::Layout.new do |layout|
+      layout.view layout_view
+      layout.subviews layout_subviews
+      layout_block.call(layout)
+    end
+  end
+
+end
+
+
+module Teacup
+
+module_function
+  def get_subviews(target)
+    [target] + target.subviews.map { |subview|
+      get_subviews(subview).select{ |v| v.stylename }
+    }.flatten
+  end
+
 end
