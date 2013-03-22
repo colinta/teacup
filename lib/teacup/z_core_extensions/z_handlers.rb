@@ -1,133 +1,133 @@
 ##|
 ##|  UIView.frame
 ##|
-Teacup.handler UIView, :left, :x { |x|
-  f = self.frame
-  f.origin.x = Teacup::calculate(self, :width, x)
-  self.frame = f
+Teacup.handler UIView, :left, :x { |target, x|
+  f = target.frame
+  f.origin.x = Teacup::calculate(target, :width, x)
+  target.frame = f
 }
 
-Teacup.handler UIView, :right { |r|
-  f = self.frame
-  f.origin.x = Teacup::calculate(self, :width, r) - f.size.width
-  self.frame = f
+Teacup.handler UIView, :right { |target, r|
+  f = target.frame
+  f.origin.x = Teacup::calculate(target, :width, r) - f.size.width
+  target.frame = f
 }
 
-Teacup.handler UIView, :center_x, :middle_x { |x|
-  c = self.center
-  c.x = Teacup::calculate(self, :width, x)
-  self.center = c
+Teacup.handler UIView, :center_x, :middle_x { |target, x|
+  c = target.center
+  c.x = Teacup::calculate(target, :width, x)
+  target.center = c
 }
 
-Teacup.handler UIView, :top, :y { |y|
-  f = self.frame
-  f.origin.y = Teacup::calculate(self, :height, y)
-  self.frame = f
+Teacup.handler UIView, :top, :y { |target, y|
+  f = target.frame
+  f.origin.y = Teacup::calculate(target, :height, y)
+  target.frame = f
 }
 
-Teacup.handler UIView, :bottom { |b|
-  f = self.frame
-  f.origin.y = Teacup::calculate(self, :height, b) - f.size.height
-  self.frame = f
+Teacup.handler UIView, :bottom { |target, b|
+  f = target.frame
+  f.origin.y = Teacup::calculate(target, :height, b) - f.size.height
+  target.frame = f
 }
 
-Teacup.handler UIView, :center_y, :middle_y { |y|
-  c = self.center
-  c.y = Teacup::calculate(self, :height, y)
-  self.center = c
+Teacup.handler UIView, :center_y, :middle_y { |target, y|
+  c = target.center
+  c.y = Teacup::calculate(target, :height, y)
+  target.center = c
 }
 
-Teacup.handler UIView, :width { |w|
-  f = self.frame
-  f.size.width = Teacup::calculate(self, :width, w)
-  self.frame = f
+Teacup.handler UIView, :width { |target, w|
+  f = target.frame
+  f.size.width = Teacup::calculate(target, :width, w)
+  target.frame = f
 }
 
-Teacup.handler UIView, :height { |h|
-  f = self.frame
-  f.size.height = Teacup::calculate(self, :height, h)
-  self.frame = f
+Teacup.handler UIView, :height { |target, h|
+  f = target.frame
+  f.size.height = Teacup::calculate(target, :height, h)
+  target.frame = f
 }
 
-Teacup.handler UIView, :origin { |origin|
-  f = self.frame
+Teacup.handler UIView, :origin { |target, origin|
+  f = target.frame
   f.origin = origin
-  self.frame = f
+  target.frame = f
 }
 
-Teacup.handler UIView, :size { |size|
+Teacup.handler UIView, :size { |target, size|
   # odd... if I changed these to .is_a?, weird errors happen.  Use ===
   if Symbol === size && size == :full
-    if self.superview
-      size = self.superview.bounds.size
+    if target.superview
+      size = target.superview.bounds.size
     else
-      size = self.frame.size
+      size = target.frame.size
     end
   elsif Array === size
-    size = [Teacup::calculate(self, :width, size[0]), Teacup::calculate(self, :height, size[1])]
+    size = [Teacup::calculate(target, :width, size[0]), Teacup::calculate(target, :height, size[1])]
   end
-  f = self.frame
+  f = target.frame
   f.size = size
-  self.frame = f
+  target.frame = f
 }
 
-Teacup.handler UIView, :frame { |frame|
+Teacup.handler UIView, :frame { |target, frame|
   # odd... if I changed these to .is_a?, weird errors happen.  Use ===
   if Symbol === frame && frame == :full
-    if self.superview
-      frame = self.superview.bounds
+    if target.superview
+      frame = target.superview.bounds
     else
-      frame = self.frame
+      frame = target.frame
     end
   elsif Array === frame && frame.length == 4
     frame = [
-        [Teacup::calculate(self, :width, frame[0]), Teacup::calculate(self, :height, frame[1])],
-        [Teacup::calculate(self, :width, frame[2]), Teacup::calculate(self, :height, frame[3])]
+        [Teacup::calculate(target, :width, frame[0]), Teacup::calculate(target, :height, frame[1])],
+        [Teacup::calculate(target, :width, frame[2]), Teacup::calculate(target, :height, frame[3])]
       ]
   elsif Array === frame && frame.length == 2
     frame = [
-        [Teacup::calculate(self, :width, frame[0][0]), Teacup::calculate(self, :height, frame[0][1])],
-        [Teacup::calculate(self, :width, frame[1][0]), Teacup::calculate(self, :height, frame[1][1])]
+        [Teacup::calculate(target, :width, frame[0][0]), Teacup::calculate(target, :height, frame[0][1])],
+        [Teacup::calculate(target, :width, frame[1][0]), Teacup::calculate(target, :height, frame[1][1])]
       ]
   end
-  self.frame = frame
+  target.frame = frame
 }
 
-Teacup.handler UIView, :gradient { |gradient|
-  gradient_layer = self.instance_variable_get(:@gradient_layer) || begin
+Teacup.handler UIView, :gradient { |target, gradient|
+  gradient_layer = target.instance_variable_get(:@gradient_layer) || begin
     gradient_layer = CAGradientLayer.layer
-    gradient_layer.frame = self.bounds
-    self.layer.insertSublayer(gradient_layer, atIndex:0)
+    gradient_layer.frame = target.bounds
+    target.layer.insertSublayer(gradient_layer, atIndex:0)
     gradient_layer
   end
 
   gradient.each do |key, value|
     case key.to_s
     when 'colors'
-      colors = [value].flatten.collect { |color| color.is_a?(UIColor) ? color.CGColor : color }
+      colors = [value].flatten.collect { |target, color| color.is_a?(UIColor) ? color.CGColor : color }
       gradient_layer.colors = colors
     else
       gradient_layer.send("#{key}=", value)
     end
   end
 
-  self.instance_variable_set(:@gradient_layer, gradient_layer)
+  target.instance_variable_set(:@gradient_layer, gradient_layer)
 }
 
 ##|
 ##|  UIButton
 ##|
-Teacup.handler UIButton, :title { |title|
-  self.setTitle(title, forState: UIControlStateNormal)
+Teacup.handler UIButton, :title { |target, title|
+  target.setTitle(title, forState: UIControlStateNormal)
 }
 
 
-Teacup.handler UIButton, :titleColor { |color|
-  self.setTitleColor(color.uicolor, forState: UIControlStateNormal)
+Teacup.handler UIButton, :titleColor { |target, color|
+  target.setTitleColor(color.uicolor, forState: UIControlStateNormal)
 }
 
 
-Teacup.handler UIButton, :titleFont, :font { |font|
+Teacup.handler UIButton, :titleFont, :font { |target, font|
   font = font.uifont
-  self.titleLabel.font = font
+  target.titleLabel.font = font
 }
