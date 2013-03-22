@@ -125,14 +125,9 @@ class UIViewController
     true
   end
 
-  # The compiling mechanisms combined with how UIKit works of rubymotion do
-  # not allow the `shouldAutorotateToInterfaceOrientation` method to be
-  # overridden in modules/extensions.  So instead, HERE is the code for what
-  # `shouldAutorotateToInterfaceOrientation` should look like if you want
-  # to use the teacup rotation stuff.  Call this method from your own
-  # `shouldAutorotateToInterfaceOrientation` method.
-  #
-  # the teacup developers apologize for any inconvenience. :-)
+  # This method *used* to be useful for the `shouldAutorotateToOrientation`
+  # method, but the iOS 6 update deprecates that method.  Instead, use the
+  # `supportedInterfaceOrientations` and return `autorotateMask`.
   def autorotateToOrientation(orientation)
     if view.stylesheet and view.stylesheet.is_a?(Teacup::Stylesheet) and view.stylename
       properties = view.stylesheet.query(view.stylename, self, orientation)
@@ -167,6 +162,10 @@ class UIViewController
     return orientation == UIInterfaceOrientationPortrait
   end
 
+  # You can use this method in `supportedInterfaceOrientations`, and it will
+  # query the stylesheet for the supported orientations, based on what
+  # orientations are defined.  At a minimum, to opt-in to this feature, you'll
+  # need to define styles like `style :root, landscape: true`
   def autorotateMask
     if view.stylesheet and view.stylesheet.is_a?(Teacup::Stylesheet) and view.stylename
       properties = view.stylesheet.query(view.stylename, self, orientation)
@@ -206,6 +205,9 @@ class UIViewController
     return UIInterfaceOrientationPortrait
   end
 
+  # restyles the view!  be careful about putting styles in your stylesheet that
+  # you change in your controller.  anything that might change over time should
+  # be applied in your controller using `style`
   def willAnimateRotationToInterfaceOrientation(orientation, duration:duration)
     view.restyle!(orientation)
   end
