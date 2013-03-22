@@ -9,14 +9,16 @@ private
   def dummy
     setFrame(nil)
     setOpaque(nil)
+    setClipsToBounds(nil)
   end
 end
 
- class DummyTableView < UITableView
-   def allowsSelection=(value)
-     setAllowSelection value
-   end
+class DummyTableView < UITableView
+private
+ def dummy
+   setAllowSelection(value)
  end
+end
 
 class DummyButton < UIButton
 private
