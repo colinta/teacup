@@ -159,7 +159,12 @@ class UIViewController
       return false
     end
 
-    return orientation == UIInterfaceOrientationPortrait
+    # returns the system default
+    if device == UIUserInterfaceIdiomPhone
+      return orientation != UIInterfaceOrientationPortraitUpsideDown
+    else
+      return true
+    end
   end
 
   # You can use this method in `supportedInterfaceOrientations`, and it will
@@ -167,10 +172,9 @@ class UIViewController
   # orientations are defined.  At a minimum, to opt-in to this feature, you'll
   # need to define styles like `style :root, landscape: true`
   def autorotateMask
+    device = UIDevice.currentDevice.userInterfaceIdiom
     if view.stylesheet and view.stylesheet.is_a?(Teacup::Stylesheet) and view.stylename
       properties = view.stylesheet.query(view.stylename, self, orientation)
-      device = UIDevice.currentDevice.userInterfaceIdiom
-      device == UIUserInterfaceIdiomPhone
 
       orientations = 0
       if properties.supports?(:portrait) or properties.supports?(:upside_up)
@@ -202,7 +206,13 @@ class UIViewController
       end
       return orientations
     end
-    return UIInterfaceOrientationPortrait
+
+    # returns the system default
+    if device == UIUserInterfaceIdiomPhone
+      return UIInterfaceOrientationMaskAllButUpsideDown
+    else
+      return UIInterfaceOrientationMaskAll
+    end
   end
 
   # restyles the view!  be careful about putting styles in your stylesheet that
