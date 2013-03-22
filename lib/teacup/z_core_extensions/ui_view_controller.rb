@@ -215,8 +215,8 @@ class UIViewController
   ##|
   def motion_layout(layout_view=self.view, layout_subviews={}, &layout_block)
     Teacup.get_subviews(self.view).each do |view|
-      if view.stylename && ! layout_subviews[view.stylename]
-        layout_subviews[view.stylename] = view
+      if view.stylename && ! layout_subviews[view.stylename.to_s]
+        layout_subviews[view.stylename.to_s] = view
       end
     end
 
