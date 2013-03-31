@@ -10,6 +10,7 @@ private
     setFrame(nil)
     setOpaque(nil)
     setClipsToBounds(nil)
+    setUserInteractionEnabled(nil)
   end
 end
 
@@ -93,9 +94,3 @@ private
   end
 end
 
-class DummyUIImageView < UIImageView
-private
-  def dummy
-    setUserInteractionEnabled(nil)
-  end
-end
