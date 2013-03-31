@@ -226,6 +226,8 @@ class UIViewController
   #       horizontal "|-margin-[bottom]-margin-|"
   #     end
   def auto(layout_view=self.view, layout_subviews={}, &layout_block)
+    raise "gem install 'motion-layout'" unless defined? Motion::Layout
+
     Teacup.get_subviews(self.view).each do |view|
       if view.stylename && ! layout_subviews[view.stylename.to_s]
         layout_subviews[view.stylename.to_s] = view
