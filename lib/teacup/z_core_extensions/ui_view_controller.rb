@@ -213,6 +213,18 @@ class UIViewController
   ##|
   ##|  Motion-Layout support
   ##|
+
+  # Calling this method uses Nick Quaranto's motion-layout gem to provide ASCII
+  # art style access to autolayout.  It assigns all the subviews by stylename,
+  # and assigns `self.view` as the target view.  Beyond that, it's up to you to
+  # implement the layout methods:
+  #
+  #     auto do
+  #       metrics 'margin' => 20
+  #       vertical "|-[top]-margin-[bottom]-|"
+  #       horizontal "|-margin-[top]-margin-|"
+  #       horizontal "|-margin-[bottom]-margin-|"
+  #     end
   def auto(layout_view=self.view, layout_subviews={}, &layout_block)
     Teacup.get_subviews(self.view).each do |view|
       if view.stylename && ! layout_subviews[view.stylename.to_s]
