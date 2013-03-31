@@ -213,7 +213,7 @@ class UIViewController
   ##|
   ##|  Motion-Layout support
   ##|
-  def motion_layout(layout_view=self.view, layout_subviews={}, &layout_block)
+  def auto(layout_view=self.view, layout_subviews={}, &layout_block)
     Teacup.get_subviews(self.view).each do |view|
       if view.stylename && ! layout_subviews[view.stylename.to_s]
         layout_subviews[view.stylename.to_s] = view
@@ -223,7 +223,7 @@ class UIViewController
     Motion::Layout.new do |layout|
       layout.view layout_view
       layout.subviews layout_subviews
-      layout_block.call(layout)
+      layout.instance_eval(&layout_block)
     end
   end
 
