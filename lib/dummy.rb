@@ -10,6 +10,7 @@ private
     setFrame(nil)
     setOpaque(nil)
     setClipsToBounds(nil)
+    setUserInteractionEnabled(nil)
   end
 end
 
@@ -53,6 +54,7 @@ end
 class DummyTextField < UITextField
 private
   def dummy
+    setSecureTextEntry(nil)
     setReturnKeyType(nil)
     setAutocapitalizationType(nil)
     setAutocorrectionType(nil)
@@ -91,3 +93,4 @@ private
     setOn(true)
   end
 end
+
