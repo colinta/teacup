@@ -9,14 +9,17 @@ private
   def dummy
     setFrame(nil)
     setOpaque(nil)
+    setClipsToBounds(nil)
+    setUserInteractionEnabled(nil)
   end
 end
 
- class DummyTableView < UITableView
-   def allowsSelection=(value)
-     setAllowSelection value
-   end
+class DummyTableView < UITableView
+private
+ def dummy
+   setAllowSelection(value)
  end
+end
 
 class DummyButton < UIButton
 private
@@ -51,6 +54,7 @@ end
 class DummyTextField < UITextField
 private
   def dummy
+    setSecureTextEntry(nil)
     setReturnKeyType(nil)
     setAutocapitalizationType(nil)
     setAutocorrectionType(nil)
@@ -89,3 +93,4 @@ private
     setOn(true)
   end
 end
+
