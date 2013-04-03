@@ -21,8 +21,4 @@ DESC
   gem.files       = `git ls-files`.split($\)
   gem.require_paths = ['lib']
   gem.test_files  = gem.files.grep(%r{^spec/})
-
-  gem.add_dependency 'rake'
-  gem.add_development_dependency 'rspec'
-
 end
