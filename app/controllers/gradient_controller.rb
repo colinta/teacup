@@ -1,0 +1,3 @@
+
+class GradientController < UIViewController
+end
