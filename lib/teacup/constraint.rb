@@ -51,12 +51,12 @@ module Teacup
         ]
       when :full_width
         [
-          Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
+          Teacup::Constraint.new(:self, :center_x).equals(relative_to, :center_x),
           Teacup::Constraint.new(:self, :width).equals(relative_to, :width),
         ]
       when :full_height
         [
-          Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
+          Teacup::Constraint.new(:self, :center_y).equals(relative_to, :center_y),
           Teacup::Constraint.new(:self, :height).equals(relative_to, :height),
         ]
       when :center_x
