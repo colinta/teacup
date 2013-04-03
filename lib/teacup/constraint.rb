@@ -248,12 +248,3 @@ private
     end
   end
 end
-
-# constraintWithItem: target
-#          attribute: attribute
-#          relatedBy: relationship
-#             toItem: relative_to
-#          attribute: attribute2
-#         multiplier: multiplier
-#           constant: constant
-
