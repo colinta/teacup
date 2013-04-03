@@ -249,7 +249,7 @@ class UIView
       constraint.each { |sym, relative_to|
         @teacup_constraints[sym] = relative_to
       }
-    elsif constraint.is_a? Teacup::Constraint or constraint.is_a? Symbol
+    elsif constraint.is_a?(Teacup::Constraint) || constraint.is_a?(Symbol)
       @teacup_constraints[constraint] = true
     else
       raise "Unsupported constraint: #{constraint.inspect}"
