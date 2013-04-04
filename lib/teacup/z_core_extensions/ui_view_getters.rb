@@ -37,10 +37,13 @@ class UIView
 
   def _teacup_check_stylename(name_or_class)
     if name_or_class.is_a? Class
-      self.is_a? name_or_class
-    else
-      self.stylename == name_or_class
+      return self.is_a?(name_or_class)
+    elsif stylename == name_or_class
+      return true
+    elsif stylesheet.is_a?(Teacup::Stylesheet)
+      return stylesheet.extends_style?(self.stylename, name_or_class)
     end
+    return false
   end
 
 end

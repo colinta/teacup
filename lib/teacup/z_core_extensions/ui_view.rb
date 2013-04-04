@@ -48,9 +48,12 @@ class UIView
   end
 
   def stylesheet
-    super
+    if @stylesheet.is_a? Symbol
+      @stylesheet = Teacup::Stylesheet[@stylesheet]
+    end
     # is a stylesheet assigned explicitly?
     retval = @stylesheet
+    return retval if retval
 
     # the 'teacup_next_responder' is assigned in the `layout` method, and links
     # any views created there to the custom class (could be a controller, could

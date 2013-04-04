@@ -257,7 +257,31 @@ module Teacup
       end
     end
 
-    protected
+    # In the [rare] case you need to know whether the style extends another
+    # style, this method will find out quickly.  This is mostly useful in the
+    # `UIView#viewWithStylename` method.
+    def extends_style?(stylename, extended_name, checked=[])
+      return true if stylename == extended_name
+
+      extended_style_names = styles[stylename][:extends]
+      return false unless extended_style_names
+
+      extended_style_names = [extended_style_names] unless extended_style_names.is_a? Array
+      return true if extended_style_names.any? { |name| name == extended_name }
+      retval = false
+      extended_style_names.each do |recusive_check|
+        next if checked.include?(recusive_check)
+
+        checked << recusive_check
+        if extends_style?(recusive_check, extended_name, checked)
+          retval = true
+          break
+        end
+      end
+      return retval
+    end
+
+protected
 
     # The list of Stylesheets or names that have been imported into this one.
     #
