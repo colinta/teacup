@@ -169,6 +169,9 @@ module Teacup
     end
 
     def plus(constant)
+      if not self.relationship
+        constant = -constant
+      end
       self.constant += constant
       self
     end
