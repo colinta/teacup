@@ -1,5 +1,5 @@
-source :rubygems
+source 'https://rubygems.org'
 
-gem 'teacup', :path => '.'
+gem 'rake'
 
 gemspec
