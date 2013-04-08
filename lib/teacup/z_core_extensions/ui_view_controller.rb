@@ -256,13 +256,8 @@ class UIViewController
 end
 
 
-module Teacup
-
-module_function
-  def get_subviews(target)
-    [target] + target.subviews.map { |subview|
-      get_subviews(subview).select{ |v| v.stylename }
-    }.flatten
-  end
-
+def Teacup.get_subviews(target)
+  [target] + target.subviews.map { |subview|
+    get_subviews(subview).select{ |v| v.stylename }
+  }.flatten
 end
