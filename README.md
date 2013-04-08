@@ -3,9 +3,6 @@ Teacup
 
 A community-driven DSL for creating user interfaces on the iphone.
 
-**Note: for a yet-unknown reason teacup does not compile correctly using ruby
-2.0.  Use 1.9.3 instead please, or help determine what is wrong with 2.0.**
-
 Using teacup, you can easily create and style layouts while keeping your code
 dry.  The goal is to offer a rubyesque (well, actually a rubymotion-esque) way
 to create interfaces programmatically.
