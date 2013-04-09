@@ -8,7 +8,7 @@ describe 'Using constraints in portrait' do
     @controller.header_view.frame.tap do |f|
       f.origin.x.should == 0
       f.origin.y.should == 0
-      f.size.width.should == @controller.view.frame.size.width
+      f.size.width.should == @controller.container.frame.size.width
       f.size.height.should == 52
     end
   end
@@ -16,8 +16,8 @@ describe 'Using constraints in portrait' do
   it 'should have a footer view' do
     @controller.footer_view.frame.tap do |f|
       f.origin.x.should == 0
-      (f.origin.y + f.size.height).should == @controller.view.frame.size.height
-      f.size.width.should == @controller.view.frame.size.width
+      (f.origin.y + f.size.height).should == @controller.container.frame.size.height
+      f.size.width.should == @controller.container.frame.size.width
       f.size.height.should == 52
     end
   end
@@ -26,8 +26,8 @@ describe 'Using constraints in portrait' do
     @controller.center_view.frame.tap do |f|
       f.origin.x.should == 8
       f.origin.y.should == @controller.header_view.frame.size.height + 8
-      f.size.width.should == @controller.view.frame.size.width - 16
-      f.size.height.should == @controller.view.frame.size.height - 120
+      f.size.width.should == @controller.container.frame.size.width - 16
+      f.size.height.should == @controller.container.frame.size.height - 120
     end
   end
 
@@ -70,11 +70,15 @@ describe 'Using constraints in landscape' do
     rotate_device :to => :landscape
   end
 
+  after do
+    rotate_device :to => :portrait
+  end
+
   it 'should have a header view' do
     @controller.header_view.frame.tap do |f|
       f.origin.x.should == 0
       f.origin.y.should == 0
-      f.size.width.should == @controller.view.frame.size.width
+      f.size.width.should == @controller.container.frame.size.width
       f.size.height.should == 52
     end
   end
@@ -82,8 +86,8 @@ describe 'Using constraints in landscape' do
   it 'should have a footer view' do
     @controller.footer_view.frame.tap do |f|
       f.origin.x.should == 0
-      (f.origin.y + f.size.height).should == @controller.view.frame.size.height
-      f.size.width.should == @controller.view.frame.size.width
+      (f.origin.y + f.size.height).should == @controller.container.frame.size.height
+      f.size.width.should == @controller.container.frame.size.width
       f.size.height.should == 52
     end
   end
@@ -92,8 +96,8 @@ describe 'Using constraints in landscape' do
     @controller.center_view.frame.tap do |f|
       f.origin.x.should == 8
       f.origin.y.should == @controller.header_view.frame.size.height + 8
-      f.size.width.should == @controller.view.frame.size.width - 16
-      f.size.height.should == @controller.view.frame.size.height - 120
+      f.size.width.should == @controller.container.frame.size.width - 16
+      f.size.height.should == @controller.container.frame.size.height - 120
     end
   end
 

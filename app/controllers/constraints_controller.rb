@@ -1,5 +1,6 @@
 class ConstraintsController < UIViewController
-  attr :header_view,
+  attr :container,
+       :header_view,
        :footer_view,
        :center_view,
        :left_view,
@@ -9,13 +10,19 @@ class ConstraintsController < UIViewController
   stylesheet :constraints
 
   layout :root do
-    @header_view = subview(UIView, :header)
-    @footer_view = subview(UIView, :footer)
-    @center_view = subview(UIView, :center) do
-      @left_view = subview(UIView, :left)
-      @top_right_view = subview(UIView, :top_right)
-      @btm_right_view = subview(UIView, :btm_right)
+    @container = subview(UIView, :container) do
+      @header_view = subview(UIView, :header)
+      @footer_view = subview(UIView, :footer)
+      @center_view = subview(UIView, :center) do
+        @left_view = subview(UIView, :left)
+        @top_right_view = subview(UIView, :top_right)
+        @btm_right_view = subview(UIView, :btm_right)
+      end
     end
+  end
+
+  def supportedInterfaceOrientations
+    UIInterfaceOrientationMaskAllButUpsideDown
   end
 
 end
@@ -24,7 +31,10 @@ end
 Teacup::Stylesheet.new :constraints do
 
   style :root,
-    autoresizingMask: UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight,
+    accessibilityLabel: 'root view'
+
+  style :container,
+    constraints: [:full],
     backgroundColor: UIColor.blackColor
 
   style :header,
