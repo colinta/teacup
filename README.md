@@ -3,6 +3,8 @@ Teacup
 
 A community-driven DSL for creating user interfaces on the iphone.
 
+[![Build Status](https://travis-ci.org/rubymotion/teacup.png)](https://travis-ci.org/rubymotion/teacup)
+
 Using teacup, you can easily create and style layouts while keeping your code
 dry.  The goal is to offer a rubyesque (well, actually a rubymotion-esque) way
 to create interfaces programmatically.
