@@ -123,7 +123,7 @@ Teacup.handler UIButton, :title { |target, title|
 
 
 Teacup.handler UIButton, :titleColor { |target, color|
-  target.setTitleColor(color.uicolor, forState: UIControlStateNormal)
+  target.setTitleColor(color, forState: UIControlStateNormal)
 }
 
 
