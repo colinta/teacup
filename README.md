@@ -55,7 +55,7 @@ gems on a per-project basis, using a gemset.  See the
       end
     end
     ```
-4.  Create the stylesheet
+4.  Create the stylesheet (Usually in app/styles/)
 
     ```ruby
     Teacup::Stylesheet.new :main_screen do
