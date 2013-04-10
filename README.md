@@ -69,6 +69,15 @@ Teacup implements the `viewDidLoad` method and instantiates any views you
 declare in the `layout` block.  Make sure to call `super` if you implement
 `viewDidLoad`, or you can use the "teacup-esque" `layoutDidLoad` method.
 
+#### Just Layout
+In the situation where you'd like to utilize the styles of Teacup without having your view
+automatically added in `viewDidLoad`.  You can do this by simply calling the layout method instead of the block.
+
+```ruby
+# Custom Navigation Title still styled by Teacup
+@custom_label = layout(UILabel, :custom_title)
+self.navigationItem.titleView = @custom_label
+```
 
 #### Showdown
 
