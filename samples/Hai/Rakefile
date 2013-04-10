@@ -9,5 +9,4 @@ Motion::Project::App.setup do |app|
   app.identifier = 'com.rubymotion.Hai'
 
   app.device_family = :iphone
-  app.files += Dir.glob(File.join(app.project_dir, 'styles/**/*.rb'))
 end

@@ -9,5 +9,5 @@ Motion::Project::App.setup do |app|
   app.name = 'AutoLayout'
 
   #include styles
-  app.files += Dir.glob(File.join(app.project_dir, 'styles/**/*.rb'))
+  app.files += Dir.glob(File.join(app.project_dir, 'lib/**/*.rb'))
 end
