@@ -1,3 +1,5 @@
+motion_require '../handler'
+
 ##|
 ##|  UIView.frame
 ##|

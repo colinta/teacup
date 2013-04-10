@@ -1,3 +1,5 @@
+motion_require '../layout'
+
 # Teacup's UIView extensions defines some utility functions for UIView that
 # enable a lot of the magic for Teacup::Layout.
 

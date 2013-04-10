@@ -1,3 +1,5 @@
+motion_require '../layout'
+
 # Adds methods to the UIViewController class to make defining a layout and
 # stylesheet very easy.  Also provides rotation methods that analyze
 class UIViewController
