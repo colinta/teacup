@@ -20,6 +20,10 @@ to create interfaces programmatically.
 ```bash
 > gem install teacup
 ```
+and in your Rakefile
+```ruby
+require 'teacup'
+```
 
 **Better Install**
 
