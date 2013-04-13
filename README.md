@@ -335,7 +335,7 @@ Teacup.handler UIView, :left { |view, x|
 How about setting the title of a `UIButton`?
 
 ```ruby
-Teacup.handler UIButton, :title { |view, title|
+Teacup.handler UIButton, :title { |target, title|
   target.setTitle(title, forState: UIControlStateNormal)
 }
 ```
