@@ -20,6 +20,10 @@ to create interfaces programmatically.
 ```bash
 > gem install teacup
 ```
+and in your Rakefile
+```ruby
+require 'teacup'
+```
 
 **Better Install**
 
@@ -55,7 +59,7 @@ gems on a per-project basis, using a gemset.  See the
       end
     end
     ```
-4.  Create the stylesheet
+4.  Create the stylesheet (Usually in app/styles/)
 
     ```ruby
     Teacup::Stylesheet.new :main_screen do
