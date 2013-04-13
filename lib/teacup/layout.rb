@@ -140,7 +140,9 @@ module Teacup
       if block_given?
         superview_chain << view
         begin
-          yield(view)
+          # yield will not work if this is defined in the context of the
+          # UIViewController `layout` class method.
+          instance_exec(view, &block)
         rescue NoMethodError => e
           NSLog("Exception executing layout(#{view.inspect}) in #{self.inspect} (stylesheet=#{stylesheet})")
           raise e
