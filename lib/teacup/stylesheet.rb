@@ -221,7 +221,7 @@ module Teacup
       if queries[-1].is_a? Hash
         properties = queries.pop
       else
-        # empty style declarations are allowed
+        # empty style declarations are allowed, but accomplish nothing.
         return
       end
 

@@ -9,6 +9,9 @@ class UIView
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
 
+  # A list of style classes that will be merged in
+  attr_reader :style_classes
+
   # Any class that includes Teacup::Layout gets a `layout` method, which assigns
   # itself as the 'teacup_next_responder'.
   attr_accessor :teacup_next_responder
@@ -20,9 +23,32 @@ class UIView
   #
   # This will cause new styles to be applied from the stylesheet.
   #
+  # If you are using Pixate, it will also set the pixate `styleId` property.
+  #
   # @param Symbol  stylename
   def stylename=(new_stylename)
     @stylename = new_stylename
+    if respond_to?(:'setStyleId:')
+      setStyleId(new_stylename)
+    end
+    if respond_to?(:'setNuiClass:')
+      setNuiClass(new_stylename)
+    end
+    restyle!
+  end
+
+  # Why stop at just one stylename!?  Assign a bunch of them using
+  # `style_classes`. These are distinct from `stylename`, and `stylename` styles
+  # are given priority of `style_classes`.
+  #
+  # If you are using Pixate, it will also set the pixate `styleClass` property.
+  #
+  # @param Array [Symbol] style_classes
+  def style_classes=(new_style_classes)
+    @style_classes = new_style_classes
+    if respond_to?(:setStyleClass)
+      setStyleClass(new_style_classes.join(' '))
+    end
     restyle!
   end
 

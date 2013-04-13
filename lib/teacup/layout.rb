@@ -74,7 +74,10 @@ module Teacup
     #                           current stylesheet (see {stylesheet}) for this
     #                           element will be immediately applied.
     #
-    # @param properties         The third parameter is optional, and is a Hash
+    # @param classes            The third parameter is optional, and is a list
+    #                           of style classes.
+    #
+    # @param properties         The fourth parameter is optional, and is a Hash
     #                           of properties to apply to the view directly.
     #
     # @param &block             If a block is passed, it is evaluated such that
@@ -100,17 +103,22 @@ module Teacup
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
     #   end
     #
-    def layout(view_or_class, name_or_properties=nil, properties_or_nil=nil, &block)
+    def layout(view_or_class, maybe_stylename=nil, maybe_style_classes=nil, maybe_style_properties=nil, &block)
       view = Teacup.to_instance(view_or_class)
 
-      name = nil
-      properties = properties_or_nil
+      stylename = nil
+      style_properties = nil
+      style_classes = nil
 
-      if name_or_properties.is_a? Hash
-        name = nil
-        properties = name_or_properties
-      elsif name_or_properties
-        name = name_or_properties.to_sym
+      [maybe_stylename, maybe_style_classes, maybe_style_properties].each do |setting|
+        case setting
+        when Symbol, String
+          stylename = setting
+        when Hash
+          style_properties = setting
+        when Enumerable
+          style_classes = setting
+        end
       end
 
       # prevents the calling of restyle! until we return to this method
@@ -119,15 +127,20 @@ module Teacup
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view
       view.teacup_next_responder = self
-      view.stylename = name
-      if properties
-        view.style(properties) if properties
+      if stylename
+        view.stylename = stylename
+      end
+      if style_classes
+        view.style_classes = style_classes
+      end
+      if style_properties
+        view.style(style_properties) if style_properties
       end
 
       if block_given?
         superview_chain << view
         begin
-          instance_exec(view, &block) if block_given?
+          yield(view)
         rescue NoMethodError => e
           NSLog("Exception executing layout(#{view.inspect}) in #{self.inspect} (stylesheet=#{stylesheet})")
           raise e
