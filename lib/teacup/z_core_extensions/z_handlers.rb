@@ -49,10 +49,26 @@ Teacup.handler UIView, :height { |target, h|
   target.frame = f
 }
 
+Teacup.handler UIView, :size { |target, size|
+  f = target.frame
+  size_x = Teacup::calculate(target, :width, size[0])
+  size_y = Teacup::calculate(target, :height, size[1])
+  f.size = [size_x, size_y]
+  target.frame = f
+}
+
 Teacup.handler UIView, :origin { |target, origin|
   f = target.frame
-  f.origin = origin
+  origin_x = Teacup::calculate(target, :width, origin[0])
+  origin_y = Teacup::calculate(target, :height, origin[1])
+  f.origin = [origin_x, origin_y]
   target.frame = f
+}
+
+Teacup.handler UIView, :center { |target, center|
+  center_x = Teacup::calculate(target, :width, center[0])
+  center_y = Teacup::calculate(target, :height, center[1])
+  target.center = [center_x, center_y]
 }
 
 Teacup.handler UIView, :size { |target, size|
