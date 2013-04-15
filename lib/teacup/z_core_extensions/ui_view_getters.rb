@@ -18,21 +18,30 @@ class UIView
     view = subviews.find { |subview| found_subview = subview.viewWithStylename(name_or_class) }
     return found_subview if view
 
-    nil  # couldn't find it
+    return nil  # couldn't find it
   end
 
   # get all subviews by stylename or class
   # my_view.viewsWithStylename :button => [#<UIButton..>, #<UIButton...>]
   # my_view.viewsWithStylename UIButton => [#<UIButton..>, #<UIButton...>]
   def viewsWithStylename name_or_class
-    r = []
-    r << self if self._teacup_check_stylename(name_or_class)
+    retval = []
+    retval << self if self._teacup_check_stylename(name_or_class)
 
-    subviews.each do |view|
-      r << view if view._teacup_check_stylename(name_or_class)
-      r.concat view.viewsWithStylename name_or_class
+    search_views = [].concat(self.subviews)
+    # ewww, a traditional for loop! the search_views array is modified in place,
+    # and `each` and other methods don't like that.
+    index = 0
+    while index < search_views.length
+      view = search_views[index]
+      if view._teacup_check_stylename(name_or_class)
+        retval << view
+      end
+      search_views.concat(view.subviews)
+      index += 1
     end
-    r
+
+    return retval
   end
 
   def _teacup_check_stylename(name_or_class)
