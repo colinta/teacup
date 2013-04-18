@@ -9,7 +9,7 @@ class UIView
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
 
-  # A list of style classes that will be merged in
+  # A list of style classes that will be merged in (lower priority than stylename)
   attr_reader :style_classes
 
   # Any class that includes Teacup::Layout gets a `layout` method, which assigns
@@ -50,6 +50,10 @@ class UIView
       setStyleClass(new_style_classes.join(' '))
     end
     restyle!
+  end
+
+  def style_classes
+    @style_classes ||= []
   end
 
   # Alter the stylesheet of this view.
@@ -100,7 +104,10 @@ class UIView
   def restyle!(orientation=nil)
     if Teacup.should_restyle?
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
-        style(stylesheet.query(stylename, self, orientation))
+        style_classes.each do |stylename|
+          style(stylesheet.query(stylename, self, orientation))
+        end
+        style(stylesheet.query(self.stylename, self, orientation))
       end
       subviews.each{ |subview| subview.restyle!(orientation) }
     end
@@ -271,13 +278,13 @@ class UIView
     @teacup_constraints ||= {}
 
     if constraint.is_a? Array
-      constraint.each { |constraint|
+      constraint.each do |constraint|
         add_uniq_constraints(constraint)
-      }
+      end
     elsif constraint.is_a? Hash
-      constraint.each { |sym, relative_to|
+      constraint.each do |sym, relative_to|
         @teacup_constraints[sym] = relative_to
-      }
+      end
     elsif constraint.is_a?(Teacup::Constraint) || constraint.is_a?(Symbol)
       @teacup_constraints[constraint] = true
     else
