@@ -39,7 +39,11 @@ module Teacup
     # note about `debug`: not all objects in this method are a UIView instance,
     # so don't assume that the object *has* a debug method.
     if value.is_a? Proc
-      value = target.instance_exec(&value)
+      if value.arity == 1
+        value = value.call(target)
+      else
+        value = target.instance_exec(&value)
+      end
     end
 
     handled = false
