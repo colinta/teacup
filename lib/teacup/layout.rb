@@ -103,39 +103,30 @@ module Teacup
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
     #   end
     #
-    def layout(view_or_class, maybe_stylename=nil, maybe_style_classes=nil, maybe_style_properties=nil, &block)
+    def layout(view_or_class, *teacup_settings, &block)
       view = Teacup.to_instance(view_or_class)
+
+      # prevents the calling of restyle! until we return to this method
+      should_restyle = Teacup.should_restyle_and_block
 
       stylename = nil
       style_properties = nil
       style_classes = nil
 
-      [maybe_stylename, maybe_style_classes, maybe_style_properties].each do |setting|
+      teacup_settings.each do |setting|
         case setting
         when Symbol, String
-          stylename = setting
+          view.stylename = setting
         when Hash
-          style_properties = setting
+          view.style(setting)
         when Enumerable
-          style_classes = setting
+          view.style_classes = setting
         end
       end
-
-      # prevents the calling of restyle! until we return to this method
-      should_restyle = Teacup.should_restyle_and_block
 
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view
       view.teacup_next_responder = self
-      if stylename
-        view.stylename = stylename
-      end
-      if style_classes
-        view.style_classes = style_classes
-      end
-      if style_properties
-        view.style(style_properties) if style_properties
-      end
 
       if block_given?
         superview_chain << view
