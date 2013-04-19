@@ -125,11 +125,7 @@ class UIView
           Teacup::Constraint.from_sym(constraint, relative_to)
         end
       end
-    }.flatten.tap{ |my_constraints|
-      unless my_constraints.empty?
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
-      end
-    }.map do |original_constraint|
+    }.flatten.map do |original_constraint|
       constraint = original_constraint.copy
 
       case original_constraint.target
@@ -177,6 +173,14 @@ class UIView
           puts "#{tab} #{container.stylename.inspect}"
           container = container.superview
         end
+      end
+
+      if constraint.target
+        constraint.target.setTranslatesAutoresizingMaskIntoConstraints(false)
+      end
+
+      if constraint.relative_to
+        constraint.relative_to.setTranslatesAutoresizingMaskIntoConstraints(false)
       end
 
       # the return value, for the map
