@@ -131,12 +131,10 @@ module Teacup
     end
 
     def get_stylesheet_cache(stylename, target, orientation)
-      orientation ||= UIApplication.sharedApplication.statusBarOrientation
       stylesheet_cache[stylename][target][orientation]
     end
 
     def set_stylesheet_cache(stylename, target, orientation, value)
-      orientation ||= UIApplication.sharedApplication.statusBarOrientation
       self.stylesheet_cache[stylename][target][orientation] = value
     end
 

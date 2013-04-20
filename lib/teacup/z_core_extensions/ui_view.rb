@@ -175,16 +175,12 @@ class UIView
         end
       end
 
-      if constraint.target
-        constraint.target.setTranslatesAutoresizingMaskIntoConstraints(false)
-      end
-
-      if constraint.relative_to
-        constraint.relative_to.setTranslatesAutoresizingMaskIntoConstraints(false)
-      end
-
       # the return value, for the map
       constraint.nslayoutconstraint
+    end
+
+    unless my_constraints.empty?
+      self.setTranslatesAutoresizingMaskIntoConstraints(false)
     end
 
     # now add all che child constraints
