@@ -1,5 +1,5 @@
 
-Teacup::Stylesheet.new(:first) do
+Teacup::Stylesheet.new(:main) do
 
   # enable orientations on the root view
   style :root,

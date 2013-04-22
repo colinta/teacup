@@ -1,5 +1,5 @@
 describe "Application 'Teacup'" do
-  tests FirstController
+  tests MainController
 
   before do
     @root_view = window.subviews[0]
@@ -91,7 +91,7 @@ end
 
 
 describe "background view in landscape" do
-  tests FirstController
+  tests MainController
 
   before do
     @root_view = window.subviews[0]
@@ -155,9 +155,39 @@ describe "background view in landscape" do
 
 end
 
-describe "Stylesheet 'first'" do
+
+describe "background view in landscape" do
+  tests MainController
+
   before do
-    @stylesheet = Teacup::Stylesheet[:first]
+    @root_view = window.subviews[0]
+    @background = @root_view.subviews[0]
+    @welcome = @background.subviews[0]
+    @footer = @background.subviews[1]
+    @button = @background.subviews[2]
+    rotate_device :to => :landscape
+    rotate_device :to => :portrait
+  end
+
+  it "should be in portrait" do
+    if UIApplication.sharedApplication.statusBarOrientation != UIInterfaceOrientationPortrait
+      NSLog("\n=====\n  The device orientation is not changing to `portrait`!\n=====\n")
+    end
+    UIApplication.sharedApplication.statusBarOrientation.should == UIInterfaceOrientationPortrait
+  end
+
+  it "root view should be styled as :root, keeping landscape properties that weren't changed" do
+    @root_view.stylename.should == :root
+    @root_view.backgroundColor.should == UIColor.redColor
+  end
+
+end
+
+
+# this is the stylesheet used in MainController
+describe "Stylesheet 'main'" do
+  before do
+    @stylesheet = Teacup::Stylesheet[:main]
   end
 
   it "should exist" do

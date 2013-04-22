@@ -2,7 +2,7 @@
 class LandscapeOnlyController < UIViewController
 
   def viewDidLoad
-    UIApplication.sharedApplication.windows[0].rootViewController = FirstController.alloc.init
+    UIApplication.sharedApplication.windows[0].rootViewController = MainController.alloc.init
   end
 
   def shouldAutorotateToInterfaceOrientation(orientation)

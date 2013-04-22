@@ -1,7 +1,6 @@
+class MainController < UIViewController
 
-class FirstController < UIViewController
-
-  stylesheet :first
+  stylesheet :main
 
   layout :root do
     subview(CustomView, :background) do
