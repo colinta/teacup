@@ -16,6 +16,10 @@ class UIView
   # itself as the 'teacup_next_responder'.
   attr_accessor :teacup_next_responder
 
+  # When styles are applied using `subview` or `layout`, they are stored in this
+  # hash and given the highest priority
+  attr_accessor :teacup_style
+
   # Enable debug messages for this object
   attr_accessor :debug
 
@@ -54,6 +58,10 @@ class UIView
 
   def style_classes
     @style_classes ||= []
+  end
+
+  def teacup_style
+    @teacup_style ||= {}
   end
 
   # Alter the stylesheet of this view.
@@ -109,7 +117,9 @@ class UIView
         end
         style(stylesheet.query(self.stylename, self, orientation))
       end
-      subviews.each{ |subview| subview.restyle!(orientation) }
+      # apply styles stored in `layout` method
+      style(teacup_style)
+      subviews.each { |subview| subview.restyle!(orientation) }
     end
   end
 

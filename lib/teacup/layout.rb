@@ -109,18 +109,22 @@ module Teacup
       # prevents the calling of restyle! until we return to this method
       should_restyle = Teacup.should_restyle_and_block
 
-      stylename = nil
-      style_properties = nil
-      style_classes = nil
-
       teacup_settings.each do |setting|
         case setting
         when Symbol, String
           view.stylename = setting
         when Hash
-          view.style(setting)
+          view.teacup_style = Teacup::merge_defaults(setting, view.teacup_style)
         when Enumerable
           view.style_classes = setting
+        when nil
+          # skip. this is so that helper methods that accept arguments like
+          # stylename can pass those on to this method without having to
+          # introspect the values (just set the default value to `nil`)
+          #
+          # long story short: tests will fail `nil` is not ignore here
+        else
+          raise "The argument #{setting.inspect} is not supported in Teacup::Layout::layout()"
         end
       end
 

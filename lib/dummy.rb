@@ -1,9 +1,3 @@
-class TeacupDummy
-  def anyMethodName
-    @anyobject.type = nil
-  end
-end
-
 class DummyView < UIView
 private
   def dummy
@@ -11,6 +5,8 @@ private
     setOpaque(nil)
     setClipsToBounds(nil)
     setUserInteractionEnabled(nil)
+    UIView.appearanceWhenContainedIn(UIView, nil)
+    UIView.appearance
   end
 end
 
