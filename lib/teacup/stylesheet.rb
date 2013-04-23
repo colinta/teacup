@@ -253,7 +253,7 @@ module Teacup
     #
     # @return String
     def inspect
-      "Teacup::Stylesheet[#{name.inspect}] = #{styles.inspect}"
+      "#{self.class.name}[#{name.inspect}] = #{styles.inspect}"
     end
 
     # The array of Stylesheets that have been imported into this one.
@@ -316,7 +316,8 @@ protected
       @imported ||= []
     end
 
-    # The actual contents of this stylesheet as a Hash from stylename to properties.
+    # The styles hash contains Teacup::Style objects, which get linked to the
+    # current stylesheet.
     #
     # @return Hash[Symbol, Hash]
     def styles
