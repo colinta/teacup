@@ -2,8 +2,8 @@ describe "UIAppearance support" do
   tests CustomAppearanceController
 
   it "should have custom appearance on label_1" do
-    font = UIFont.systemFontOfSize(14)
-    controller.label_1.numberOfLines.should == 1
+    controller.label_1.numberOfLines.should == 3
+    controller.label_1.alpha.should == 0.75
   end
 
   it "should have custom appearance on container" do
@@ -11,8 +11,8 @@ describe "UIAppearance support" do
   end
 
   it "should have different appearance on label_2" do
-    font = UIFont.boldSystemFontOfSize(20)
     controller.label_2.numberOfLines.should == 2
+    controller.label_2.alpha.should == 0.5
   end
 
 end

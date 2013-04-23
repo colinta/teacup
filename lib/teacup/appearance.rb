@@ -37,7 +37,7 @@ module Teacup
           appearance = klass.appearance
         end
 
-        Teacup.apply_hash appearance, properties.build
+        Teacup.apply_hash appearance, properties.build, klass
       end
     end
 
