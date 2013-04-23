@@ -182,11 +182,14 @@ module Teacup
     # some resources (fonts) not available when the application is first
     # started.  The downside is that @instance variables and variables that
     # should be closed over are not.
+    #
+    # @return true if the block was run. false otherwise
     def run_block
       if @block
         _block = @block
         @block = nil
         instance_eval &_block
+        true
       end
     end
 
@@ -297,12 +300,15 @@ module Teacup
       return retval
     end
 
+    def exclude_instance_vars
+      @exclude_instance_vars ||= [:@name, :@block, :@imported, :@styles, :@stylesheet_cache]
+    end
+
     def import_instance_vars(from_stylesheet)
       from_stylesheet.run_block
 
-      exclude = [:@name, :@block, :@imported, :@styles, :@stylesheet_cache]
       from_stylesheet.instance_variables.each do |var|
-        next if exclude.include? var
+        next if exclude_instance_vars.include? var
         self.instance_variable_set(var, from_stylesheet.instance_variable_get(var))
       end
     end
