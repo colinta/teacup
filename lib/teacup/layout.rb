@@ -114,7 +114,9 @@ module Teacup
         when Symbol, String
           view.stylename = setting
         when Hash
-          view.teacup_style = Teacup::merge_defaults(setting, view.teacup_style)
+          # override settings in teacup_style, but apply them to teacup_style
+          # so that it remains a Teacup::Style object
+          Teacup::merge_defaults(setting, view.teacup_style, view.teacup_style)
         when Enumerable
           view.style_classes = setting
         when nil

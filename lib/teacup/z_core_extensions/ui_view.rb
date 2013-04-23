@@ -61,7 +61,7 @@ class UIView
   end
 
   def teacup_style
-    @teacup_style ||= {}
+    @teacup_style ||= Teacup::Style.new
   end
 
   # Alter the stylesheet of this view.
@@ -118,7 +118,7 @@ class UIView
         style(stylesheet.query(self.stylename, self, orientation))
       end
       # apply styles stored in `layout` method
-      style(teacup_style)
+      style(teacup_style.build(self, orientation))
       subviews.each { |subview| subview.restyle!(orientation) }
     end
   end
