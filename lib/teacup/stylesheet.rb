@@ -164,6 +164,30 @@ module Teacup
     def import(name_or_stylesheet)
       @stylesheet_cache = nil
       imported << name_or_stylesheet
+
+      sheet = nil
+      if name_or_stylesheet.is_a? Teacup::Stylesheet
+        sheet = name_or_stylesheet
+      elsif Teacup::Stylesheet.stylesheets.has_key? name_or_stylesheet
+        sheet = Teacup::Stylesheet.stylesheets[name_or_stylesheet]
+      end
+
+      if sheet
+        import_instance_vars(sheet)
+      end
+    end
+
+    # the block handed to Stylesheet#new is not run immediately - it is run
+    # the first time the stylesheet is queried.  This fixes bugs related to
+    # some resources (fonts) not available when the application is first
+    # started.  The downside is that @instance variables and variables that
+    # should be closed over are not.
+    def run_block
+      if @block
+        _block = @block
+        @block = nil
+        instance_eval &_block
+      end
     end
 
     # Get the properties defined for the given stylename, in this Stylesheet and
@@ -183,15 +207,7 @@ module Teacup
       return {} unless stylename
 
       unless get_stylesheet_cache(stylename, target, orientation)
-        # the block handed to Stylesheet#new is not run immediately - it is run
-        # the first time the stylesheet is queried.  This fixes bugs related to
-        # some resources (fonts) not available when the application is first
-        # started.  The downside is that @instance variables and variables that
-        # should be closed over are not.
-        if @block
-          instance_eval &@block
-          @block = nil
-        end
+        run_block
         seen[self] = true
 
         set_stylesheet_cache(stylename, target, orientation, styles[stylename].build(target, orientation, seen))
@@ -246,12 +262,14 @@ module Teacup
     def imported_stylesheets
       imported.map do |name_or_stylesheet|
         if name_or_stylesheet.is_a? Teacup::Stylesheet
-          name_or_stylesheet
+          sheet = name_or_stylesheet
         elsif Teacup::Stylesheet.stylesheets.has_key? name_or_stylesheet
-          Teacup::Stylesheet.stylesheets[name_or_stylesheet]
+          sheet = Teacup::Stylesheet.stylesheets[name_or_stylesheet]
         else
           raise "Teacup tried to import Stylesheet #{name_or_stylesheet.inspect} into Stylesheet[#{self.name.inspect}], but it didn't exist"
         end
+
+        sheet
       end
     end
 
@@ -279,6 +297,16 @@ module Teacup
       return retval
     end
 
+    def import_instance_vars(from_stylesheet)
+      from_stylesheet.run_block
+
+      exclude = [:@name, :@block, :@imported, :@styles, :@stylesheet_cache]
+      from_stylesheet.instance_variables.each do |var|
+        next if exclude.include? var
+        self.instance_variable_set(var, from_stylesheet.instance_variable_get(var))
+      end
+    end
+
 protected
 
     # The list of Stylesheets or names that have been imported into this one.
@@ -293,10 +321,10 @@ protected
     # @return Hash[Symbol, Hash]
     def styles
       @styles ||= Hash.new{ |_styles, stylename|
-        @styles[stylename] = Style.new
-        @styles[stylename].stylename = stylename
-        @styles[stylename].stylesheet = self
-        @styles[stylename]
+        _styles[stylename] = Style.new
+        _styles[stylename].stylename = stylename
+        _styles[stylename].stylesheet = self
+        _styles[stylename]
       }
     end
 
