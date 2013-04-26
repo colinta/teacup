@@ -85,6 +85,27 @@ Teacup supports [Pixate][] and [NUI][], too, so you can use those systems for
 styling and Teacup to manage your view hierarchy and apply auto-layout
 constraints.  Teacup can also integrate with the [motion-layout][] gem!
 
+### Table of Contents
+
+* [Layouts](#layouts)
+* [Stylesheets](#stylesheets)
+  * [Using and re-using styles in a Stylesheet](#using-and-re-using-styles-in-a-stylesheet)
+  * [Style via Stylename](#style-via-stylename)
+  * [Extending Styles](#extending-styles)
+  * [Style via UIView Class](#style-via-uiview class)
+  * [Importing stylesheets](#importing-stylesheets)
+  * [Style via UIAppearance](#style-via-uiappearance)
+  * [Styling View Properties](#styling-view-properties)
+  * [Orientation Styles](#orientation-styles)
+  * [UIView animation additions](#uiview-animation-additions)
+  * [Style Handlers](#style-handlers)
+  * [Frame Calculations](#frame-calculations)
+  * [Auto-Layout](#auto-layout)
+  * [Motion-Layout](#motion-layout)
+  * [Stylesheet extensions](#stylesheet-extensions)
+    * [Autoresizing Masks](#autoresizing-masks)
+    * [Device detection](#device-detection)
+    * [Rotation helpers](#rotation-helpers)
 
 Layouts
 -------
