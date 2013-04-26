@@ -95,6 +95,7 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
   * [Style via UIView Class](#style-via-uiview-class)
   * [Importing stylesheets](#importing-stylesheets)
   * [Style via UIAppearance](#style-via-uiappearance)
+* [More Teacup features](#more-teacup-features)
   * [Styling View Properties](#styling-view-properties)
   * [Orientation Styles](#orientation-styles)
   * [UIView animation additions](#uiview-animation-additions)
@@ -106,6 +107,13 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
     * [Autoresizing Masks](#autoresizing-masks)
     * [Device detection](#device-detection)
     * [Rotation helpers](#rotation-helpers)
+* [Showdown](#showdown)
+* [The Nitty Gritty](#the-nitty-gritty)
+* [Advanced Teacup Tricks](#advanced-teacup-tricks)
+  * [UITableViewCell](#uitableviewcell)
+  * [Sweettea](#sweettea)
+* [Misc notes](#misc-notes)
+* [The Dummy](#the-dummy)
 
 Layouts
 -------
