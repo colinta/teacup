@@ -14,4 +14,10 @@ module Teacup
     end
   end
 
+  def get_subviews(target)
+    [target] + target.subviews.map do |subview|
+      get_subviews(subview).select { |v| v.stylename }
+    end.flatten
+  end
+
 end

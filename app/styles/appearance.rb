@@ -4,9 +4,9 @@ end
 class CustomAppearanceContainer < UIView
 end
 
-Teacup.handler UIView, :redHerring { |view, alpha|
+Teacup.handler UIView, :redHerring do |view, alpha|
   view.alpha = alpha
-}
+end
 
 Teacup::Appearance.new do
 

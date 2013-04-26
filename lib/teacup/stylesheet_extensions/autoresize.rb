@@ -18,6 +18,40 @@ module Teacup
       end
     end
 
+    ##|
+    ##|  DEPRECATED
+    ##|
+
+    def flexible_left
+      NSLog("The Stylesheet method `flexible_left` is deprecated, use `autoresize.flexible_left` instead")
+      UIViewAutoresizingFlexibleLeftMargin
+    end
+
+    def flexible_width
+      NSLog("The Stylesheet method `flexible_width` is deprecated, use `autoresize.flexible_width` instead")
+      UIViewAutoresizingFlexibleWidth
+    end
+
+    def flexible_right
+      NSLog("The Stylesheet method `flexible_right` is deprecated, use `autoresize.flexible_right` instead")
+      UIViewAutoresizingFlexibleRightMargin
+    end
+
+    def flexible_top
+      NSLog("The Stylesheet method `flexible_top` is deprecated, use `autoresize.flexible_top` instead")
+      UIViewAutoresizingFlexibleTopMargin
+    end
+
+    def flexible_height
+      NSLog("The Stylesheet method `flexible_height` is deprecated, use `autoresize.flexible_height` instead")
+      UIViewAutoresizingFlexibleHeight
+    end
+
+    def flexible_bottom
+      NSLog("The Stylesheet method `flexible_bottom` is deprecated, use `autoresize.flexible_bottom` instead")
+      UIViewAutoresizingFlexibleBottomMargin
+    end
+
   end
 
   class Autoresize

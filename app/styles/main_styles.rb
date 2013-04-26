@@ -8,8 +8,8 @@ Teacup::Stylesheet.new(:main) do
     width: 320,
     height: 480,
     backgroundColor:  UIColor.yellowColor,
-    portrait:    true,
-    upside_down:  false,
+    portrait: true,
+    upside_down: false,
 
     layer: {
       cornerRadius: 10.0,
@@ -21,13 +21,13 @@ Teacup::Stylesheet.new(:main) do
 
     landscape_left: {
       layer: {
-        transform: spin(identity, -pi / 2),
+        transform: transform_layer.spin(-pi / 2),
       },
     },
 
     landscape_right: {
       layer: {
-        transform: spin(identity, pi / 2),
+        transform: transform_layer.spin(pi / 2),
       },
     }
 

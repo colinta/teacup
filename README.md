@@ -9,9 +9,15 @@ Using teacup, you can easily create and style layouts while keeping your code
 dry.  The goal is to offer a rubyesque (well, actually a rubymotion-esque) way
 to create interfaces programmatically.
 
-**Check out a working sample app [here][Hai]!**
+**Check out some sample apps!**
+
+[“Hai”][Hai]
+[“AutoLayout”][AutoLayout]
+[“OnePage”][OnePage]
 
 [Hai]: https://github.com/rubymotion/teacup/tree/master/samples/Hai
+[AutoLayout]: https://github.com/rubymotion/teacup/tree/master/samples/AutoLayout
+[OnePage]: https://github.com/rubymotion/teacup/tree/master/samples/OnePage
 
 #### Installation
 
@@ -27,9 +33,8 @@ require 'teacup'
 
 **Better Install**
 
-However, it is recommended that you use [Bundler][] and [rvm][] to manage your
-gems on a per-project basis, using a gemset.  See the
-[Installation wiki page][Installation] for more help on doing that.
+However, it is recommended that you use [Bundler][] to manage your gems.  See
+the [Installation wiki page][Installation] for more help on doing that.
 
 [Bundler]: http://gembundler.com/
 [rvm]: https://rvm.io/
@@ -74,8 +79,10 @@ declare in the `layout` block.  Make sure to call `super` if you implement
 `viewDidLoad`, or you can use the "teacup-esque" `layoutDidLoad` method.
 
 #### Styling Without Implicitly Adding the View
-In the situation where you'd like to utilize the styles of Teacup without having your view
-automatically added in `viewDidLoad`.  You can accomplish this by calling the `layout` method instead of the block.
+
+In the situation where you'd like to utilize the styles of Teacup without having
+your view automatically added in `viewDidLoad`.  You can accomplish this by
+calling the `layout` method instead of the block.
 
 ```ruby
 # Custom Navigation Title still styled by Teacup
@@ -202,7 +209,7 @@ most likely), but they can also perform introspection, using "handlers".
 Basics
 ======
 
-Create a stylesheet in any code file, usually `styles.rb` or `styles/main.rb`,
+Create a stylesheet in any code file, usually `app/styles.rb` or `app/styles/main.rb`,
 if you have a ton of 'em.  The `Teacup::Stylesheet` constructor accepts a
 stylesheet name and a block, which will contain your style declarations.
 
@@ -232,14 +239,14 @@ style :spinner,
   autoresizingMask: flexible_left|flexible_right|flexible_top|flexible_bottom
 
 
-# device-specific geometries - app_size, screen_size, and device/device? methods
+# device-specific geometries - app_size, screen_size, and device/device_is? methods
 style :root,
   origin: [0, 0],
   size: app_size  # doesn't include the status bar - screen_size does
 
-if device? iPhone
+if device_is? iPhone
   style :image, image: UIImage.imageNamed "my iphone image"
-elsif device? iPad
+elsif device_is? iPad
   style :image, image: UIImage.imageNamed "my ipad image"
 end
 
@@ -248,7 +255,7 @@ end
 if device|iPhone > 0
   # ...
 end
-# so yeah, you might as well use `device? iPhone`, in my opinion.
+# so yeah, you might as well use `device_is? iPhone`, in my opinion.
 
 
 # rotations - use the identity and pi methods

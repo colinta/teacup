@@ -1,6 +1,6 @@
 # Teacup's UIView extensions defines some utility functions for UIView that
 # enable a lot of the magic for Teacup::Layout.
-
+#
 # Users of teacup should be able to ignore the contents of this file for
 # the most part.
 class UIView
@@ -58,6 +58,19 @@ class UIView
 
   def style_classes
     @style_classes ||= []
+  end
+
+  def add_style_class(stylename)
+    unless style_classes.include?
+      style_classes << stylename
+      restyle!
+    end
+  end
+
+  def remove_style_class(stylename)
+    if style_classes.delete(stylename)
+      restyle!
+    end
   end
 
   def teacup_style
@@ -219,6 +232,15 @@ class UIView
     end
   end
 
+  def teacup_animation(options)
+    UIView.beginAnimations(nil, context: nil)
+    UIView.setAnimationDuration(options[:duration]) if options.key?(:duration)
+    UIView.setAnimationCurve(options[:curve]) if options.key?(:curve)
+    UIView.setAnimationDelay(options[:delay]) if options.key?(:delay)
+    yield
+    UIView.commitAnimations
+  end
+
   # Animate a change to a new stylename.
   #
   # This is equivalent to wrapping a call to .stylename= inside
@@ -231,13 +253,26 @@ class UIView
   def animate_to_stylename(stylename, options={})
     return if self.stylename == stylename
 
-    UIView.beginAnimations(nil, context: nil)
-    # TODO: This should be in a style-sheet!
-    UIView.setAnimationDuration(options[:duration]) if options[:duration]
-    UIView.setAnimationCurve(options[:curve]) if options[:curve]
-    UIView.setAnimationDelay(options[:delay]) if options[:delay]
-    self.stylename = stylename
-    UIView.commitAnimations
+    teacup_animation(options) do
+      self.stylename = stylename
+    end
+  end
+
+  # Animate a change to a new list of style_classes.
+  #
+  # This is equivalent to wrapping a call to .style_classes= inside
+  # UIView.beginAnimations.
+  #
+  # @param Symbol  the new stylename
+  # @param Options  the options for the animation (may include the
+  #                 duration and the curve)
+  #
+  def animate_to_styles(style_classes, options={})
+    return if self.style_classes == style_classes
+
+    teacup_animation(options) do
+      self.style_classes = style_classes
+    end
   end
 
   # Animate a change to new styles
@@ -248,12 +283,9 @@ class UIView
   # @param Hash   the new styles and options for the animation
   #
   def animate_to_style(style)
-    UIView.beginAnimations(nil, context: nil)
-    UIView.setAnimationDuration(style[:duration]) if style[:duration]
-    UIView.setAnimationCurve(style[:curve]) if style[:curve]
-    UIView.setAnimationDelay(style[:delay]) if style[:delay]
-    style(style)
-    UIView.commitAnimations
+    teacup_animation(options) do
+      self.style(style)
+    end
   end
 
   # Apply style properties to this element.

@@ -43,14 +43,6 @@ class UIViewController
       @layout_definition = [stylename, properties, block]
     end
 
-    def stylesheet(new_stylesheet=nil)
-      if new_stylesheet.nil?
-        return @stylesheet
-      end
-
-      @stylesheet = new_stylesheet
-    end
-
   end # class << self
 
   # Assigning a new stylesheet triggers {restyle!}.
@@ -222,42 +214,4 @@ class UIViewController
     view.restyle!(orientation)
   end
 
-  ##|
-  ##|  Motion-Layout support
-  ##|
-
-  # Calling this method uses Nick Quaranto's motion-layout gem to provide ASCII
-  # art style access to autolayout.  It assigns all the subviews by stylename,
-  # and assigns `self.view` as the target view.  Beyond that, it's up to you to
-  # implement the layout methods:
-  #
-  #     auto do
-  #       metrics 'margin' => 20
-  #       vertical "|-[top]-margin-[bottom]-|"
-  #       horizontal "|-margin-[top]-margin-|"
-  #       horizontal "|-margin-[bottom]-margin-|"
-  #     end
-  def auto(layout_view=self.view, layout_subviews={}, &layout_block)
-    raise "gem install 'motion-layout'" unless defined? Motion::Layout
-
-    Teacup.get_subviews(self.view).each do |view|
-      if view.stylename && ! layout_subviews[view.stylename.to_s]
-        layout_subviews[view.stylename.to_s] = view
-      end
-    end
-
-    Motion::Layout.new do |layout|
-      layout.view layout_view
-      layout.subviews layout_subviews
-      layout.instance_eval(&layout_block)
-    end
-  end
-
-end
-
-
-def Teacup.get_subviews(target)
-  [target] + target.subviews.map { |subview|
-    get_subviews(subview).select{ |v| v.stylename }
-  }.flatten
 end

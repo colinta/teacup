@@ -68,6 +68,7 @@ module Teacup
     attr_reader :name
 
     class << self
+
       def stylesheets
         @stylesheets ||= {}
       end
@@ -79,6 +80,7 @@ module Teacup
       def []= name, stylesheet
         stylesheets[name] = stylesheet
       end
+
     end
 
     # Create a new Stylesheet.

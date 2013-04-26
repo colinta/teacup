@@ -1,4 +1,23 @@
 module Teacup
+  # Adds the class `stylesheet` method to
+  module LayoutClass
+
+    # Calling this method in the class body will assign a default stylesheet for
+    # all instances of your class
+    def stylesheet(new_stylesheet=nil)
+      if new_stylesheet.nil?
+        if @stylesheet.is_a? Symbol
+          @stylesheet = Teacup::Stylesheet[@stylesheet]
+        end
+
+        return @stylesheet
+      end
+
+      @stylesheet = new_stylesheet
+    end
+
+  end
+
   # Teacup::Layout defines a layout and subview function that can be used to
   # declare and configure the layout of views and the view hierarchy in your
   # application.
@@ -18,6 +37,10 @@ module Teacup
   #     end
   #   end
   module Layout
+    def self.included(base)
+      base.extend LayoutClass
+    end
+
     # Assign a Stylesheet or Stylesheet name (Symbol)
     #
     # @return val
@@ -60,7 +83,7 @@ module Teacup
         @stylesheet = Teacup::Stylesheet[@stylesheet]
       end
 
-      @stylesheet
+      @stylesheet || self.class.stylesheet
     end
 
     # Alter the layout of a view
@@ -152,6 +175,7 @@ module Teacup
         Teacup.should_restyle!
         view.restyle!
       end
+
       view
     end
 
@@ -201,6 +225,37 @@ module Teacup
       layout(instance, *args, &block)
 
       instance
+    end
+
+    ##|
+    ##|  Motion-Layout support
+    ##|
+
+    # Calling this method uses Nick Quaranto's motion-layout gem to provide ASCII
+    # art style access to autolayout.  It assigns all the subviews by stylename,
+    # and assigns `self.view` as the target view.  Beyond that, it's up to you to
+    # implement the layout methods:
+    #
+    #     auto do
+    #       metrics 'margin' => 20
+    #       vertical "|-[top]-margin-[bottom]-|"
+    #       horizontal "|-margin-[top]-margin-|"
+    #       horizontal "|-margin-[bottom]-margin-|"
+    #     end
+    def auto(layout_view=top_level_view, layout_subviews={}, &layout_block)
+      raise "gem install 'motion-layout'" unless defined? Motion::Layout
+
+      Teacup.get_subviews(top_level_view).each do |view|
+        if view.stylename && ! layout_subviews[view.stylename.to_s]
+          layout_subviews[view.stylename.to_s] = view
+        end
+      end
+
+      Motion::Layout.new do |layout|
+        layout.view layout_view
+        layout.subviews layout_subviews
+        layout.instance_eval(&layout_block)
+      end
     end
 
     protected
