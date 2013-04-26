@@ -92,7 +92,7 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
   * [Using and re-using styles in a Stylesheet](#using-and-re-using-styles-in-a-stylesheet)
   * [Style via Stylename](#style-via-stylename)
   * [Extending Styles](#extending-styles)
-  * [Style via UIView Class](#style-via-uiview class)
+  * [Style via UIView Class](#style-via-uiview-class)
   * [Importing stylesheets](#importing-stylesheets)
   * [Style via UIAppearance](#style-via-uiappearance)
   * [Styling View Properties](#styling-view-properties)
