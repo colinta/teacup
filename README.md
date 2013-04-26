@@ -64,15 +64,15 @@ require 'teacup'
     ```
 
 
-##                            Teacup, explained
+##                            Teacup
 
-Teacup's goal is to facilitate the creation and styling of yoru `UIView`s
+Teacup's goal is to facilitate the creation and styling of yoru `UIViews`
 hierarchy. Say "Goodbye!" to Xcode & XIB files!
 
 Teacup is composed of two systems:
 
 - Layouts
-  A DSL to create `UIView`s and to organize them in a hierarchy.  You assign the
+  A DSL to create `UIViews` and to organize them in a hierarchy.  You assign the
   style name and style classes from these methods.
 
 - Stylesheets
@@ -110,9 +110,9 @@ class MyController < UIViewController
 end
 ```
 
-You can use very similar code you `UIView` subclasses.
+You can use very similar code in your `UIView` subclasses.
 
-```
+```ruby
 # view example
 #
 # if you use teacup in all your projects, you can bundle your custom views with
@@ -144,9 +144,10 @@ The `layout` and `subview` methods are the work horses of the Teacup view DSL.
     common to use this feature to assign the `delegate` or `dataSource`.
   - `&block` - See discussion below
   - Returns the `uiview` that was created or passed to `layout`.
+  - only the `uiview` arg is required.  You can pass any combination of
+    stylename, style_classes, and additional_styles (some, none, or all).
 * `subview(uiview|UIViewClass, stylename, style_classes, additional_styles, &block)`
   - Identical to `layout`, but adds the view to the current target
-    (`superview_chain` is the method that returns this view).
 
 The reason it is so easy to define view hierarchies in Teacup is because the
 `layout` and `subview` methods can be "nested" by passing a block.
@@ -171,11 +172,12 @@ really it's just Ruby code (and isn't that the best system?).
 module Teacup::Layout
 
   # creates a button and assigns a default stylename
-  def button(*args)
+  def button(*args, &block)
     # apply a default stylename
     args = [:button] if args.empty?
+
     # instantiate a button and give it a style class
-    subview(UIButton.buttonWithType(UIButtonTypeCustom), *args)
+    subview(UIButton.buttonWithType(UIButtonTypeCustom), *args, &block)
   end
 
   # creates a button with an icon image and label
@@ -191,14 +193,17 @@ module Teacup::Layout
     button = UIButton.buttonWithType(UIButtonTypeCustom)
     button.addSubview(image_view)
     button.addSubview(label)
+
     # code could go here to position the icon and label, or at could be handled
     # by the stylesheet
+
     subview(button)
   end
 
 end
-
-# example use of the helper method
+```
+###### example use of the helper methods
+```
 class MyController < UIViewController
 
   layout do
@@ -217,6 +222,7 @@ with Teacup.  It's method signature is
 ```ruby
 UIViewController.layout(stylename=nil, styles={}, &block)
 ```
+
 * `stylename` is the stylename you want applied to your controller's `self.view`
   object.
 * `styles` are *rarely* applied here, but one common use case is when you assign
@@ -227,9 +233,9 @@ UIViewController.layout(stylename=nil, styles={}, &block)
 
 ##                                Stylesheets
 
-This is where you will store your view-styling-related code. Migrating code from
-your controller (or custom view) into a stylesheet is very straightforward. The
-method names map 1::1.
+This is where you will store your styling-related code. Migrating code from your
+controller or custom view into a stylesheet is very straightforward. The method
+names map 1::1.
 
 ```ruby
 # classic Cocoa/UIKit
@@ -284,7 +290,7 @@ meant for *design*, not behavior.
 
 Let's look at each in turn.
 
-#### Style via stylename
+### Style via Stylename
 
 This is the most common way to apply a style.
 
@@ -319,20 +325,16 @@ We can tackle this a couple ways.  You can apply "last-minute" styles in the
 ```ruby
 layout do
   subview(UILabel, :h1,
-    # the `subview` and `layout` can apply styles
+    # the `subview` and `layout` methods can apply styles
     text: "Omg, it's full of stars"
     )
 end
 ```
 
-In this case though we just have static text, so you can apply the style using
+In this case though we just have static text, so you can assign the text using
 the stylesheet:
 
 ```ruby
-layout do
-  subview(UILabel, :main_header)
-end
-
 Teacup::Stylesheet.new :main do
 
   style :h1,
@@ -345,9 +347,11 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-Not very DRY though is it!  We had to use a new `style` (not all our labels say
-"OMG"), but we still wanted to use our font from the `:h1` style. We can tell
-the `:main_header` style that it `extends` the `:h1` style:
+### Extending Styles
+
+Not very DRY though is it!?  We have to use a new style (`:main_header`) because
+not all our labels say "OMG", but we want to use our font from the `:h1` style.
+We can tell the `:main_header` style that it `extends` the `:h1` style:
 
 ```ruby
 layout do
@@ -365,15 +369,29 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-#### Style via Class
+A common style when writing stylesheets is to use instance variables to store
+settings you want to tweak.
 
-If you need to apply styles to *all* instances of a UIView subclass, you can do
-so by applying styles to a class name instead of a symbol.  This feature is
+```ruby
+Teacup::Stylesheet.new :main do
+  @hi_font = UIFont.systemFontOfSize(20)
+
+  style :h1,
+    font: @hi_font
+  style :main_header, extends: :h1,
+    text: "Omg, it's full of stars"
+end
+```
+
+### Style via UIView Class
+
+If you need to apply styles to *all* instances of a `UIView` subclass, you can
+do so by applying styles to a class name instead of a symbol.  This feature is
 handy at times when you might otherwise use `UIAppearance` (which teacup also
 supports!).
 
 ```ruby
-Teacup::Stylesheet.new :main do
+Teacup::Stylesheet.new :app do
 
   style UILabel,
     font: UIFont.systemFontOfSize(20)
@@ -384,7 +402,7 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-#### Importing stylesheets
+### Importing stylesheets
 
 We've touched on the ability to write styles, extend styles, and apply styles to
 a class.  Now we can introduce another feature that is even more useful for
@@ -418,11 +436,11 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-#### Style via UIAppearance
+### Style via UIAppearance
 
 And lastly, the `UIAppearance protocol` is supported by creating an instance of
-`Teacup::Appearance`.  There is debatable benefit to using UIAppearance, because
-it will apply styles to views that are outside your control, like the
+`Teacup::Appearance`.  There is debatable benefit to using [UIAppearance][],
+because it will apply styles to views that are outside your control, like the
 camera/image pickers and email/message controllers.  Using `import` instead will
 not apply styles to those views.
 
@@ -446,7 +464,7 @@ Teacup::Appearance.new do
 end
 ```
 
-That block will be run because it gets associated with
+That block will be associated with
 `UIApplicationDidFinishLaunchingNotification`, which is where most
 `UIAppearance` code goes anyway!  Yaaay, magic.
 
@@ -456,16 +474,18 @@ You have enough information *right now* to go play with Teacup.  Check out the
 example apps, write your own, whatever.  But read on to hear about why Teacup is
 more than just writing `layouts` and applying styles.
 
-### Teacup as a utility
-
-You can use all the methods above without having to rely on the entirety of
-Teacup's layout and stylesheet systems. By that I mean any time you are creating
-a view hierarchy don't be shy about using Teacup to do it, and since `UIView`
-has the `style` method, it can be used to group a bunch of customizations
-anywhere in your code. You don't *have* to pull out a stylesheet to do it.
+## Teacup as a utility
 
 When you are prototyping an app it is useful to bang out a bunch of code
 quickly, and here are some ways that Teacup might help.
+
+You can use all the methods above without having to rely on the entirety of
+Teacup's layout and stylesheet systems. By that I mean *any* time you are
+creating a view hierarchy don't be shy about using Teacup to do it.
+
+`UIView` has the `style` method, which can be used to group a bunch of
+customizations anywhere in your code. You don't *have* to pull out a stylesheet
+to do it.
 
 ```ruby
 # Custom Navigation Title created and styled by Teacup
@@ -490,37 +510,25 @@ def tableView(table_view, cellForRowAtIndexPath:index_path)
   return cell
 end
 
-# Use the `style` method on a view to apply your styling. These are not "saved"
-# anywhere (unlike passing styles to `subview/layout`, which do get saved).
+# Use the `style` method on a view to apply your styling. This is a one-shot
+# styling.
 @label.style(textColor: UIColor.blueColor, text: 'Blue Label')
 ```
 
-Now is a good time to mention that when `UIView` goes looking for its
-`stylesheet` it does so by going up the responder chain, that means that if you
-define the stylesheet on a parent view, all the child views will use that same
-stylesheet.  It also means you can assign a stylesheet to a child view without
-worrying what the parent view's stylesheet is.
-
-Caveat!  If you implement a class that includes `Teacup::Layout`, you can assign
-it a `stylesheet`. *That* stylesheet will be used by views created using
-`layout` or `subview`.  Saying that `UIView` inherits its `stylesheet` from the
-responder chain is not accurate; it actually uses `teacup_responder`, which just
-defaults to `nextResponder`.
-
-### More Teacup features
+## More Teacup features
 
 There are a few (OK, a bunch) more features that Teacup provides that deserve
 discussion:
 
-- Styling properties
-- Orientation styles
-- UIView additions
-- Style handlers
+- Styling View Properties
+- Orientation Styles
+- UIView Additions
+- Style Handlers
 - Frame Calculations
 - Auto-Layout & [Motion-Layout][motion-layout]
-- Stylesheet extensions
+- Stylesheet Extensions
 
-#### Styling properties
+### Styling View Properties
 
 Styling a UIView is fun, but a UIView is often composed of many objects, like
 the `layer`, or maybe an `imageView` or `textLabel` and so on.  You can style
@@ -541,14 +549,11 @@ style :tablecell,
   }
 ```
 
-Being able to style the layer comes in handy!  CoreAnimation is awesome, and
-`CALayar` is your first point of entry into that world.
-
-#### Orientation-specific styles
+### Orientation Styles
 
 There's more to stylesheets than just translating `UIView` setters.  Teacup can
-also translate orientation directives.  These are applied when the view is
-created and when a rotation occurs.
+also apply orientation-specific styles.  These are applied when the view is
+created (using the current device orientation) and when a rotation occurs.
 
 ```ruby
 Teacup::Stylesheet.new :main do
@@ -565,10 +570,10 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-When you combine these styles with [Frame Calculations][calculations] you can do
-very powerful frame manipulation, very easily!
+Combine these styles with [Frame Calculations][calculations] to have you view
+frame recalculated automatically.
 
-#### UIView animation additions
+### UIView animation additions
 
 We've already seen the Teacup related properties:
 
@@ -579,11 +584,11 @@ We've already seen the Teacup related properties:
 Each of these has a corresponding method that you can use to facilitate
 animations.
 
-- `animate_to_stylename`
-- `animate_to_styles`
-- `animate_to_style`
+- `animate_to_stylename(stylename)`
+- `animate_to_styles(style_classes)`
+- `animate_to_style(properties)`
 
-#### Style Handlers
+### Style Handlers
 
 *This feature is used extensively by [sweettea][] to make a more intuitive
 stylesheet DSL*
@@ -598,18 +603,19 @@ This is where Teacup's style handlers come in.  They are matched against a
 style when you use it in your stylesheet.
 
 ```ruby
-# this handler adds the `:title` style to the UIButton class.
+# this handler adds a `:title` handler to the UIButton class (and subclasses).
 Teacup.handler UIButton, :title do |target, title|
   target.setTitle(title, forState: UIControlStateNormal)
 end
 
-Teacup::Stylesheet.new do
-  style UIButton,
-    title: 'This is the title'  # <= this will end up being passed to the handler above
+# ...
+subview(UIButton,
+  title: 'This is the title'  # <= this will end up being passed to the handler above
+  )
 
-  style UISomeOtherClass, # (not a subclass of UIButton, btw)
-    title: 'This is the title'  # <= but this will not!  the handler above is restricted to UIButton subclasses
-end
+layout(UINavigationItem,
+  title: 'This is the title'  # <= but this will not!  the handler above is restricted to UIButton subclasses
+  )
 ```
 
 Other handlers are defined in `z_handlers.rb`.  Another useful one is the
@@ -620,9 +626,9 @@ style :container,
   frame: :full  # => [[0, 0], superview.frame.size]
 ```
 
-#### Frame Calculations
+### Frame Calculations
 
-*These are super cool, especially when combined smartly with autoresizingMasks*
+*These are super cool, just don't forget your autoresizingMasks*
 
 When positioning views you will often have situations where you want to have a
 view centered, or 8 pixels to the right of center, or full width/height. All of
@@ -653,7 +659,7 @@ When this code executes, the string `'100% - 16'` is translated into the formula
 `1.00 * target.superview.frame.size.width - 16`.  If the property is related to
 the height or y-position, it will be calculated based on the height.
 
-The frame calculations must be a string of the form "[0-9]+% [+-] [0-9]+".  If
+The frame calculations must be a string of the form `/[0-9]+% [+-] [0-9]+/`.  If
 you need more "math-y-ness" than that, you can construct strings using interpolation.
 
 ```ruby
@@ -686,11 +692,11 @@ Teacup::Stylesheet.new :main do
     autoresizingMask: (UIViewAutoresizingFlexibleLeftMargin |
                        UIViewAutoresizingFlexibleRightMargin |
                        UIViewAutoresizingFlexibleTopMargin)
-
+    # see the autoresizing extension below for an even better way to write this.
 end
 ```
 
-#### Auto-Layout
+### Auto-Layout
 
 *This is another much bigger topic than it is given space for here*
 
@@ -760,11 +766,12 @@ in you chuckle with glee.  In this example you could go completely with just
 frame calculation formulas and springs and struts.  Your frame code would still
 be cluttered, just cluttered in a different way.
 
-#### [Motion-Layout][motion-layout]
+### [Motion-Layout][motion-layout]
 
 If you are using Nick Quaranto's motion-layout gem, you can use it from within
-a `UIViewController`.  Then benefit is that the stylenames assigned to your
-views will be used in the dictionary that the ASCII-based system relies on.
+any class that includes `Teacup::Layout`.  Then benefit is that the Teacup
+stylenames assigned to your views will be used in the dictionary that the
+ASCII-based system relies on.
 
 ```ruby
 layout do
@@ -787,13 +794,13 @@ end
 
 ```
 
-#### Stylesheet extensions
+### Stylesheet extensions
 
 Auto-Layout is just one Stylesheet extension, there are a few others.  And if
 you want to write your own, just open up the `Teacup::Stylesheet` class and
 start adding methods.
 
-###### Autoresizing Masks
+#### Autoresizing Masks
 
 If you've used the SugarCube `uiautoresizingmask` methods, you'll recognize
 these.  They are handy, and hopefully intuitive, shorthands for common springs
@@ -1002,7 +1009,7 @@ end
 
 ## The Nitty Gritty
 
-###### Regarding Style Precedence
+#### Regarding Style Precedence
 
 You need to be careful when extending styles and using orientation styles
 because the precedence rules take some getting used to.  The goal is that you
@@ -1031,23 +1038,6 @@ However, there's a way around *that, too.*  If you call `restyle!` on a
 With me so far?  Orientation styles are reapplied whenever the device is
 rotated. But generic styles are only applied in `viewDidLoad` and when
 `restyle!` is called explicitly.
-
-There are also times when you either want (or must) override (or add to) the
-stylesheet styles.  For instance, if you want to assign the `delegate` or
-`dataSource` properties, this cannot be done from a `Stylesheet`.  But that's
-okay, because we have a chance to add these styles in the `subview` and `layout`
-methods.
-
-```ruby
-layout do
-  subview(UITableView, delegate: self)
-end
-```
-
-These styles are stored in a separate hash - the `teacup_style`, and it is
-applied in `restyle!` and during orientation changes.  The idea here is that the
-closer the style setting is to where the view is instantiated, the higher the
-precedence.
 
 How does the `:extends` property affect things?
 
@@ -1090,8 +1080,8 @@ end
 
 There are times when you might wish teacup "just worked", but please remember:
 Teacup is not a "blessed" framework built by Apple engineers. We have access to
-the same APIs that you do!  That said, here are some use-cases where you can
-most definitely *use* teacup, but you'll need to do a little more leg work.
+the same APIs that you do. That said, here are some use-cases where you can most
+definitely *use* teacup, but you'll need to do a little more leg work.
 
 ### Trust your parent view - by using springs and struts
 
@@ -1100,18 +1090,17 @@ most definitely *use* teacup, but you'll need to do a little more leg work.
 It's been mentioned a few times in this document that Teacup will create & style
 views in the `viewDidLoad` method.  That means that the `superview` property of
 the controller's view will, necessarily, *not* be set yet.  `viewDidLoad` is
-called after the view is instantiated (in `loadView`), so this is obvious once
-you think about it!
+called after the view is instantiated (in `loadView`), and it hasn't been added
+as a subview yet.
 
 Auto-Layout is based on the relationship between two views - often a container
 and child view.  It's an amazing system, but if that parent view *isn't
 available*, well, you're not gonna have much success.
 
-In the case of a UIViewController your "container" is usually the `self.view`
-property, which by default has sensible springs setup so that it stretches with
-to fill the superview, so this hurdle is solved for you. It's not until you go
-messing with the `self.view` property, or are not in the context of a
-`UIViewController` that things get hairy.
+In the case of a UIViewController your "container" is the `self.view` property,
+which by default has sensible springs setup so that it stretches to fill the
+superview. It's not until you go messing with the `self.view` property, or are
+not in the context of a `UIViewController` that things get hairy.
 
 If this is the case, you should get some pretty obvious warning messages,
 something along the lines of `Could not find :superview`.
@@ -1138,11 +1127,11 @@ class TableHelper
     unless cell
       cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault
                           reuseIdentifier: cell_identifier)
-      # the receiver here is the controller, which is actually important!
+
       layout(cell.contentView) do
         subview(UIImageView, :image)
       end
-      # cell.contentView and all child classes will use the :table_helper stylesheet
+      # cell.contentView and all child classes will "inherit" the :table_helper stylesheet
     end
 
     return cell
@@ -1151,7 +1140,7 @@ class TableHelper
 end
 ```
 
-### Sweettea
+### [Sweettea][]
 
 *SugarCube + Teacup = Sweettea*
 
@@ -1222,6 +1211,22 @@ need to assign all the frames in your layout block.  This is not recommended,
 though!  It is usually cleaner to do the frame calculations in stylesheets,
 either using [geomotion][], frame calculations, or auto-layout.
 
+Within a `subview/layout` block views are added to the last object in
+`Layout#superview_chain`.  Views are pushed and popped from this array in the
+`Layout#layout` method, starting with the `top_level_view`.
+
+When `UIView` goes looking for its `stylesheet` it does so by going up the
+responder chain, that means that if you define the stylesheet on a parent view,
+all the child views will use that same stylesheet.  It also means you can assign
+a stylesheet to a child view without worrying what the parent view's stylesheet
+is.
+
+Caveat!  If you implement a class that includes `Teacup::Layout`, you can assign
+it a `stylesheet`. *That* stylesheet will be used by views created using
+`layout` or `subview`.  Saying that `UIView` inherits its `stylesheet` from the
+responder chain is not accurate; it actually uses `teacup_responder`, which just
+defaults to `nextResponder`.
+
 ## The Dummy
 
 If you get an error that looks like this:
@@ -1249,5 +1254,7 @@ tool helps you build great apps!
 [Pixate]: http://www.pixate.com
 [NUI]: https://github.com/tombenner/nui
 [geomotion]: https://github.com/clayallsopp/geomotion
+[UIAppearance]: http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAppearance_Protocol/Reference/Reference.html#//apple_ref/occ/intf/UIAppearance
 [motion-layout]: https://github.com/qrush/motion-layout
+[sweettea]: http://github.com/colinta/sweettea
 [colinta]: http://github.com/colinta

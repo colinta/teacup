@@ -258,6 +258,10 @@ module Teacup
       end
     end
 
+    def top_level_view
+      raise "No default view has been defined for #{self.class}.  Implement `top_level_view`."
+    end
+
     protected
 
     # Get's the current stack of views in nested calls to layout.
