@@ -66,7 +66,7 @@ require 'teacup'
 
 ##                            Teacup
 
-Teacup's goal is to facilitate the creation and styling of yoru `UIViews`
+Teacup's goal is to facilitate the creation and styling of your `UIViews`
 hierarchy. Say "Goodbye!" to Xcode & XIB files!
 
 Teacup is composed of two systems:
@@ -285,7 +285,7 @@ meant for *design*, not behavior.
 - Styles are be applied via stylename (`style :label`) or class (`style UILabel`)
 - Styles can extend other styles (`style :big_button, extends: :button`)
 - A stylesheet can import other stylesheets (`import :app`)
-- The special Appearance stylesheet can be used to apply styles to UIAppearance
+- The special Appearance stylesheet can be used to apply styles to `UIAppearance`
   (`Teacup::Appearance.new`)
 
 Let's look at each in turn.
@@ -1244,7 +1244,7 @@ about every method that you would want to style.
 Teacup was born out of the #rubymotion irc chatroom in the early days of
 RubyMotion.  Its design, direction, and priorities are all up for discussion!
 
-I'm [Colin T.A. Gray][colinta], the maintainer of the Teacup project.  I this
+I'm [Colin T.A. Gray][colinta], the maintainer of the Teacup project.  I hope this
 tool helps you build great apps!
 
 [advanced]: https://github.com/rubymotion/teacup/#advanced-teacup-tricks
