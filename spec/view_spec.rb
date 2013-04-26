@@ -1,7 +1,19 @@
+class CustomLabel < UILabel
+  attr :partyTime
+
+  def initWithFrame(frame)
+    super.tap do
+      @partyTime = :excellent
+    end
+  end
+
+end
+
+
 describe "Teacup::View" do
 
   before do
-    @view = UILabel.new
+    @view = CustomLabel.new
 
     @stylesheet = Teacup::Stylesheet.new do
       style :label,
@@ -20,6 +32,14 @@ describe "Teacup::View" do
       @view.stylename = :label
 
       @view.stylename.should == :label
+      @view.text.should == "Stylesheet1 Label1"
+    end
+  end
+
+  describe 'apply_stylename=' do
+    it 'should set the style when a stylesheet is there' do
+      @view.stylesheet = @stylesheet
+      @view.apply_stylename(:label)
       @view.text.should == "Stylesheet1 Label1"
     end
   end
@@ -95,7 +115,8 @@ describe "Teacup::View" do
     end
 
     it 'should warn about unknown thingies' do
-      @view.style(partyTime: :excellent)
+      @view.style(partyTime: :bogus)
+      @view.partyTime.should == :excellent
     end
 
   end

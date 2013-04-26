@@ -38,6 +38,7 @@ describe "Application 'Teacup'" do
     @background.frame.size.width.should == 300
     @background.frame.size.height.should == 440
     @background.backgroundColor.should == UIColor.darkGrayColor
+    @background.custom_attr.should == :custom_value
   end
 
   it "background view should have subviews" do
@@ -69,13 +70,8 @@ describe "Application 'Teacup'" do
     @welcome.text.should == "Welcome to teacup"
   end
 
-  it "should be styled as :footer" do
-    @footer.stylename.should == :footer
-    @footer.frame.origin.x.should == 10
-    @footer.frame.origin.y.should == 410
-    @footer.frame.size.width.should == 280
-    @footer.frame.size.height.should == 20
-    @footer.text.should == "This is a teacup example"
+  it "should be assigned to .welcome" do
+    @welcome.should == controller.welcome
   end
 
   it "should be styled as :next_message" do
@@ -85,6 +81,19 @@ describe "Application 'Teacup'" do
     @button.frame.size.width.should == 130
     @button.frame.size.height.should == 20
     @button.titleForState(UIControlStateNormal).should == "Next Message..."
+  end
+
+  it "should be assigned to .button" do
+    @button.should == controller.button
+  end
+
+  it "should be styled as :footer" do
+    @footer.stylename.should == :footer
+    @footer.frame.origin.x.should == 10
+    @footer.frame.origin.y.should == 410
+    @footer.frame.size.width.should == 280
+    @footer.frame.size.height.should == 20
+    @footer.text.should == "This is a teacup example"
   end
 
 end
@@ -148,7 +157,7 @@ describe "background view in landscape" do
     @button.stylename.should == :next_message
     @button.frame.origin.x.should == 20
     @button.frame.origin.y.should == 200
-    @button.frame.size.width.should == 130
+    @button.frame.size.width.should == 135
     @button.frame.size.height.should == 20
     @button.titleForState(UIControlStateNormal).should == "Next Message..."
   end

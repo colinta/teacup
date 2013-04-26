@@ -50,6 +50,7 @@ Teacup::Stylesheet.new(:main) do
     left: 10,
     top: 30,
     backgroundColor:  UIColor.blackColor,
+    custom_attr: :custom_value,
 
     portrait: {
       width:  300,
@@ -90,7 +91,6 @@ Teacup::Stylesheet.new(:main) do
 
 
   style :next_message,
-    width:   130,
     height:  20,
     portrait: nil,
     title:   "Next Message..."
@@ -101,11 +101,13 @@ Teacup::Stylesheet.new(:main) do
     portrait: {
       left:   150,
       top:    370,
+      width:   140,  # this should get overridden
     },
 
     landscape: {
       left:   20,
       top:    200,
+      width:   140,  # this should get overridden
     }
 
 end

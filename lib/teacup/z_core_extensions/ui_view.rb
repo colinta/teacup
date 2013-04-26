@@ -312,6 +312,16 @@ class UIView
     self.setNeedsLayout
   end
 
+  # Applies styles pulled from a stylesheet, but does not assign those styles to
+  # any property.  This is a one-shot use method, meant to be used as
+  # initialization or to apply styles that should not be reapplied during a
+  # rotation.
+  def apply_stylename(stylename)
+    if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
+      style(stylesheet.query(stylename, self))
+    end
+  end
+
   def top_level_view
     return self
   end
