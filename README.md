@@ -262,6 +262,13 @@ UIViewController.layout(stylename=nil, styles={}, &block)
 * `&block` is the most important - it is the layout code that will be called
   during `viewDidLoad`.
 
+After the views have been added and styles have been applied Teacup calls the
+`layoutDidLoad` method.  If you need to perform some additional initialization
+on your views, you should do it in this method.  If you use the `layout` block
+the styles have not yet been applied.  Frames will not be set, text and titles
+will be empty, and images will not have images.  This all happens at the *end*
+of the `layout` block.
+
 Stylesheets
 -----------
 
@@ -1082,8 +1089,40 @@ orientation-specific styles, your local generic styles will win.
 
 The more "local" styles always win - and that applies to styles that you add
 using the `subview/layout` methods, too. The only time it doesn't really apply
-is if you apply styles using `UIView#style`.  Those are one-shot (they can get
-overwritten when `restyle!` is called).
+is if you apply styles using `UIView#style` or `UIView#apply_stylename`.  Those
+are one-shot (they can get overwritten when `restyle!` is called).
+
+There are also times when you either want (or must) override (or add to) the
+stylesheet styles.  For instance, if you want to assign the `delegate` or
+`dataSource` properties, this cannot be done from a `Stylesheet`.  But that's
+okay, because we have a chance to add these styles in the `subview` and `layout`
+methods.
+
+```ruby
+layout do
+  subview(UITableView, delegate: self)
+end
+```
+
+You apply any styles here, but styles should never be used as "initialization"
+code.  You can use the `style()` or `apply_stylename()` methods for that purpose.
+
+```ruby
+layout do
+  table_view = subview(UITableView, :tableview, delegate: self,
+    font: UIFont.boldSystemFontOfSize(10)  # this will override the stylesheet settings
+    )
+end
+
+def layoutDidLoad
+  table_view.apply_stylename(:tableview_init)  # this will only get applied once
+end
+```
+
+Styles assigned in `subview/layout` are stored in a separate hash,
+`teacup_style`, and it is reapplied in `restyle!` and during orientation
+changes.  The idea here is that the closer the style setting is to where the
+view is instantiated, the higher the precedence.
 
 More examples!
 
@@ -1230,39 +1269,71 @@ Misc notes
 ----------
 
 Multiple calls to `style` with the same stylename combines styles, it doesn't
-replace.
+replace the styles.
 
-Stylesheets should not be modified - they cache styles by name (per
-orientation).
-
-You can add and remove a `style_class` using `add_style_class` and
-`remove_style_class`, which will call `restyle!` for you if the style was not
-already in the `style_classes` array.
+------
 
 Styles are not necessarily applied immediately.  They are applied at the end of
-the outermost `layout/subview` method, include the `UIViewController##layout`
-block.
+the outermost `layout/subview` method, including the `UIViewController##layout`
+block.  If you call `stylename=` or `stylesheet=` *outside* a `layout/subview`
+block, your view will be restyled immediately.
 
-If you need to do frame calculations outside of the stylesheet code, you will
-need to assign all the frames in your layout block.  This is not recommended,
-though!  It is usually cleaner to do the frame calculations in stylesheets,
-either using [geomotion][], frame calculations, or auto-layout.
+------
+
+Restyling a view calls `restyle!` on all child views, all the way down the tree.
+Much care has been taken to call this method sparingly within Teacup.
+
+------
+
+Any properties that you apply in a `layout/subview` method are retained and
+reapplied in `restyle!` and during a rotation.  This includes `stylename`,
+`style_classes`, and styles (`teacup_style`).  If you want to apply "one-shot"
+styles, you should use `view.style` or `view.apply_stylename` (and you should do
+this in the `layoutDidLoad` method, or after you know that the styles have been
+applied).
+
+------
+
+Stylesheets should not be modified once they are created - they cache styles by
+name (per orientation).
+
+------
+
+You can add and remove a `style_class` using `add_style_class` and
+`remove_style_class`, which will call `restyle!` for you if `style_classes`
+array was changed.
+
+------
+
+If you need to do frame calculations outside of the stylesheet code, you should
+do so in the `layoutDidLoad` method.  This is not necessary, though!  It is
+usually cleaner to do the frame calculations in stylesheets, either using
+[geomotion][], frame calculations, or auto-layout.
+
+------
 
 Within a `subview/layout` block views are added to the last object in
 `Layout#superview_chain`.  Views are pushed and popped from this array in the
-`Layout#layout` method, starting with the `top_level_view`.
+`Layout#layout` method, starting with the `top_level_view`.  If you include
+`Teacup::Layout` on your own class, you do not *have* to implement
+`top_level_view` unless you want to use the `subview` method to add classes to a
+"default" target.
+
+------
 
 When `UIView` goes looking for its `stylesheet` it does so by going up the
-responder chain, that means that if you define the stylesheet on a parent view,
-all the child views will use that same stylesheet.  It also means you can assign
-a stylesheet to a child view without worrying what the parent view's stylesheet
-is.
+responder chain.  That means that if you define the stylesheet on a parent view
+or controller, all the child views will use that same stylesheet by default.  It
+also means you can assign a stylesheet to a child view without worrying what the
+parent view's stylesheet is.
 
 Caveat!  If you implement a class that includes `Teacup::Layout`, you can assign
 it a `stylesheet`. *That* stylesheet will be used by views created using
-`layout` or `subview`.  Saying that `UIView` inherits its `stylesheet` from the
-responder chain is not accurate; it actually uses `teacup_responder`, which just
-defaults to `nextResponder`.
+`layout` or `subview` even though your class is probably not part of the
+responder chain.  Saying that `UIView` inherits its `stylesheet` from the
+responder chain is not accurate; it actually uses `teacup_responder`, which
+defaults to `nextResponder`, but it is assigned to whatever object calls the
+`layout` method on the view.
 
 The Dummy
 ---------
