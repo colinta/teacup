@@ -27,23 +27,31 @@ module Teacup
 
   # applies a Hash of styles, and converts the frame styles (origin, size, top,
   # left, width, height) into one frame property.
-  def apply_hash(target, properties)
+  #
+  # For UIAppearance support, the class of the UIView class that is being
+  # modified can be passed in
+  def apply_hash(target, properties, klass=nil)
     properties.each do |key, value|
-      Teacup.apply target, key, value
+      Teacup.apply target, key, value, klass
     end
   end
 
   # Applies a single style to a target.  Delegates to a teacup handler if one is
   # found.
-  def apply(target, key, value)
+  def apply(target, key, value, klass=nil)
     # note about `debug`: not all objects in this method are a UIView instance,
     # so don't assume that the object *has* a debug method.
     if value.is_a? Proc
-      value = target.instance_exec(&value)
+      if value.arity == 1
+        value = value.call(target)
+      else
+        value = target.instance_exec(&value)
+      end
     end
 
+    klass ||= target.class
     handled = false
-    target.class.ancestors.each do |ancestor|
+    klass.ancestors.each do |ancestor|
       if Teacup.handlers[ancestor].has_key? key
         NSLog "#{ancestor.name} is handling #{key} = #{value.inspect}"  if target.respond_to? :debug and target.debug
         if Teacup.handlers[ancestor][key].arity == 1
@@ -75,11 +83,18 @@ module Teacup
       NSLog "Setting #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
       target.send(assign, value)
     elsif target.respondsToSelector(setter)
-      NSLog "Calling target(#{key}, #{value.inspect})" if target.respond_to? :debug and target.debug
+      NSLog "Calling target.#{setter}(#{value.inspect})" if target.respond_to? :debug and target.debug
+      target.send(setter, value)
+    elsif target.is_a?(self.AppearanceClass)
+      NSLog "Calling target.#{setter}(#{value.inspect})" if target.respond_to? :debug and target.debug
       target.send(setter, value)
     else
       NSLog "TEACUP WARNING: Can't apply #{setter.inspect}#{assign and " or " + assign.inspect or ""} to #{target.inspect}"
     end
+  end
+
+  def AppearanceClass
+    @appearance_klass ||= UIView.appearance.class
   end
 
   def handlers

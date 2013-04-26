@@ -49,13 +49,11 @@ module Teacup
       end
 
       # first, move orientation settings into properties "base" level.
-      if orientation
-        Overrides[orientation].each do |orientation_key|
-          if override = self[orientation_key]
-            # override is first, so it takes precedence
-            if override.is_a? Hash
-              Teacup::merge_defaults override, properties, properties
-            end
+      Overrides[orientation].each do |orientation_key|
+        if override = self[orientation_key]
+          # override is first, so it takes precedence
+          if override.is_a? Hash
+            Teacup::merge_defaults override, properties, properties
           end
         end
       end
@@ -68,8 +66,9 @@ module Teacup
         properties.delete(orientation_key)
       end
 
-      # now we can merge extends, and importing.  before merging, these will go
-      # through the same process that we just finished on the local style
+      # now we can merge extends, and imported_stylesheets.  before merging,
+      # these will go through the same process that we just finished on the
+      # local style
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         stylesheet.imported_stylesheets.reverse.each do |stylesheet|
           imported_properties = stylesheet.query(self.stylename, target, rotation_orientation, seen)
@@ -104,7 +103,7 @@ module Teacup
         end
       end
 
-      properties
+      return properties
     end
 
   end

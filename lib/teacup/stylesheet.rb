@@ -68,6 +68,7 @@ module Teacup
     attr_reader :name
 
     class << self
+
       def stylesheets
         @stylesheets ||= {}
       end
@@ -79,6 +80,7 @@ module Teacup
       def []= name, stylesheet
         stylesheets[name] = stylesheet
       end
+
     end
 
     # Create a new Stylesheet.
@@ -131,12 +133,10 @@ module Teacup
     end
 
     def get_stylesheet_cache(stylename, target, orientation)
-      orientation ||= UIApplication.sharedApplication.statusBarOrientation
       stylesheet_cache[stylename][target][orientation]
     end
 
     def set_stylesheet_cache(stylename, target, orientation, value)
-      orientation ||= UIApplication.sharedApplication.statusBarOrientation
       self.stylesheet_cache[stylename][target][orientation] = value
     end
 
@@ -166,6 +166,33 @@ module Teacup
     def import(name_or_stylesheet)
       @stylesheet_cache = nil
       imported << name_or_stylesheet
+
+      sheet = nil
+      if name_or_stylesheet.is_a? Teacup::Stylesheet
+        sheet = name_or_stylesheet
+      elsif Teacup::Stylesheet.stylesheets.has_key? name_or_stylesheet
+        sheet = Teacup::Stylesheet.stylesheets[name_or_stylesheet]
+      end
+
+      if sheet
+        import_instance_vars(sheet)
+      end
+    end
+
+    # the block handed to Stylesheet#new is not run immediately - it is run
+    # the first time the stylesheet is queried.  This fixes bugs related to
+    # some resources (fonts) not available when the application is first
+    # started.  The downside is that @instance variables and variables that
+    # should be closed over are not.
+    #
+    # @return true if the block was run. false otherwise
+    def run_block
+      if @block
+        _block = @block
+        @block = nil
+        instance_eval &_block
+        true
+      end
     end
 
     # Get the properties defined for the given stylename, in this Stylesheet and
@@ -185,15 +212,7 @@ module Teacup
       return {} unless stylename
 
       unless get_stylesheet_cache(stylename, target, orientation)
-        # the block handed to Stylesheet#new is not run immediately - it is run
-        # the first time the stylesheet is queried.  This fixes bugs related to
-        # some resources (fonts) not available when the application is first
-        # started.  The downside is that @instance variables and variables that
-        # should be closed over are not.
-        if @block
-          instance_eval &@block
-          @block = nil
-        end
+        run_block
         seen[self] = true
 
         set_stylesheet_cache(stylename, target, orientation, styles[stylename].build(target, orientation, seen))
@@ -221,7 +240,7 @@ module Teacup
       if queries[-1].is_a? Hash
         properties = queries.pop
       else
-        # empty style declarations are allowed
+        # empty style declarations are allowed, but accomplish nothing.
         return
       end
 
@@ -239,7 +258,7 @@ module Teacup
     #
     # @return String
     def inspect
-      "Teacup::Stylesheet[#{name.inspect}] = #{styles.inspect}"
+      "#{self.class.name}[#{name.inspect}] = #{styles.inspect}"
     end
 
     # The array of Stylesheets that have been imported into this one.
@@ -248,12 +267,14 @@ module Teacup
     def imported_stylesheets
       imported.map do |name_or_stylesheet|
         if name_or_stylesheet.is_a? Teacup::Stylesheet
-          name_or_stylesheet
+          sheet = name_or_stylesheet
         elsif Teacup::Stylesheet.stylesheets.has_key? name_or_stylesheet
-          Teacup::Stylesheet.stylesheets[name_or_stylesheet]
+          sheet = Teacup::Stylesheet.stylesheets[name_or_stylesheet]
         else
           raise "Teacup tried to import Stylesheet #{name_or_stylesheet.inspect} into Stylesheet[#{self.name.inspect}], but it didn't exist"
         end
+
+        sheet
       end
     end
 
@@ -281,6 +302,19 @@ module Teacup
       return retval
     end
 
+    def exclude_instance_vars
+      @exclude_instance_vars ||= [:@name, :@block, :@imported, :@styles, :@stylesheet_cache]
+    end
+
+    def import_instance_vars(from_stylesheet)
+      from_stylesheet.run_block
+
+      from_stylesheet.instance_variables.each do |var|
+        next if exclude_instance_vars.include? var
+        self.instance_variable_set(var, from_stylesheet.instance_variable_get(var))
+      end
+    end
+
 protected
 
     # The list of Stylesheets or names that have been imported into this one.
@@ -290,15 +324,16 @@ protected
       @imported ||= []
     end
 
-    # The actual contents of this stylesheet as a Hash from stylename to properties.
+    # The styles hash contains Teacup::Style objects, which get linked to the
+    # current stylesheet.
     #
     # @return Hash[Symbol, Hash]
     def styles
       @styles ||= Hash.new{ |_styles, stylename|
-        @styles[stylename] = Style.new
-        @styles[stylename].stylename = stylename
-        @styles[stylename].stylesheet = self
-        @styles[stylename]
+        _styles[stylename] = Style.new
+        _styles[stylename].stylename = stylename
+        _styles[stylename].stylesheet = self
+        _styles[stylename]
       }
     end
 

@@ -1,5 +1,5 @@
 
-Teacup::Stylesheet.new(:first) do
+Teacup::Stylesheet.new(:main) do
 
   # enable orientations on the root view
   style :root,
@@ -8,8 +8,8 @@ Teacup::Stylesheet.new(:first) do
     width: 320,
     height: 480,
     backgroundColor:  UIColor.yellowColor,
-    portrait:    true,
-    upside_down:  false,
+    portrait: true,
+    upside_down: false,
 
     layer: {
       cornerRadius: 10.0,
@@ -21,13 +21,13 @@ Teacup::Stylesheet.new(:first) do
 
     landscape_left: {
       layer: {
-        transform: spin(identity, -pi / 2),
+        transform: transform_layer.spin(-pi / 2),
       },
     },
 
     landscape_right: {
       layer: {
-        transform: spin(identity, pi / 2),
+        transform: transform_layer.spin(pi / 2),
       },
     }
 

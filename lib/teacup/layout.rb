@@ -1,4 +1,23 @@
 module Teacup
+  # Adds the class `stylesheet` method to
+  module LayoutClass
+
+    # Calling this method in the class body will assign a default stylesheet for
+    # all instances of your class
+    def stylesheet(new_stylesheet=nil)
+      if new_stylesheet.nil?
+        if @stylesheet.is_a? Symbol
+          @stylesheet = Teacup::Stylesheet[@stylesheet]
+        end
+
+        return @stylesheet
+      end
+
+      @stylesheet = new_stylesheet
+    end
+
+  end
+
   # Teacup::Layout defines a layout and subview function that can be used to
   # declare and configure the layout of views and the view hierarchy in your
   # application.
@@ -18,6 +37,10 @@ module Teacup
   #     end
   #   end
   module Layout
+    def self.included(base)
+      base.extend LayoutClass
+    end
+
     # Assign a Stylesheet or Stylesheet name (Symbol)
     #
     # @return val
@@ -60,7 +83,7 @@ module Teacup
         @stylesheet = Teacup::Stylesheet[@stylesheet]
       end
 
-      @stylesheet
+      @stylesheet || self.class.stylesheet
     end
 
     # Alter the layout of a view
@@ -74,7 +97,10 @@ module Teacup
     #                           current stylesheet (see {stylesheet}) for this
     #                           element will be immediately applied.
     #
-    # @param properties         The third parameter is optional, and is a Hash
+    # @param classes            The third parameter is optional, and is a list
+    #                           of style classes.
+    #
+    # @param properties         The fourth parameter is optional, and is a Hash
     #                           of properties to apply to the view directly.
     #
     # @param &block             If a block is passed, it is evaluated such that
@@ -100,34 +126,43 @@ module Teacup
     #     subview(UIImage, backgroundColor: UIColor.colorWithImagePattern(image)
     #   end
     #
-    def layout(view_or_class, name_or_properties=nil, properties_or_nil=nil, &block)
+    def layout(view_or_class, *teacup_settings, &block)
       view = Teacup.to_instance(view_or_class)
-
-      name = nil
-      properties = properties_or_nil
-
-      if name_or_properties.is_a? Hash
-        name = nil
-        properties = name_or_properties
-      elsif name_or_properties
-        name = name_or_properties.to_sym
-      end
 
       # prevents the calling of restyle! until we return to this method
       should_restyle = Teacup.should_restyle_and_block
 
+      teacup_settings.each do |setting|
+        case setting
+        when Symbol, String
+          view.stylename = setting
+        when Hash
+          # override settings in teacup_style, but apply them to teacup_style
+          # so that it remains a Teacup::Style object
+          Teacup::merge_defaults(setting, view.teacup_style, view.teacup_style)
+        when Enumerable
+          view.style_classes = setting
+        when nil
+          # skip. this is so that helper methods that accept arguments like
+          # stylename can pass those on to this method without having to
+          # introspect the values (just set the default value to `nil`)
+          #
+          # long story short: tests will fail `nil` is not ignore here
+        else
+          raise "The argument #{setting.inspect} is not supported in Teacup::Layout::layout()"
+        end
+      end
+
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view
       view.teacup_next_responder = self
-      view.stylename = name
-      if properties
-        view.style(properties) if properties
-      end
 
       if block_given?
         superview_chain << view
         begin
-          instance_exec(view, &block) if block_given?
+          # yield will not work if this is defined in the context of the
+          # UIViewController `layout` class method.
+          instance_exec(view, &block)
         rescue NoMethodError => e
           NSLog("Exception executing layout(#{view.inspect}) in #{self.inspect} (stylesheet=#{stylesheet})")
           raise e
@@ -140,6 +175,7 @@ module Teacup
         Teacup.should_restyle!
         view.restyle!
       end
+
       view
     end
 
@@ -189,6 +225,41 @@ module Teacup
       layout(instance, *args, &block)
 
       instance
+    end
+
+    ##|
+    ##|  Motion-Layout support
+    ##|
+
+    # Calling this method uses Nick Quaranto's motion-layout gem to provide ASCII
+    # art style access to autolayout.  It assigns all the subviews by stylename,
+    # and assigns `self.view` as the target view.  Beyond that, it's up to you to
+    # implement the layout methods:
+    #
+    #     auto do
+    #       metrics 'margin' => 20
+    #       vertical "|-[top]-margin-[bottom]-|"
+    #       horizontal "|-margin-[top]-margin-|"
+    #       horizontal "|-margin-[bottom]-margin-|"
+    #     end
+    def auto(layout_view=top_level_view, layout_subviews={}, &layout_block)
+      raise "gem install 'motion-layout'" unless defined? Motion::Layout
+
+      Teacup.get_subviews(top_level_view).each do |view|
+        if view.stylename && ! layout_subviews[view.stylename.to_s]
+          layout_subviews[view.stylename.to_s] = view
+        end
+      end
+
+      Motion::Layout.new do |layout|
+        layout.view layout_view
+        layout.subviews layout_subviews
+        layout.instance_eval(&layout_block)
+      end
+    end
+
+    def top_level_view
+      raise "No default view has been defined for #{self.class}.  Implement `top_level_view`."
     end
 
     protected

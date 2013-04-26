@@ -122,6 +122,7 @@ describe "Teacup::Stylesheet" do
         import :importedbyname
 
         style :label,
+          text: @imported_text,
           backgroundColor: :blue,
           layer: {
             borderWidth: 2,
@@ -129,6 +130,8 @@ describe "Teacup::Stylesheet" do
       end
 
       Teacup::Stylesheet.new(:importedbyname) do
+        @imported_text = 'imported text'
+
         style :label,
           title: "Imported by name",
           layer: {
@@ -141,6 +144,7 @@ describe "Teacup::Stylesheet" do
         import :importedbyname
 
         style :label,
+          text: @imported_text,
           backgroundColor: :blue
       end
 
@@ -177,6 +181,14 @@ describe "Teacup::Stylesheet" do
     it 'should merge properties' do
       @oo_name_importer.query(:label)[:layer][:borderWidth].should == 2
       @oo_name_importer.query(:label)[:layer][:borderColor].should == :red
+    end
+
+    it 'should import instance variables' do
+      @name_importer.query(:label)[:text].should == 'imported text'
+    end
+
+    it 'should import instance variables even if defined out of order' do
+      @oo_name_importer.query(:label)[:text].should == 'imported text'
     end
 
     it 'should work with a value' do

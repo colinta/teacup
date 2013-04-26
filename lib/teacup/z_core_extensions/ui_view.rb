@@ -1,6 +1,6 @@
 # Teacup's UIView extensions defines some utility functions for UIView that
 # enable a lot of the magic for Teacup::Layout.
-
+#
 # Users of teacup should be able to ignore the contents of this file for
 # the most part.
 class UIView
@@ -9,9 +9,16 @@ class UIView
   # The current stylename that is used to look up properties in the stylesheet.
   attr_reader :stylename
 
+  # A list of style classes that will be merged in (lower priority than stylename)
+  attr_reader :style_classes
+
   # Any class that includes Teacup::Layout gets a `layout` method, which assigns
   # itself as the 'teacup_next_responder'.
   attr_accessor :teacup_next_responder
+
+  # When styles are applied using `subview` or `layout`, they are stored in this
+  # hash and given the highest priority
+  attr_accessor :teacup_style
 
   # Enable debug messages for this object
   attr_accessor :debug
@@ -20,10 +27,54 @@ class UIView
   #
   # This will cause new styles to be applied from the stylesheet.
   #
+  # If you are using Pixate, it will also set the pixate `styleId` property.
+  #
   # @param Symbol  stylename
   def stylename=(new_stylename)
     @stylename = new_stylename
+    if respond_to?(:'setStyleId:')
+      setStyleId(new_stylename)
+    end
+    if respond_to?(:'setNuiClass:')
+      setNuiClass(new_stylename)
+    end
     restyle!
+  end
+
+  # Why stop at just one stylename!?  Assign a bunch of them using
+  # `style_classes`. These are distinct from `stylename`, and `stylename` styles
+  # are given priority of `style_classes`.
+  #
+  # If you are using Pixate, it will also set the pixate `styleClass` property.
+  #
+  # @param Array [Symbol] style_classes
+  def style_classes=(new_style_classes)
+    @style_classes = new_style_classes
+    if respond_to?(:setStyleClass)
+      setStyleClass(new_style_classes.join(' '))
+    end
+    restyle!
+  end
+
+  def style_classes
+    @style_classes ||= []
+  end
+
+  def add_style_class(stylename)
+    unless style_classes.include?
+      style_classes << stylename
+      restyle!
+    end
+  end
+
+  def remove_style_class(stylename)
+    if style_classes.delete(stylename)
+      restyle!
+    end
+  end
+
+  def teacup_style
+    @teacup_style ||= Teacup::Style.new
   end
 
   # Alter the stylesheet of this view.
@@ -74,9 +125,14 @@ class UIView
   def restyle!(orientation=nil)
     if Teacup.should_restyle?
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
-        style(stylesheet.query(stylename, self, orientation))
+        style_classes.each do |stylename|
+          style(stylesheet.query(stylename, self, orientation))
+        end
+        style(stylesheet.query(self.stylename, self, orientation))
       end
-      subviews.each{ |subview| subview.restyle!(orientation) }
+      # apply styles stored in `layout` method
+      style(teacup_style.build(self, orientation))
+      subviews.each { |subview| subview.restyle!(orientation) }
     end
   end
 
@@ -92,11 +148,7 @@ class UIView
           Teacup::Constraint.from_sym(constraint, relative_to)
         end
       end
-    }.flatten.tap{ |my_constraints|
-      unless my_constraints.empty?
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
-      end
-    }.map do |original_constraint|
+    }.flatten.map do |original_constraint|
       constraint = original_constraint.copy
 
       case original_constraint.target
@@ -150,6 +202,10 @@ class UIView
       constraint.nslayoutconstraint
     end
 
+    unless my_constraints.empty?
+      self.setTranslatesAutoresizingMaskIntoConstraints(false)
+    end
+
     # now add all che child constraints
     subviews.each do |subview|
       my_constraints.concat(subview.get_ns_constraints)
@@ -176,6 +232,15 @@ class UIView
     end
   end
 
+  def teacup_animation(options)
+    UIView.beginAnimations(nil, context: nil)
+    UIView.setAnimationDuration(options[:duration]) if options.key?(:duration)
+    UIView.setAnimationCurve(options[:curve]) if options.key?(:curve)
+    UIView.setAnimationDelay(options[:delay]) if options.key?(:delay)
+    yield
+    UIView.commitAnimations
+  end
+
   # Animate a change to a new stylename.
   #
   # This is equivalent to wrapping a call to .stylename= inside
@@ -188,13 +253,26 @@ class UIView
   def animate_to_stylename(stylename, options={})
     return if self.stylename == stylename
 
-    UIView.beginAnimations(nil, context: nil)
-    # TODO: This should be in a style-sheet!
-    UIView.setAnimationDuration(options[:duration]) if options[:duration]
-    UIView.setAnimationCurve(options[:curve]) if options[:curve]
-    UIView.setAnimationDelay(options[:delay]) if options[:delay]
-    self.stylename = stylename
-    UIView.commitAnimations
+    teacup_animation(options) do
+      self.stylename = stylename
+    end
+  end
+
+  # Animate a change to a new list of style_classes.
+  #
+  # This is equivalent to wrapping a call to .style_classes= inside
+  # UIView.beginAnimations.
+  #
+  # @param Symbol  the new stylename
+  # @param Options  the options for the animation (may include the
+  #                 duration and the curve)
+  #
+  def animate_to_styles(style_classes, options={})
+    return if self.style_classes == style_classes
+
+    teacup_animation(options) do
+      self.style_classes = style_classes
+    end
   end
 
   # Animate a change to new styles
@@ -205,12 +283,9 @@ class UIView
   # @param Hash   the new styles and options for the animation
   #
   def animate_to_style(style)
-    UIView.beginAnimations(nil, context: nil)
-    UIView.setAnimationDuration(style[:duration]) if style[:duration]
-    UIView.setAnimationCurve(style[:curve]) if style[:curve]
-    UIView.setAnimationDelay(style[:delay]) if style[:delay]
-    style(style)
-    UIView.commitAnimations
+    teacup_animation(options) do
+      self.style(style)
+    end
   end
 
   # Apply style properties to this element.
@@ -245,13 +320,13 @@ class UIView
     @teacup_constraints ||= {}
 
     if constraint.is_a? Array
-      constraint.each { |constraint|
+      constraint.each do |constraint|
         add_uniq_constraints(constraint)
-      }
+      end
     elsif constraint.is_a? Hash
-      constraint.each { |sym, relative_to|
+      constraint.each do |sym, relative_to|
         @teacup_constraints[sym] = relative_to
-      }
+      end
     elsif constraint.is_a?(Teacup::Constraint) || constraint.is_a?(Symbol)
       @teacup_constraints[constraint] = true
     else

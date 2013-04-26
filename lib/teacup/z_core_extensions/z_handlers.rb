@@ -138,6 +138,16 @@ Teacup.handler UIButton, :title { |target, title|
 }
 
 
+Teacup.handler UIButton, :image { |target, image|
+  target.setImage(image, forState: UIControlStateNormal)
+}
+
+
+Teacup.handler UIButton, :backgroundImage { |target, background_image|
+  target.setBackgroundImage(background_image, forState: UIControlStateNormal)
+}
+
+
 Teacup.handler UIButton, :titleColor { |target, color|
   target.setTitleColor(color, forState: UIControlStateNormal)
 }
