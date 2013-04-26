@@ -64,7 +64,8 @@ require 'teacup'
     ```
 
 
-##                            Teacup
+Teacup
+------
 
 Teacup's goal is to facilitate the creation and styling of your `UIViews`
 hierarchy. Say "Goodbye!" to Xcode & XIB files!
@@ -85,7 +86,8 @@ styling and Teacup to manage your view hierarchy and apply auto-layout
 constraints.  Teacup can also integrate with the [motion-layout][] gem!
 
 
-##                         Layouts
+Layouts
+-------
 
 The `Teacup::Layout` module is mixed into `UIViewController` and `UIView` so
 that these two classes can take advantage of the view-hierarchy DSL.
@@ -231,7 +233,8 @@ UIViewController.layout(stylename=nil, styles={}, &block)
 * `&block` is the most important - it is the layout code that will be called
   during `viewDidLoad`.
 
-##                                Stylesheets
+Stylesheets
+-----------
 
 This is where you will store your styling-related code. Migrating code from your
 controller or custom view into a stylesheet is very straightforward. The method
@@ -468,13 +471,14 @@ That block will be associated with
 `UIApplicationDidFinishLaunchingNotification`, which is where most
 `UIAppearance` code goes anyway!  Yaaay, magic.
 
-# Now go use Teacup!
+### Now go use Teacup!
 
 You have enough information *right now* to go play with Teacup.  Check out the
 example apps, write your own, whatever.  But read on to hear about why Teacup is
 more than just writing `layouts` and applying styles.
 
-## Teacup as a utility
+Teacup as a utility
+-------------------
 
 When you are prototyping an app it is useful to bang out a bunch of code
 quickly, and here are some ways that Teacup might help.
@@ -515,7 +519,8 @@ end
 @label.style(textColor: UIColor.blueColor, text: 'Blue Label')
 ```
 
-## More Teacup features
+More Teacup features
+--------------------
 
 There are a few (OK, a bunch) more features that Teacup provides that deserve
 discussion:
@@ -1007,7 +1012,8 @@ Teacup::Stylesheet.new(:some_view) do
 end
 ```
 
-## The Nitty Gritty
+The Nitty Gritty
+----------------
 
 #### Regarding Style Precedence
 
@@ -1076,7 +1082,8 @@ Teacup::Stylesheet.new :my_sheet do
 end
 ```
 
-## Advanced Teacup Tricks
+Advanced Teacup Tricks
+----------------------
 
 There are times when you might wish teacup "just worked", but please remember:
 Teacup is not a "blessed" framework built by Apple engineers. We have access to
@@ -1190,7 +1197,8 @@ style :login_input, extends: :email_input
 style :password_input, extends: :secure_input
 ```
 
-## Misc notes
+Misc notes
+----------
 
 Multiple calls to `style` with the same stylename combines styles, it doesn't
 replace.
@@ -1227,7 +1235,8 @@ it a `stylesheet`. *That* stylesheet will be used by views created using
 responder chain is not accurate; it actually uses `teacup_responder`, which just
 defaults to `nextResponder`.
 
-## The Dummy
+The Dummy
+---------
 
 If you get an error that looks like this:
 
