@@ -1,77 +1,77 @@
 ##|
 ##|  UIView.frame
 ##|
-Teacup.handler UIView, :left, :x { |target, x|
+Teacup.handler UIView, :left, :x do |target, x|
   f = target.frame
   f.origin.x = Teacup::calculate(target, :width, x)
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :right { |target, r|
+Teacup.handler UIView, :right do |target, r|
   f = target.frame
   f.origin.x = Teacup::calculate(target, :width, r) - f.size.width
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :center_x, :middle_x { |target, x|
+Teacup.handler UIView, :center_x, :middle_x do |target, x|
   c = target.center
   c.x = Teacup::calculate(target, :width, x)
   target.center = c
-}
+end
 
-Teacup.handler UIView, :top, :y { |target, y|
+Teacup.handler UIView, :top, :y do |target, y|
   f = target.frame
   f.origin.y = Teacup::calculate(target, :height, y)
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :bottom { |target, b|
+Teacup.handler UIView, :bottom do |target, b|
   f = target.frame
   f.origin.y = Teacup::calculate(target, :height, b) - f.size.height
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :center_y, :middle_y { |target, y|
+Teacup.handler UIView, :center_y, :middle_y do |target, y|
   c = target.center
   c.y = Teacup::calculate(target, :height, y)
   target.center = c
-}
+end
 
-Teacup.handler UIView, :width { |target, w|
+Teacup.handler UIView, :width do |target, w|
   f = target.frame
   f.size.width = Teacup::calculate(target, :width, w)
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :height { |target, h|
+Teacup.handler UIView, :height do |target, h|
   f = target.frame
   f.size.height = Teacup::calculate(target, :height, h)
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :size { |target, size|
+Teacup.handler UIView, :size do |target, size|
   f = target.frame
   size_x = Teacup::calculate(target, :width, size[0])
   size_y = Teacup::calculate(target, :height, size[1])
   f.size = [size_x, size_y]
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :origin { |target, origin|
+Teacup.handler UIView, :origin do |target, origin|
   f = target.frame
   origin_x = Teacup::calculate(target, :width, origin[0])
   origin_y = Teacup::calculate(target, :height, origin[1])
   f.origin = [origin_x, origin_y]
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :center { |target, center|
+Teacup.handler UIView, :center do |target, center|
   center_x = Teacup::calculate(target, :width, center[0])
   center_y = Teacup::calculate(target, :height, center[1])
   target.center = [center_x, center_y]
-}
+end
 
-Teacup.handler UIView, :size { |target, size|
+Teacup.handler UIView, :size do |target, size|
   # odd... if I changed these to .is_a?, weird errors happen.  Use ===
   if Symbol === size && size == :full
     if target.superview
@@ -85,9 +85,9 @@ Teacup.handler UIView, :size { |target, size|
   f = target.frame
   f.size = size
   target.frame = f
-}
+end
 
-Teacup.handler UIView, :frame { |target, frame|
+Teacup.handler UIView, :frame do |target, frame|
   # odd... if I changed these to .is_a?, weird errors happen.  Use ===
   if Symbol === frame && frame == :full
     if target.superview
@@ -107,9 +107,9 @@ Teacup.handler UIView, :frame { |target, frame|
       ]
   end
   target.frame = frame
-}
+end
 
-Teacup.handler UIView, :gradient { |target, gradient|
+Teacup.handler UIView, :gradient do |target, gradient|
   gradient_layer = target.instance_variable_get(:@teacup_gradient_layer) || begin
     gradient_layer = CAGradientLayer.layer
     gradient_layer.frame = target.bounds
@@ -128,35 +128,35 @@ Teacup.handler UIView, :gradient { |target, gradient|
   end
 
   target.instance_variable_set(:@teacup_gradient_layer, gradient_layer)
-}
+end
 
 ##|
 ##|  UIButton
 ##|
-Teacup.handler UIButton, :title { |target, title|
+Teacup.handler UIButton, :title do |target, title|
   target.setTitle(title, forState: UIControlStateNormal)
-}
+end
 
 
-Teacup.handler UIButton, :image { |target, image|
+Teacup.handler UIButton, :image do |target, image|
   target.setImage(image, forState: UIControlStateNormal)
-}
+end
 
 
-Teacup.handler UIButton, :backgroundImage { |target, background_image|
+Teacup.handler UIButton, :backgroundImage do |target, background_image|
   target.setBackgroundImage(background_image, forState: UIControlStateNormal)
-}
+end
 
 
-Teacup.handler UIButton, :titleColor { |target, color|
+Teacup.handler UIButton, :titleColor do |target, color|
   target.setTitleColor(color, forState: UIControlStateNormal)
-}
+end
 
 
-Teacup.handler UIButton, :titleFont, :font { |target, font|
+Teacup.handler UIButton, :titleFont, :font do |target, font|
   font = font.uifont
   target.titleLabel.font = font
-}
+end
 
 
 ##|
@@ -175,4 +175,9 @@ Teacup.handler UINavigationBar, :backgroundImage do |styles|
       self.setBackgroundImage(image && image.uiimage, forBarMetrics:UIBarMetricsLandscapePhone)
     end
   end
+end
+
+# otherwise teacup would treat attrs as a stylable-property
+Teacup.handler UINavigationBar, :titleTextAttributes do |view, attrs|
+  view.titleTextAttributes = attrs
 end
