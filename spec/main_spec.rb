@@ -78,7 +78,7 @@ describe "Application 'Teacup'" do
     @button.stylename.should == :next_message
     @button.frame.origin.x.should == 150
     @button.frame.origin.y.should == 370
-    @button.frame.size.width.should == 130
+    @button.frame.size.width.should == 140
     @button.frame.size.height.should == 20
     @button.titleForState(UIControlStateNormal).should == "Next Message..."
   end
@@ -157,7 +157,7 @@ describe "background view in landscape" do
     @button.stylename.should == :next_message
     @button.frame.origin.x.should == 20
     @button.frame.origin.y.should == 200
-    @button.frame.size.width.should == 135
+    @button.frame.size.width.should == 140
     @button.frame.size.height.should == 20
     @button.titleForState(UIControlStateNormal).should == "Next Message..."
   end

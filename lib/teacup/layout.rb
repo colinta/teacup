@@ -132,14 +132,16 @@ module Teacup
       # prevents the calling of restyle! until we return to this method
       should_restyle = Teacup.should_restyle_and_block
 
+      teacup_style = Style.new
+
       teacup_settings.each do |setting|
         case setting
         when Symbol, String
           view.stylename = setting
         when Hash
-          # override settings in teacup_style, but apply them to teacup_style
-          # so that it remains a Teacup::Style object
-          Teacup::merge_defaults(setting, view.teacup_style, view.teacup_style)
+          # override settings, but apply them to teacup_style so that it remains
+          # a Teacup::Style object
+          Teacup::merge_defaults(setting, teacup_style, teacup_style)
         when Enumerable
           view.style_classes = setting
         when nil
@@ -152,6 +154,8 @@ module Teacup
           raise "The argument #{setting.inspect} is not supported in Teacup::Layout::layout()"
         end
       end
+
+      view.style(teacup_style.build(nil))
 
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view

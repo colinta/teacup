@@ -8,11 +8,7 @@ class MainController < UIViewController
     subview(CustomView, :background) do
       @welcome = subview(UILabel, :welcome)
       subview(UILabel, :footer)
-      @button = subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :next_message,
-        width: 130,
-        landscape: {
-          width: 135,
-        })
+      @button = subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :next_message)
     end
 
     @button.addTarget(self, action: :next_message, forControlEvents:UIControlEventTouchUpInside)

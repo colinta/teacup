@@ -16,10 +16,6 @@ class UIView
   # itself as the 'teacup_next_responder'.
   attr_accessor :teacup_next_responder
 
-  # When styles are applied using `subview` or `layout`, they are stored in this
-  # hash and given the highest priority
-  attr_accessor :teacup_style
-
   # Enable debug messages for this object
   attr_accessor :debug
 
@@ -73,10 +69,6 @@ class UIView
     end
   end
 
-  def teacup_style
-    @teacup_style ||= Teacup::Style.new
-  end
-
   # Alter the stylesheet of this view.
   #
   # This will cause new styles to be applied using the current stylename,
@@ -124,15 +116,15 @@ class UIView
 
   def restyle!(orientation=nil)
     if Teacup.should_restyle?
+      # important to set subview settings first, so that autoresizingMask is set
+      # before the parent frame is changed
+      subviews.each { |subview| subview.restyle!(orientation) }
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         style_classes.each do |stylename|
           style(stylesheet.query(stylename, self, orientation))
         end
         style(stylesheet.query(self.stylename, self, orientation))
       end
-      # apply styles stored in `layout` method
-      style(teacup_style.build(self, orientation))
-      subviews.each { |subview| subview.restyle!(orientation) }
     end
   end
 

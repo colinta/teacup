@@ -1104,13 +1104,15 @@ layout do
 end
 ```
 
-You apply any styles here, but styles should never be used as "initialization"
-code.  You can use the `style()` or `apply_stylename()` methods for that purpose.
+Styles applied here are one-shot.  It is the exact same as assigning the
+`stylename` and `style_classes` and then calling `style`.  Because the
+stylesheet is not necessarily applied immediately, these styles could be
+overwritten before they take effect.
 
 ```ruby
 layout do
   table_view = subview(UITableView, :tableview, delegate: self,
-    font: UIFont.boldSystemFontOfSize(10)  # this will override the stylesheet settings
+    font: UIFont.boldSystemFontOfSize(10)  # the stylesheet could override this during rotation
     )
 end
 
@@ -1119,10 +1121,8 @@ def layoutDidLoad
 end
 ```
 
-Styles assigned in `subview/layout` are stored in a separate hash,
-`teacup_style`, and it is reapplied in `restyle!` and during orientation
-changes.  The idea here is that the closer the style setting is to where the
-view is instantiated, the higher the precedence.
+The idea here is that the closer the style setting is to where the view is
+instantiated, the higher the precedence.
 
 More examples!
 
@@ -1285,12 +1285,10 @@ Much care has been taken to call this method sparingly within Teacup.
 
 ------
 
-Any properties that you apply in a `layout/subview` method are retained and
-reapplied in `restyle!` and during a rotation.  This includes `stylename`,
-`style_classes`, and styles (`teacup_style`).  If you want to apply "one-shot"
-styles, you should use `view.style` or `view.apply_stylename` (and you should do
-this in the `layoutDidLoad` method, or after you know that the styles have been
-applied).
+Any styles that you apply in a `layout/subview` method are *not* retained, they
+are applied immediately, and so the stylesheet can (and usually do) override
+those styles if there is a conflict.  Only styles stored in a stylesheet are
+reapplied (during rotation or in `restyle!`).
 
 ------
 
