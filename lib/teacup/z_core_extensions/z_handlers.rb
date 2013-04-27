@@ -157,3 +157,22 @@ Teacup.handler UIButton, :titleFont, :font { |target, font|
   font = font.uifont
   target.titleLabel.font = font
 }
+
+
+##|
+##|  UINavigationBar
+##|
+Teacup.handler UINavigationBar, :backgroundImage do |styles|
+  if styles.is_a?(UIImage)
+    styles = { portrait: styles }
+  end
+
+  styles.each do |metric, image|
+    case metric
+    when UIBarMetricsDefault, :portrait
+      self.setBackgroundImage(image && image.uiimage, forBarMetrics:UIBarMetricsDefault)
+    when UIBarMetricsLandscapePhone, :landscape
+      self.setBackgroundImage(image && image.uiimage, forBarMetrics:UIBarMetricsLandscapePhone)
+    end
+  end
+end
