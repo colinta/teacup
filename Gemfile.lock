@@ -1,16 +1,16 @@
 PATH
   remote: .
   specs:
-    teacup (1.3.3)
+    teacup (2.0.0pre)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    rake (10.0.3)
+    motion-layout (0.0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  rake
+  motion-layout
   teacup!

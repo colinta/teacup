@@ -14,10 +14,14 @@ module Teacup
     end
   end
 
-  def get_subviews(target)
-    [target] + target.subviews.map do |subview|
-      get_subviews(subview).select { |v| v.stylename }
-    end.flatten
+  # Returns all the subviews of `target` that have a stylename.  `target` is not
+  # included in the list.  Used by the motion-layout integration in layout.rb.
+  def get_styled_subviews(target)
+    retval = target.subviews.select { |v| v.stylename }
+    retval.concat(target.subviews.map do |subview|
+      get_styled_subviews(subview)
+    end)
+    retval.flatten
   end
 
 end

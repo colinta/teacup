@@ -2,7 +2,7 @@ describe "Gradient" do
   tests GradientController
 
   before do
-    @root_view = window.subviews[0]
+    @root_view = controller.view
   end
 
   it "should insert gradient layer when gradient style is set" do

@@ -6,7 +6,7 @@ class AppDelegate
     application.setStatusBarHidden(true, withAnimation:UIStatusBarAnimationSlide)
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    ctlr = ConstraintsController.new
+    ctlr = MotionLayoutController.new
     @window.rootViewController = ctlr
     @window.rootViewController.wantsFullScreenLayout = true
     @window.makeKeyAndVisible
