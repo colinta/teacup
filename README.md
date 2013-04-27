@@ -807,9 +807,9 @@ in you chuckle with glee.  In this example you could go completely with just
 frame calculation formulas and springs and struts.  Your frame code would still
 be cluttered, just cluttered in a different way.
 
-### [Motion-Layout][motion-layout]
+### Motion-Layout[motion-layout]
 
-If you are using Nick Quaranto's motion-layout gem, you can use it from within
+If you are using [Nick Quaranto][qrush]'s [motion-layout][] gem, you can use it from within
 any class that includes `Teacup::Layout`.  Then benefit is that the Teacup
 stylenames assigned to your views will be used in the dictionary that the
 ASCII-based system relies on.
@@ -1365,5 +1365,6 @@ tool helps you build great apps!
 [geomotion]: https://github.com/clayallsopp/geomotion
 [UIAppearance]: http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAppearance_Protocol/Reference/Reference.html#//apple_ref/occ/intf/UIAppearance
 [motion-layout]: https://github.com/qrush/motion-layout
-[sweettea]: http://github.com/colinta/sweettea
-[colinta]: http://github.com/colinta
+[sweettea]: https://github.com/colinta/sweettea
+[qrush]: https://github.com/qrush
+[colinta]: https://github.com/colinta
