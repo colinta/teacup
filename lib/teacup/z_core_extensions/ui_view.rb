@@ -116,15 +116,15 @@ class UIView
 
   def restyle!(orientation=nil)
     if Teacup.should_restyle?
-      # important to set subview settings first, so that autoresizingMask is set
-      # before the parent frame is changed
-      subviews.each { |subview| subview.restyle!(orientation) }
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         style_classes.each do |stylename|
           style(stylesheet.query(stylename, self, orientation))
         end
         style(stylesheet.query(self.stylename, self, orientation))
       end
+      # important to set subview settings first, so that autoresizingMask is set
+      # before the parent frame is changed
+      subviews.each { |subview| subview.restyle!(orientation) }
     end
   end
 
