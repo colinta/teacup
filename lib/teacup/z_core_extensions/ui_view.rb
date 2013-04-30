@@ -122,8 +122,6 @@ class UIView
         end
         style(stylesheet.query(self.stylename, self, orientation))
       end
-      # important to set subview settings first, so that autoresizingMask is set
-      # before the parent frame is changed
       subviews.each { |subview| subview.restyle!(orientation) }
     end
   end
