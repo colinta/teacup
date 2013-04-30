@@ -177,7 +177,8 @@ Teacup.handler UINavigationBar, :backgroundImage do |styles|
   end
 end
 
-# otherwise teacup would treat attrs as a stylable-property
+# this handler lyooks redundant, but without it Teacup would treat `attrs` as a
+# stylable-property (the 'nested styling' feature)
 Teacup.handler UINavigationBar, :titleTextAttributes do |view, attrs|
   view.titleTextAttributes = attrs
 end
