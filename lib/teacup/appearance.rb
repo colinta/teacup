@@ -12,6 +12,11 @@ module Teacup
   #
   # end
   class Appearance < Stylesheet
+    TeacupAppearanceApplyNotification = 'TeacupAppearanceApplyNotification'
+
+    def self.apply
+      NSNotificationCenter.defaultCenter.postNotificationName(TeacupAppearanceApplyNotification, object:nil)
+    end
 
     # Contains a list of styles associated with "containers".  These do not get
     # merged like the usual `style` declarations.
@@ -25,6 +30,10 @@ module Teacup
       NSNotificationCenter.defaultCenter.addObserver(self,
               selector: :'apply_appearance:',
               name: UIApplicationDidFinishLaunchingNotification,
+              object: nil)
+      NSNotificationCenter.defaultCenter.addObserver(self,
+              selector: :'apply_appearance:',
+              name: TeacupAppearanceApplyNotification,
               object: nil)
 
       super(&block)
@@ -65,6 +74,8 @@ module Teacup
     # when_contained_in property using `delete`
     def apply_appearance(notification=nil)
       return unless run_block
+      NSNotificationCenter.defaultCenter.removeObserver(self, name:UIApplicationDidFinishLaunchingNotification, object:nil)
+      NSNotificationCenter.defaultCenter.removeObserver(self, name:TeacupAppearanceApplyNotification, object:nil)
 
       when_contained_in.each do |klass, properties|
         contained_in = properties.delete(:when_contained_in)
