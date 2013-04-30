@@ -659,8 +659,9 @@ layout(UINavigationItem,
   )
 ```
 
-Other handlers are defined in `z_handlers.rb`.  Another useful one is the
-ability to make view the same size as its parent, and located at the origin.
+[Other built-in handlers][other-handlers] are defined in `z_handlers.rb`.
+Another useful one is the ability to make view the same size as its parent, and
+located at the origin.
 
 ```ruby
 style :container,
@@ -1357,6 +1358,7 @@ tool helps you build great apps!
 [advanced]: https://github.com/rubymotion/teacup/#advanced-teacup-tricks
 [calculations]: https://github.com/rubymotion/teacup/#frame-calculations
 [dummy.rb]: https://github.com/rubymotion/teacup/tree/master/lib/dummy.rb
+[other-handlers]: https://github.com/rubymotion/teacup/tree/master/lib/teacup/z_core_extensions/z_handlers.rb
 
 [Pixate]: http://www.pixate.com
 [NUI]: https://github.com/tombenner/nui
