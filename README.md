@@ -503,9 +503,12 @@ Teacup::Appearance.new do
 end
 ```
 
-That block will be associated with
-`UIApplicationDidFinishLaunchingNotification`, which is where most
-`UIAppearance` code goes anyway!  Yaaay, magic.
+That block is called using the `UIApplicationDidFinishLaunchingNotification`,
+but that notification is not called until the *end* of the
+`application(application,didFinishLaunchingWithOptions:launchOptions)` method.
+This is sometimes after your views have been created, and so they will not be
+styled. If that is the case, call `Teacup::Appearance.apply` before creating
+your `rootViewController`.
 
 ### Now go use Teacup!
 
@@ -1333,6 +1336,15 @@ responder chain.  Saying that `UIView` inherits its `stylesheet` from the
 responder chain is not accurate; it actually uses `teacup_responder`, which
 defaults to `nextResponder`, but it is assigned to whatever object calls the
 `layout` method on the view.
+
+------
+
+If you use `Teacup::Appearance` but it is not styling the first screen of your
+app (but, strangely, *does* style all other screens), try calling
+`Teacup::Appearance.apply` before creating you create the `rootViewController`
+(in your `AppDelegate`)..
+
+------
 
 The Dummy
 ---------
