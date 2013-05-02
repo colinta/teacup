@@ -155,7 +155,7 @@ module Teacup
         end
       end
 
-      view.style(teacup_style.build(nil))
+      view.style(teacup_style.build(view))
 
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view

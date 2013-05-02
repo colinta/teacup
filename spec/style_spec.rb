@@ -194,7 +194,7 @@ describe "Teacup::Style" do
     style3 = Teacup::Style.new
     style3.stylesheet = sheet
 
-    built = style3.build(UIInterfaceOrientationPortrait)
+    built = style3.build(nil, UIInterfaceOrientationPortrait)
     built[:top].should == nil
     built[:left].should == nil
     built[:width].should == nil

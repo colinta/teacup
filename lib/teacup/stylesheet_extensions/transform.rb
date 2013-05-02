@@ -71,11 +71,10 @@ module Teacup
 
     # Translates the view
     def translate point, y=nil
-      case point
-      when CGPoint
+      if point.respond_to?(:x) &&point.respond_to?(:y)
         x = point.x
         y = point.y
-      when Array
+      elsif point.is_a? Array
         x = point[0]
         y = point[1]
       else
