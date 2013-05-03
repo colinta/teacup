@@ -21,16 +21,3 @@ class AppDelegate
     SugarCube::Adjust::tree
   end
 end
-
-
-class MainTableController < NSViewController
-
-  layout do |root|
-    $view = subview(NSImageView,
-      frame: root.bounds,
-      image: NSImage.imageNamed('teacup'),
-      autoresizingMask: NSViewWidthSizable | NSViewHeightSizable,
-      )
-  end
-
-end
