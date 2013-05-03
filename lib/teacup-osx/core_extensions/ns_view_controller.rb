@@ -4,7 +4,6 @@ class NSViewController
 
   alias _teacup_loadview loadView
   def loadView
-    NSLog("=============== ns_view_controller.rb line #{__LINE__} ===============")
     if nibName and nibBundle
       _teacup_loadview
     else
@@ -16,7 +15,6 @@ class NSViewController
   end
 
   def top_level_view
-    NSLog("=============== ns_view_controller.rb line #{__LINE__} ===============")
     view
   end
 
