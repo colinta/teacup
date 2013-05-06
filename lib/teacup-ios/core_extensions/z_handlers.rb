@@ -154,7 +154,6 @@ end
 
 
 Teacup.handler UIButton, :titleFont, :font do |target, font|
-  font = font.uifont
   target.titleLabel.font = font
 end
 
