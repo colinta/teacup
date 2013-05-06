@@ -1,7 +1,7 @@
 Teacup
 ======
 
-A community-driven DSL for creating user interfaces on the iphone.
+A community-driven DSL for creating user interfaces on iOS.
 
 [![Build Status](https://travis-ci.org/rubymotion/teacup.png)](https://travis-ci.org/rubymotion/teacup)
 
