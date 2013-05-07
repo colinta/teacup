@@ -5,6 +5,7 @@ private
     setOpaque(nil)
     setClipsToBounds(nil)
     setUserInteractionEnabled(nil)
+    setAutoresizingMask(nil)
     NSView.appearanceWhenContainedIn(NSView, nil)
     NSView.appearance
   end
@@ -17,10 +18,20 @@ private
  end
 end
 
+class DummyTableColumn < NSTableColumn
+private
+  def dummy
+    setEditable(nil)
+  end
+end
+
 class DummyButton < NSButton
 private
   def dummy
     setTitleEdgeInsets(nil)
+    setTarget(nil)
+    setAction(nil)
+    setBezelStyle(nil)
   end
 end
 
@@ -28,8 +39,8 @@ class DummyScrollView < NSScrollView
 private
   def dummy
     setScrollEnabled(nil)
-    setShowsHorizontalScrollIndicator(nil)
-    setShowsVerticalScrollIndicator(nil)
+    setHasVerticalScroller(nil)
+    setHasHorizontalScroller(nil)
   end
 end
 

@@ -10,9 +10,9 @@ module Teacup
 
       case dimension
       when :width
-        CGRectGetWidth(view.superview.bounds) * percent + offset
+        view.superview.bounds.size.width * percent + offset
       when :height
-        CGRectGetHeight(view.superview.bounds) * percent + offset
+        view.superview.bounds.size.height * percent + offset
       else
         raise "Unknown dimension #{dimension}"
       end

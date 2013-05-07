@@ -155,11 +155,13 @@ module Teacup
         end
       end
 
-      view.style(teacup_style.build(view))
+      Teacup.apply_hash view, teacup_style.build(view)
 
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view
-      view.teacup_next_responder = self
+      if view.is_a? Layout
+        view.teacup_next_responder = self
+      end
 
       if block_given?
         superview_chain << view

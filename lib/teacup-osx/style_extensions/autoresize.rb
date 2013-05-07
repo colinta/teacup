@@ -39,7 +39,7 @@ module Teacup
 
     def flexible_top
       NSLog("The Stylesheet method `flexible_top` is deprecated, use `autoresize.flexible_top` instead")
-      NSViewMinYMargin
+      NSViewMaxYMargin
     end
 
     def flexible_height
@@ -49,7 +49,7 @@ module Teacup
 
     def flexible_bottom
       NSLog("The Stylesheet method `flexible_bottom` is deprecated, use `autoresize.flexible_bottom` instead")
-      NSViewMaxYMargin
+      NSViewMinYMargin
     end
 
   end
@@ -77,7 +77,7 @@ module Teacup
     end
 
     def flexible_top
-      NSViewMinYMargin
+      NSViewMaxYMargin
     end
 
     def flexible_height
@@ -85,7 +85,7 @@ module Teacup
     end
 
     def flexible_bottom
-      NSViewMaxYMargin
+      NSViewMinYMargin
     end
 
     ##|
