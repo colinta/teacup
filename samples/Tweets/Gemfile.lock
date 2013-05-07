@@ -1,0 +1,16 @@
+PATH
+  remote: ../..
+  specs:
+    teacup (2.0.0pre)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (10.0.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rake
+  teacup!
