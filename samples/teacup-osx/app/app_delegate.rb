@@ -18,6 +18,6 @@ class AppDelegate
     #   defer: false)
     @mainWindow.title = NSBundle.mainBundle.infoDictionary['CFBundleName']
     @mainWindow.orderFrontRegardless
-    SugarCube::Adjust::tree
   end
+
 end
