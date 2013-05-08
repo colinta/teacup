@@ -162,7 +162,7 @@ module Teacup
         case original_constraint.relative_to
         when nil
           constraint.relative_to = nil
-        when UIView
+        when view_class
           constraint.relative_to = original_constraint.relative_to
         when :self
           constraint.relative_to = self
