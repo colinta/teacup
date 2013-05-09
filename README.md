@@ -1,7 +1,7 @@
 Teacup
 ======
 
-A community-driven DSL for creating user interfaces on iOS.
+A community-driven DSL for creating user interfaces on iOS and OS X.
 
 [![Build Status](https://travis-ci.org/rubymotion/teacup.png)](https://travis-ci.org/rubymotion/teacup)
 
@@ -11,13 +11,20 @@ interfaces programmatically.
 
 **Check out some sample apps!**
 
-* “[Hai][Hai]”
-* “[AutoLayout][AutoLayout]”
-* “[OnePage][OnePage]”
+* iOS
+  * “[Hai][Hai]”
+  * “[AutoLayout][AutoLayout]”
+  * “[OnePage][OnePage]”
+* OS X
+  * “[Tweets][Tweets]” - ported from [RubyMotionSamples][]
+  * “[teacup-osx][teacup-osx]”
 
 [Hai]: https://github.com/rubymotion/teacup/tree/master/samples/Hai
 [AutoLayout]: https://github.com/rubymotion/teacup/tree/master/samples/AutoLayout
 [OnePage]: https://github.com/rubymotion/teacup/tree/master/samples/OnePage
+[Tweets]: https://github.com/rubymotion/teacup/tree/master/samples/Tweets
+[teacup-osx]: https://github.com/rubymotion/teacup/tree/master/samples/teacup-osx
+[RubyMotionSamples]: https://github.com/HipByte/RubyMotionSamples/tree/master/osx/Tweets
 
 **Quick Install**
 
@@ -29,7 +36,7 @@ and in your Rakefile
 require 'teacup'
 ```
 
-#### 10 second primer
+#### 10 second primer, iOS
 
 1.  Create a `UIViewController` subclass:
 
@@ -63,17 +70,54 @@ require 'teacup'
     end
     ```
 
+#### 10 second primer, OS X
+
+Pretty much the same!
+
+**You should use the `TeacupWindowController` parent class instead of `NSWindowController`**
+
+1.  Create a `TeacupWindowController` subclass.
+
+    ```ruby
+    class MyController < TeacupWindowController
+    ```
+2.  Assign a stylesheet name:
+
+    ```ruby
+    class MyController < TeacupWindowController
+      stylesheet :main_window
+    ```
+3.  Create a layout:
+
+    ```ruby
+    class MyController < TeacupWindowController
+      stylesheet :main_window
+
+      layout do
+        subview(NSButton, :hi_button)
+      end
+    end
+    ```
+4.  Create the stylesheet (in `app/styles/` or somewhere near the controller)
+
+    ```ruby
+    Teacup::Stylesheet.new :main_window do
+      style :hi_button,
+        origin: [10, 10],
+        title: 'Hi!'
+    end
+    ```
 
 Teacup
 ------
 
-Teacup's goal is to facilitate the creation and styling of your `UIViews`
-hierarchy. Say "Goodbye!" to Xcode & XIB files!
+Teacup's goal is to facilitate the creation and styling of your view hierarchy.
+Say "Goodbye!" to Xcode & XIB files!
 
 Teacup is composed of two systems:
 
 - Layouts
-  A DSL to create `UIViews` and to organize them in a hierarchy.  You assign the
+  A DSL to create Views and to organize them in a hierarchy.  You assign the
   style name and style classes from these methods.
 
 - Stylesheets
@@ -94,19 +138,19 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
   * [Extending Styles](#extending-styles)
   * [Style via UIView Class](#style-via-uiview-class)
   * [Importing stylesheets](#importing-stylesheets)
-  * [Style via UIAppearance](#style-via-uiappearance)
+  * [Style via UIAppearance](#style-via-uiappearance) (iOS only)
 * [More Teacup features](#more-teacup-features)
   * [Styling View Properties](#styling-view-properties)
-  * [Orientation Styles](#orientation-styles)
-  * [UIView animation additions](#uiview-animation-additions)
+  * [Orientation Styles](#orientation-styles) (iOS only)
+  * [Animation additions](#animation-additions)
   * [Style Handlers](#style-handlers)
   * [Frame Calculations](#frame-calculations)
   * [Auto-Layout](#auto-layout)
   * [Motion-Layout](#motion-layout)
   * [Stylesheet extensions](#stylesheet-extensions)
     * [Autoresizing Masks](#autoresizing-masks)
-    * [Device detection](#device-detection)
-    * [Rotation helpers](#rotation-helpers)
+    * [Device detection](#device-detection) (iOS only)
+    * [Rotation helpers](#rotation-helpers) (iOS only)
 * [Showdown](#showdown)
 * [The Nitty Gritty](#the-nitty-gritty)
 * [Advanced Teacup Tricks](#advanced-teacup-tricks)
@@ -118,12 +162,14 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
 Layouts
 -------
 
-The `Teacup::Layout` module is mixed into `UIViewController` and `UIView` so
-that these two classes can take advantage of the view-hierarchy DSL.
+The `Teacup::Layout` module is mixed into `UIViewController` and `UIView` on
+iOS, and `NSWindowController`, `NSViewController`, and `NSView` on OS X. These
+classes can take advantage of the view-hierarchy DSL.
 
-You saw an example in the primer, using the `UIViewController` class method
-`layout`.  This is a helper function that stores the layout code.  A more direct
-example might look like this:
+You saw an example in the primer, using the
+`UIViewController`/`NSWindowController` class method `layout`.  This is a helper
+function that stores the layout code.  A more direct example might look like
+this:
 
 ```ruby
 # controller example
@@ -141,12 +187,12 @@ class MyController < UIViewController
 end
 ```
 
-You can use very similar code in your `UIView` subclasses.
+You can use very similar code in your view subclasses.
 
 ```ruby
 # view example
 #
-# if you use teacup in all your projects, you can bundle your custom views with
+# if you use Teacup in all your projects, you can bundle your custom views with
 # their own stylesheets
 def MyView < UIView
 
@@ -162,10 +208,10 @@ end
 
 The `layout` and `subview` methods are the work horses of the Teacup view DSL.
 
-* `layout(uiview|UIViewClass, stylename, style_classes, additional_styles, &block)`
-  - `uiview|UIViewClass` - You can layout an existing class or you can have
-    teacup create it for you (it just calls `new` on the class, nothing
-    special).  This argument is required.
+* `layout(view|ViewClass, stylename, style_classes, additional_styles, &block)`
+  - `view|ViewClass` - You can layout an existing class or you can have Teacup
+    create it for you (it just calls `new` on the class, nothing special).  This
+    argument is required.
   - `stylename` (`Symbol`) - This is the name of a style in your stylesheet. It
     is optional
   - `style_classes` (`[Symbol,...]`) - Other stylenames, they have lower
@@ -174,10 +220,10 @@ The `layout` and `subview` methods are the work horses of the Teacup view DSL.
     either to override or augment the settings from the `Stylesheet`.  It is
     common to use this feature to assign the `delegate` or `dataSource`.
   - `&block` - See discussion below
-  - Returns the `uiview` that was created or passed to `layout`.
-  - only the `uiview` arg is required.  You can pass any combination of
+  - Returns the `view` that was created or passed to `layout`.
+  - only the `view` arg is required.  You can pass any combination of
     stylename, style_classes, and additional_styles (some, none, or all).
-* `subview(uiview|UIViewClass, stylename, style_classes, additional_styles, &block)`
+* `subview(view|UIViewClass, stylename, style_classes, additional_styles, &block)`
   - Identical to `layout`, but adds the view to the current target
 
 The reason it is so easy to define view hierarchies in Teacup is because the
@@ -198,8 +244,9 @@ to add your *own view helpers*!  I refer to this as a "partials" system, but
 really it's just Ruby code (and isn't that the best system?).
 
 ```ruby
-# the methods you add here will be available in UIView, UIViewController, and
-# any of your own classes that `include Teacup::Layout`
+# the methods you add here will be available in UIView/NSview,
+# UIViewController/NSViewController/NSWindowController, and any of your own
+# classes that `include Teacup::Layout`
 module Teacup::Layout
 
   # creates a button and assigns a default stylename
@@ -246,12 +293,15 @@ class MyController < UIViewController
 end
 ```
 
-The `UIViewController##layout` method that has been used so far is going to be
+The `Controller##layout` method that has been used so far is going to be
 the first or second thing you add to a controller when you are building an app
 with Teacup.  It's method signature is
 
 ```ruby
+# defined in teacup/teacup_controller.rb as Teacup::Controller module
 UIViewController.layout(stylename=nil, styles={}, &block)
+NSViewController.layout(stylename=nil, styles={}, &block)
+NSWindowController.layout(stylename=nil, styles={}, &block)
 ```
 
 * `stylename` is the stylename you want applied to your controller's `self.view`
@@ -422,12 +472,12 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-### Style via UIView Class
+### Style via View Class
 
-If you need to apply styles to *all* instances of a `UIView` subclass, you can
-do so by applying styles to a class name instead of a symbol.  This feature is
-handy at times when you might otherwise use `UIAppearance` (which teacup also
-supports!).
+If you need to apply styles to *all* instances of a `UIView`/`NSView` subclass,
+you can do so by applying styles to a class name instead of a symbol.  This
+feature is handy at times when you might otherwise use `UIAppearance` (which
+teacup also supports!).
 
 ```ruby
 Teacup::Stylesheet.new :app do
@@ -476,6 +526,8 @@ end
 ```
 
 ### Style via UIAppearance
+
+*iOS only*
 
 And lastly, the `UIAppearance protocol` is supported by creating an instance of
 `Teacup::Appearance`.  There is debatable benefit to using [UIAppearance][],
@@ -526,9 +578,9 @@ You can use all the methods above without having to rely on the entirety of
 Teacup's layout and stylesheet systems. By that I mean *any* time you are
 creating a view hierarchy don't be shy about using Teacup to do it.
 
-`UIView` has the `style` method, which can be used to group a bunch of
-customizations anywhere in your code. You don't *have* to pull out a stylesheet
-to do it.
+`UIView` and `NSView` have the `style` method, which can be used to group a
+bunch of customizations anywhere in your code. You don't *have* to pull out a
+stylesheet to do it.
 
 ```ruby
 # Custom Navigation Title created and styled by Teacup
@@ -566,7 +618,7 @@ discussion:
 
 - Styling View Properties
 - Orientation Styles
-- UIView Additions
+- View Class Additions
 - Style Handlers
 - Frame Calculations
 - Auto-Layout & [Motion-Layout][motion-layout]
@@ -595,6 +647,8 @@ style :tablecell,
 
 ### Orientation Styles
 
+*iOS only*
+
 There's more to stylesheets than just translating `UIView` setters.  Teacup can
 also apply orientation-specific styles.  These are applied when the view is
 created (using the current device orientation) and when a rotation occurs.
@@ -617,7 +671,7 @@ end
 Combine these styles with [Frame Calculations][calculations] to have you view
 frame recalculated automatically.
 
-### UIView animation additions
+### Animation additions
 
 We've already seen the Teacup related properties:
 
@@ -631,6 +685,9 @@ animations.
 - `animate_to_stylename(stylename)`
 - `animate_to_styles(style_classes)`
 - `animate_to_style(properties)`
+
+On OS X you have to use the `view.animator` property to perform animations.
+This is supported, but it's kind of "hacky".
 
 ### Style Handlers
 
@@ -670,6 +727,8 @@ located at the origin.
 style :container,
   frame: :full  # => [[0, 0], superview.frame.size]
 ```
+
+[other-handlers]: https://github.com/rubymotion/teacup/tree/master/lib/teacup/z_core_extensions/z_handlers.rb
 
 ### Frame Calculations
 
@@ -811,11 +870,14 @@ in you chuckle with glee.  In this example you could go completely with just
 frame calculation formulas and springs and struts.  Your frame code would still
 be cluttered, just cluttered in a different way.
 
-### Motion-Layout[motion-layout]
+This works on OS X and iOS, and you don't have to go changing the idea of "top"
+and "bottom" even though OS X uses reversed frames.
 
-If you are using [Nick Quaranto][qrush]'s [motion-layout][] gem, you can use it from within
-any class that includes `Teacup::Layout`.  Then benefit is that the Teacup
-stylenames assigned to your views will be used in the dictionary that the
+### Motion-Layout
+
+If you are using [Nick Quaranto][qrush]'s [motion-layout][] gem, you can use it
+from within any class that includes `Teacup::Layout`.  Then benefit is that the
+Teacup stylenames assigned to your views will be used in the dictionary that the
 ASCII-based system relies on.
 
 ```ruby
@@ -887,12 +949,17 @@ The `fixed` methods pin the view to one of nine locations:
     ------------+---------------+-------------
     bottom_left | bottom_middle | bottom_right
 
+    e.g. fixed_top_left, fixed_middle, fixed_bottom_right
+
 The `float` methods fill in the last gap, when you don't want your view pinned
 to any corner, and you don't want it to change size.
 
+    # incidentally:
     float_horizontal | float_vertical == fixed_middle
 
 #### Device detection
+
+*iOS only*
 
 Because the stylesheets are defined in a block, you can perform tests for device
 and screen size before setting styles.  For instance, on an ipad you might want
@@ -930,6 +997,8 @@ end
 ```
 
 #### Rotation helpers
+
+*iOS only*
 
 Because you can animate changes to the stylename or style_classes, you can make
 it pretty easy to apply rotation effects to a `UIView` or `CALayer`.  The
@@ -1370,7 +1439,6 @@ tool helps you build great apps!
 [advanced]: https://github.com/rubymotion/teacup/#advanced-teacup-tricks
 [calculations]: https://github.com/rubymotion/teacup/#frame-calculations
 [dummy.rb]: https://github.com/rubymotion/teacup/tree/master/lib/dummy.rb
-[other-handlers]: https://github.com/rubymotion/teacup/tree/master/lib/teacup/z_core_extensions/z_handlers.rb
 
 [Pixate]: http://www.pixate.com
 [NUI]: https://github.com/tombenner/nui
