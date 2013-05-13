@@ -27,6 +27,7 @@ end
 class DummyScrollView < UIScrollView
 private
   def dummy
+    setPagingEnabled(nil)
     setScrollEnabled(nil)
     setShowsHorizontalScrollIndicator(nil)
     setShowsVerticalScrollIndicator(nil)
