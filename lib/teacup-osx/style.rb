@@ -1,43 +1,22 @@
 module Teacup
   # The Style class is where the precedence rules are applied.  A Style can
   # query the Stylesheet that created it to look up other styles (for
-  # `extends:`) and to import other Stylesheets.  If it is handed a target (e.g.
-  # a `UIView` instance) and orientation, it will merge those in appropriately
-  # as well.
+  # `extends:`) and to import other Stylesheets.
   class Style < Hash
     attr_accessor :stylename
     attr_accessor :stylesheet
 
-    # A hash of orientation => true/false.  true means the orientation is
-    # supported.
-    def supports
-      @supports ||= {}
-    end
-
-    # returns the value - `nil` has special meaning when querying :portrait or :upside_up
-    def supports? orientation_key
-      false
-    end
-
+    # orientation is completely ignored on OS X, but the Teacup code was written
+    # to support them, and it was easier to ignore the orientation system than
+    # refactor it out of the shared code base.
     def build(target=nil, rotation_orientation=nil, seen={})
       properties = Style.new
       properties.stylename = self.stylename
       properties.stylesheet = self.stylesheet
 
-      # if we have an orientation, only apply those styles.  otherwise apply the
-      # entire style, including the current orientation.
-      if rotation_orientation
-        # in order to preserve the "local-first" override, we need to *delete*
-        # the keys in imported_stylesheets and extended_properties that are
-        # present in this style - even though we don't ultimately *apply* the
-        # styles
-        delete_keys = self.keys
-        orientation = rotation_orientation
-      else
-        delete_keys = []
-        properties.update(self)
-        orientation = nil
-      end
+      delete_keys = []
+      properties.update(self)
+      orientation = nil
 
       # now we can merge extends, and imported_stylesheets.  before merging,
       # these will go through the same process that we just finished on the
