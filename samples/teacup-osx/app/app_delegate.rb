@@ -1,5 +1,3 @@
-include SugarCube::Adjust
-
 
 class AppDelegate
   def applicationDidFinishLaunching(notification)
