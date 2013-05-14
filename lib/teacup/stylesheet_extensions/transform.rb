@@ -16,7 +16,27 @@ module Teacup
 
     def identity
       NSLog("The Stylesheet method `identity` is deprecated, use `transform_layer.identity` instead")
-      [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
+      transform_layer.identity
+    end
+
+    def flip(matrix, angle)
+      NSLog("The Stylesheet method `flip` is deprecated, use `transform_layer.flip` instead")
+      transform_layer.flip(angle)
+    end
+
+    def twist(matrix, angle)
+      NSLog("The Stylesheet method `twist` is deprecated, use `transform_layer.twist` instead")
+      transform_layer.twist(angle)
+    end
+
+    def spin(matrix, angle)
+      NSLog("The Stylesheet method `spin` is deprecated, use `transform_layer.spin` instead")
+      transform_layer.spin(angle)
+    end
+
+    def rotate(matrix, angle, x, y, z)
+      NSLog("The Stylesheet method `rotate` is deprecated, use `transform_layer.rotate` instead")
+      transform_layer.rotate(angle, x, y, z)
     end
 
   end
