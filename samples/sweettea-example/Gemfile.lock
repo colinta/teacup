@@ -1,21 +1,23 @@
+PATH
+  remote: ../..
+  specs:
+    teacup (2.0.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    geomotion (0.12.1)
     rake (10.0.4)
     sugarcube (0.20.18)
     sweettea (0.5.6)
       rake
       sugarcube
       teacup
-    teacup (1.3.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  geomotion
   rake
   sugarcube
   sweettea
-  teacup
+  teacup!

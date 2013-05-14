@@ -14,14 +14,14 @@ interfaces programmatically.
 * iOS
   * “[Hai][Hai]”
   * “[AutoLayout][AutoLayout]”
-  * “[OnePage][OnePage]”
+  * “[Sweettea Example][sweettea-example]”
 * OS X
   * “[Tweets][Tweets]” - ported from [RubyMotionSamples][]
   * “[teacup-osx][teacup-osx]”
 
 [Hai]: https://github.com/rubymotion/teacup/tree/master/samples/Hai
 [AutoLayout]: https://github.com/rubymotion/teacup/tree/master/samples/AutoLayout
-[OnePage]: https://github.com/rubymotion/teacup/tree/master/samples/OnePage
+[sweettea-example]: https://github.com/rubymotion/teacup/tree/master/samples/sweettea-example
 [Tweets]: https://github.com/rubymotion/teacup/tree/master/samples/Tweets
 [teacup-osx]: https://github.com/rubymotion/teacup/tree/master/samples/teacup-osx
 [RubyMotionSamples]: https://github.com/HipByte/RubyMotionSamples/tree/master/osx/Tweets

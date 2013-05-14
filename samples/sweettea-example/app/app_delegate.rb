@@ -37,7 +37,7 @@ class MyController < UIViewController
 
   layout do
     @label = subview(UILabel, :label, text: 'nifty?')
-    @button = subview(UIButton, :button)
+    @button = subview(UIButton.rounded, :button)
   end
 
 end
