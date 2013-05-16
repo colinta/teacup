@@ -17,13 +17,15 @@ interfaces programmatically.
   * “[Sweettea Example][sweettea-example]”
 * OS X
   * “[Tweets][Tweets]” - ported from [RubyMotionSamples][]
-  * “[teacup-osx][teacup-osx]”
+  * “[simple][]”
 
-[Hai]: https://github.com/rubymotion/teacup/tree/master/samples/Hai
-[AutoLayout]: https://github.com/rubymotion/teacup/tree/master/samples/AutoLayout
-[sweettea-example]: https://github.com/rubymotion/teacup/tree/master/samples/sweettea-example
-[Tweets]: https://github.com/rubymotion/teacup/tree/master/samples/Tweets
-[teacup-osx]: https://github.com/rubymotion/teacup/tree/master/samples/teacup-osx
+[Hai]: https://github.com/rubymotion/teacup/tree/master/samples/ios/Hai
+[AutoLayout]: https://github.com/rubymotion/teacup/tree/master/samples/ios/AutoLayout
+[sweettea-example]: https://github.com/rubymotion/teacup/tree/master/samples/ios/sweettea-example
+
+[Tweets]: https://github.com/rubymotion/teacup/tree/master/samples/osx/Tweets
+[simple]: https://github.com/rubymotion/teacup/tree/master/samples/osx/simple
+
 [RubyMotionSamples]: https://github.com/HipByte/RubyMotionSamples/tree/master/osx/Tweets
 
 **Quick Install**
