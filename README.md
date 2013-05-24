@@ -534,8 +534,7 @@ end
 And lastly, the `UIAppearance protocol` is supported by creating an instance of
 `Teacup::Appearance`.  There is debatable benefit to using [UIAppearance][],
 because it will apply styles to views that are outside your control, like the
-camera/image pickers and email/message controllers.  Using `import` instead will
-not apply styles to those views.
+camera/image pickers and email/message controllers.
 
 But, it does come in handy sometimes... so here it is!
 
@@ -553,6 +552,28 @@ Teacup::Appearance.new do
   # UINavigationBar.appearanceWhenContainedIn(UIToolbar, UIPopoverController, nil).setTintColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: [UIToolbar, UIPopoverController],
     tintColor: UIColor.blackColor
+
+end
+```
+
+In your AppDelegate you need to call `Teacup::Appearance.apply`.  It will get
+called automatically using the `UIApplicationDidFinishLaunchingNotification`,
+but that notification is triggered *after* the method
+`AppDelegate#didFinishLaunching(withOptions:)` is called.
+
+###### app_delegate.rb
+```ruby
+class AppDelegate
+  def didFinishLaunching(application, withOptions:options)
+    Teacup::Appearance.apply
+
+    @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
+    ctlr = MainController.new
+    @window.rootViewController = UINavigationController.alloc.initWithRootController(ctlr)
+    @window.makeKeyAndVisible
+
+    true
+  end
 
 end
 ```
