@@ -1,1 +1,1 @@
-gem "teacup", :path => '../..'
+gem 'teacup', :path => '../../..'

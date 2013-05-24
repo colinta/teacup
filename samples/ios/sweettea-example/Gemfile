@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'rake'
-gem 'teacup', :path => '../..'
+gem 'teacup', :path => '../../..'
 gem 'sugarcube'
 gem 'sweettea'
