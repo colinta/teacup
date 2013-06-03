@@ -157,6 +157,10 @@ Teacup.handler UIButton, :titleFont, :font do |target, font|
   target.titleLabel.font = font
 end
 
+Teacup.handler UIButton, :titlePadding, do |target, padding|
+  target.setTitleEdgeInsets(UIEdgeInsetsMake(padding[0], padding[1], padding[2], padding[3]))
+end
+
 
 ##|
 ##|  UINavigationBar
