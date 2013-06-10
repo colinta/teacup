@@ -295,10 +295,6 @@ module Teacup
     #
     # @param Hash  the properties to set.
     def style(properties)
-      if properties.key?(:constraints)
-        add_uniq_constraints(properties.delete(:constraints))
-      end
-
       apply_style_properties(properties)
     end
 

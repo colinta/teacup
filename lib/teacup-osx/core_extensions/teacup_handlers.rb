@@ -1,4 +1,11 @@
 ##|
+##|  Constraints
+##|
+Teacup.handler NSView, :constraints do |target, constraints|
+  target.add_uniq_constraints(constraints)
+end
+
+##|
 ##|  NSView.frame
 ##|
 Teacup.handler NSView, :left, :x do |target, x|
