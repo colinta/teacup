@@ -155,7 +155,11 @@ module Teacup
         end
       end
 
-      Teacup.apply_hash view, teacup_style.build(view)
+      if view.is_a? Teacup::View
+        view.style(teacup_style.build(view))
+      else
+        Teacup.apply_hash view, teacup_style.build(view)
+      end
 
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view
