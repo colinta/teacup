@@ -100,7 +100,7 @@ Teacup.handler NSView, :frame do |target, frame|
         [Teacup::calculate(target, :width, frame[0]), Teacup::calculate(target, :height, frame[1])],
         [Teacup::calculate(target, :width, frame[2]), Teacup::calculate(target, :height, frame[3])]
       ]
-  elsif (Array === frame && frame.length == 2) || CGRect === frame
+  elsif (Array === frame && frame.length == 2) || NSRect === frame
     frame = [
         [Teacup::calculate(target, :width, frame[0][0]), Teacup::calculate(target, :height, frame[0][1])],
         [Teacup::calculate(target, :width, frame[1][0]), Teacup::calculate(target, :height, frame[1][1])]
