@@ -1,2 +1,2 @@
 language: objective-c
-before_install: rvm use 1.9.3
+before_install: rvm use ruby-1.9.3-p392
