@@ -78,7 +78,7 @@ module Teacup
 
     def device_is?(this_device)
       this_device = self.send(this_device) if this_device.is_a? Symbol
-      return device & this_device > 0
+      return self.device & this_device > 0
     end
 
   end
