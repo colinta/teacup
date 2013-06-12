@@ -10,6 +10,7 @@ class UIViewController
   # method, but the iOS 6 update deprecates that method.  Instead, use the
   # `supportedInterfaceOrientations` and return `autorotateMask`.
   def autorotateToOrientation(orientation)
+    device = UIDevice.currentDevice.userInterfaceIdiom
     if view.stylesheet and view.stylesheet.is_a?(Teacup::Stylesheet) and view.stylename
       properties = view.stylesheet.query(view.stylename, self, orientation)
 
