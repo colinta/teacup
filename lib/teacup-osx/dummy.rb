@@ -32,6 +32,8 @@ private
     setTarget(nil)
     setAction(nil)
     setBezelStyle(nil)
+    setBordered(nil)
+    setImagePosition(nil)
   end
 end
 
