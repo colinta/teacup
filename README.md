@@ -1224,7 +1224,7 @@ More examples!
 
 ```ruby
 class MyController < UIViewController
-  stylyesheet :my_sheet
+  stylesheet :my_sheet
   layout do
     subview(UILabel, :label, text: 'overrides')
   end
