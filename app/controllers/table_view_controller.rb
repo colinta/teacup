@@ -12,7 +12,7 @@ class TableViewController < UITableViewController
   end
 
   def tableView(table_view, numberOfRowsInSection:section)
-    1
+    10
   end
 
   def tableView(tableView, heightForRowAtIndexPath:index_path)
@@ -21,6 +21,13 @@ class TableViewController < UITableViewController
 
   def tableView(table_view, cellForRowAtIndexPath:index_path)
     cell = table_view.dequeueReusableCellWithIdentifier('cell id')
+
+    # for testing cell reuse
+    if cell.is_reused.nil?
+      cell.is_reused = false
+    else
+      cell.is_reused ||= true
+    end
 
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton
 
@@ -34,7 +41,7 @@ class TableViewController < UITableViewController
       end
     end
 
-    cell
+    return cell
   end
 
   def tableView(table_view, didSelectRowAtIndexPath:index_path)
@@ -51,7 +58,7 @@ end
 
 
 class CustomCell < UITableViewCell
-  attr_accessor :title_label, :details_label, :other_label
+  attr_accessor :title_label, :details_label, :other_label, :is_reused
 end
 
 

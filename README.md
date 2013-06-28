@@ -141,6 +141,8 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
   * [Style via UIView Class](#style-via-uiview-class)
   * [Importing stylesheets](#importing-stylesheets)
   * [Style via UIAppearance](#style-via-uiappearance) (iOS only)
+* [UITableViews](#uitableviews) - This is important if you are using styles and
+  constraints in a `UITableViewDelegate`.
 * [More Teacup features](#more-teacup-features)
   * [Styling View Properties](#styling-view-properties)
   * [Orientation Styles](#orientation-styles) (iOS only)
@@ -156,7 +158,7 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
 * [Showdown](#showdown)
 * [The Nitty Gritty](#the-nitty-gritty)
 * [Advanced Teacup Tricks](#advanced-teacup-tricks)
-  * [UITableViewCell](#uitableviewcell)
+  * [Including `Teacup::Layout` on arbitrary classes](#including-teacup-layout-on-arbitrary-classes)
   * [Sweettea](#sweettea)
 * [Misc notes](#misc-notes)
 * [The Dummy](#the-dummy)
@@ -632,6 +634,49 @@ end
 # styling.
 @label.style(textColor: UIColor.blueColor, text: 'Blue Label')
 ```
+
+UITableViews
+------------
+
+Teacup is designed to be used in coordination with the controller life cycle,
+but there are other life cycles that need to be considered as well.
+UITableViews maintain a "queue" of cells that can be reused, and they need to be
+restyled when the cell is created and re-used.
+
+The solution is to apply the styles and layout constraints inside the
+`tableView:willDisplayCell:forRowAtIndexPath:` delegate method.  In your
+delegate, if you include the `Teacup::TableViewDelegate` module, you'll get this
+behavior for free, and if you override this method, you can call `super` to have
+the Teacup method run.
+
+```ruby
+class TableViewController < UITableViewController
+  include Teacup::TableViewDelegate
+
+  stylesheet :table
+
+  def tableView(table_view, cellForRowAtIndexPath:index_path)
+    cell = table_view.dequeueReusableCellWithIdentifier('cell id')
+
+    layout(cell.contentView, :root) do
+      cell.title_label = subview(UILabel, :title_label, :text => "title #{index_path.row}")
+      cell.details_label = subview(UILabel, :details_label, :text => "details #{index_path.row}")
+      cell.other_label = subview(UILabel, :other_label, :text => "other #{index_path.row}")
+    end
+
+    return cell
+  end
+
+  # This method is implemented by the Teacup::TableViewDelegate.  If you need
+  # to implement it, be sure to call super.
+  # def tableView(tableView, willDisplayCell:cell, forRowAtIndexPath:indexPath)
+  #   super
+  # end
+end
+```
+
+Constraints and styles get applied before the view appears, even if the cell is
+reused later.
 
 More Teacup features
 --------------------
@@ -1276,17 +1321,19 @@ not in the context of a `UIViewController` that things get hairy.
 If this is the case, you should get some pretty obvious warning messages,
 something along the lines of `Could not find :superview`.
 
-### UITableViewCell
-
-If you are using your controller as your tableview dataSource this is not a big
-deal, the `subview` and `layout` methods continue to work as you expect them to.
+### Including `Teacup::Layout` on arbitrary classes
 
 I don't know about you, but I often write helper classes for tableviews that
 appear on many screens in an app.  You should not shy away from adding teacup's
 `Layout` module to these helper classes.
 
+If you are using your controller as your table view dataSource, the `subview`
+and `layout` methods continue to work as you expect them to.  This is for the
+case when you are using a helper class.
+
 ```ruby
 class TableHelper
+  include Teacup::TableViewDelegate
   include Teacup::Layout
 
   stylesheet :table_helper
