@@ -6,7 +6,9 @@ class AppDelegate
     application.setStatusBarHidden(true, withAnimation:UIStatusBarAnimationSlide)
 
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
-    ctlr = MotionLayoutController.new
+    # change this controller to whatever controller you want to test, or are
+    # writing tests for.
+    ctlr = TableViewController.new
     @window.rootViewController = ctlr
     @window.rootViewController.wantsFullScreenLayout = true
     @window.makeKeyAndVisible
