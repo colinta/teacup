@@ -19,6 +19,12 @@ module Teacup
     # Enable debug messages for this object
     attr_accessor :debug
 
+    # Subviews or empty collection of views to cater for issue with iOS7 dp3
+    def teacup_subviews
+      subviews || []
+    end
+
+
     # Alter the stylename of this view.
     #
     # This will cause new styles to be applied from the stylesheet.
@@ -122,7 +128,7 @@ module Teacup
           end
           style(stylesheet.query(self.stylename, self, orientation))
         end
-        subviews.each { |subview| subview.restyle!(orientation) }
+        teacup_subviews.each { |subview| subview.restyle!(orientation) }
       end
     end
 
@@ -199,7 +205,7 @@ module Teacup
       end
 
       # now add all che child constraints
-      subviews.each do |subview|
+      teacup_subviews.each do |subview|
         my_constraints.concat(subview.get_ns_constraints)
       end
 
