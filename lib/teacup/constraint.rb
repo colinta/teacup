@@ -118,7 +118,7 @@ module Teacup
       self.attribute = attribute
       self.constant = 0
       self.multiplier = 1
-      self.priority = :high
+      self.priority = :high  # this is the xcode default
     end
 
     def equals(relative_to, attribute2=nil)
