@@ -211,16 +211,16 @@ module Teacup
     end
 
     def nslayoutconstraint
-      NSLayoutConstraint.constraintWithItem( self.target,
+      nsconstraint = NSLayoutConstraint.constraintWithItem( self.target,
                                   attribute: self.attribute,
                                   relatedBy: self.relationship,
                                      toItem: self.relative_to,
                                   attribute: self.attribute2,
                                  multiplier: self.multiplier,
                                    constant: self.constant
-                                           ) .tap do |nsconstraint|
-        nsconstraint.priority = priority_lookup self.priority
-      end
+                                           )
+      nsconstraint.priority = priority_lookup(self.priority)
+      return nsconstraint
     end
 
 private
