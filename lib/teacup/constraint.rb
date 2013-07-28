@@ -44,69 +44,69 @@ module Teacup
       case sym
       when :full
         [
-          Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
-          Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
-          Teacup::Constraint.new(:self, :width).equals(relative_to, :width),
-          Teacup::Constraint.new(:self, :height).equals(relative_to, :height),
+          self.new(:self, :left).equals(relative_to, :left),
+          self.new(:self, :top).equals(relative_to, :top),
+          self.new(:self, :width).equals(relative_to, :width),
+          self.new(:self, :height).equals(relative_to, :height),
         ]
       when :full_width
         [
-          Teacup::Constraint.new(:self, :center_x).equals(relative_to, :center_x),
-          Teacup::Constraint.new(:self, :width).equals(relative_to, :width),
+          self.new(:self, :center_x).equals(relative_to, :center_x),
+          self.new(:self, :width).equals(relative_to, :width),
         ]
       when :full_height
         [
-          Teacup::Constraint.new(:self, :center_y).equals(relative_to, :center_y),
-          Teacup::Constraint.new(:self, :height).equals(relative_to, :height),
+          self.new(:self, :center_y).equals(relative_to, :center_y),
+          self.new(:self, :height).equals(relative_to, :height),
         ]
       when :center_x
         [
-          Teacup::Constraint.new(:self, :center_x).equals(:superview, :center_x),
+          self.new(:self, :center_x).equals(:superview, :center_x),
         ]
       when :center_y
         [
-          Teacup::Constraint.new(:self, :center_y).equals(:superview, :center_y),
+          self.new(:self, :center_y).equals(:superview, :center_y),
         ]
       when :centered
         [
-          Teacup::Constraint.new(:self, :center_x).equals(:superview, :center_x),
-          Teacup::Constraint.new(:self, :center_y).equals(:superview, :center_y),
+          self.new(:self, :center_x).equals(:superview, :center_x),
+          self.new(:self, :center_y).equals(:superview, :center_y),
         ]
       when :top
         [
-          Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
+          self.new(:self, :top).equals(relative_to, :top),
         ]
       when :right
         [
-          Teacup::Constraint.new(:self, :right).equals(relative_to, :right),
+          self.new(:self, :right).equals(relative_to, :right),
         ]
       when :bottom
         [
-          Teacup::Constraint.new(:self, :bottom).equals(relative_to, :bottom),
+          self.new(:self, :bottom).equals(relative_to, :bottom),
         ]
       when :left
         [
-          Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
+          self.new(:self, :left).equals(relative_to, :left),
         ]
       when :top_left, :topleft
         [
-          Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
-          Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
+          self.new(:self, :left).equals(relative_to, :left),
+          self.new(:self, :top).equals(relative_to, :top),
         ]
       when :top_right, :topright
         [
-          Teacup::Constraint.new(:self, :right).equals(relative_to, :right),
-          Teacup::Constraint.new(:self, :top).equals(relative_to, :top),
+          self.new(:self, :right).equals(relative_to, :right),
+          self.new(:self, :top).equals(relative_to, :top),
         ]
       when :bottom_right, :bottomright
         [
-          Teacup::Constraint.new(:self, :right).equals(relative_to, :right),
-          Teacup::Constraint.new(:self, :bottom).equals(relative_to, :bottom),
+          self.new(:self, :right).equals(relative_to, :right),
+          self.new(:self, :bottom).equals(relative_to, :bottom),
         ]
       when :bottom_left, :bottomleft
         [
-          Teacup::Constraint.new(:self, :left).equals(relative_to, :left),
-          Teacup::Constraint.new(:self, :bottom).equals(relative_to, :bottom),
+          self.new(:self, :left).equals(relative_to, :left),
+          self.new(:self, :bottom).equals(relative_to, :bottom),
         ]
       else
         raise "Unknown symbol #{sym.inspect}"
@@ -188,7 +188,7 @@ module Teacup
     end
 
     def copy
-      copy = Teacup::Constraint.new(self.target, self.attribute)
+      copy = self.class.new(self.target, self.attribute)
       copy.relationship = self.relationship
       copy.relative_to = self.relative_to
       copy.attribute2 = self.attribute2
