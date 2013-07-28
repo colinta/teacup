@@ -39,6 +39,14 @@ describe "MotionLayout" do
       label3_top.should == 220
     end
 
+    it 'should have label4 at 320' do
+      frame = controller.container.label4.frame
+      frame = controller.container.convertRect(frame, toView: controller.view)
+      label4_top = CGRectGetMinY(frame)
+      label4_top.should == 320
+    end
+
+
   end
 
 end
