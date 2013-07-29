@@ -1,3 +1,4 @@
+# Fixes here should be copied to teacup-ios/style.rb
 module Teacup
   # The Style class is where the precedence rules are applied.  A Style can
   # query the Stylesheet that created it to look up other styles (for
