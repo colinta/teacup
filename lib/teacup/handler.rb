@@ -25,13 +25,28 @@
 module Teacup
   module_function
 
+  # Some properties need to be assigned before others (size in particular, so
+  # that `:center_x` can work properly).  This hash makes sure higher priority
+  # style names before lower-numbers.
+  Priorities = {
+    frame: 2,
+    size: 1,
+    width: 1,
+    height: 1,
+  }
+  Priorities.default = -1
+
   # applies a Hash of styles, and converts the frame styles (origin, size, top,
   # left, width, height) into one frame property.
   #
   # For UIAppearance support, the class of the UIView class that is being
   # modified can be passed in
   def apply_hash(target, properties, klass=nil)
-    properties.each do |key, value|
+    properties.sort do |a, b|
+      priority_a = Priorities[a[0]]
+      priority_b = Priorities[b[0]]
+      priority_b <=> priority_a
+    end.each do |key, value|
       Teacup.apply target, key, value, klass
     end
   end
