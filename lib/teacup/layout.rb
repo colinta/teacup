@@ -164,7 +164,8 @@ module Teacup
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
       # one is not explicitly assigned to the view
       if view.is_a? Layout
-        view.teacup_next_responder = self
+        view.teacup_next_responder = WeakRef.new(self)
+        # view.teacup_next_responder = self
       end
 
       if block_given?
