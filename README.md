@@ -74,7 +74,9 @@ require 'teacup'
 
 #### 10 second primer, OS X
 
-Pretty much the same!
+Pretty much the same!  Note that on OS X, view coordinates are based on having
+the origin in the bottom-left corner, not the upper-left like it is *on every
+other GUI system ever*. :-|
 
 **You should use the `TeacupWindowController` parent class instead of `NSWindowController`**
 
