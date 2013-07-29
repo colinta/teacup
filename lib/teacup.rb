@@ -22,4 +22,32 @@ Motion::Project::App.setup do |app|
   Dir.glob(File.join(teacup_lib, '**/*.rb')).reverse.each do |file|
     app.files.insert(insert_point, file)
   end
+
+  if platform == :ios
+    app.files_dependencies File.join(teacup_platform_lib, 'core_extensions/ui_view.rb') => [
+      File.join(teacup_lib, 'layout.rb'),
+      File.join(teacup_lib, 'teacup_view.rb'),
+    ]
+    app.files_dependencies File.join(teacup_platform_lib, 'core_extensions/ui_view_controller.rb') => [
+      File.join(teacup_lib, 'layout.rb'),
+      File.join(teacup_lib, 'teacup_controller.rb'),
+    ]
+  else
+    app.files_dependencies File.join(teacup_platform_lib, 'core_extensions/ns_view.rb') => [
+      File.join(teacup_lib, 'layout.rb'),
+      File.join(teacup_lib, 'teacup_view.rb'),
+    ]
+    app.files_dependencies File.join(teacup_platform_lib, 'core_extensions/ns_window.rb') => [
+      File.join(teacup_lib, 'layout.rb'),
+      File.join(teacup_lib, 'teacup_view.rb'),
+    ]
+    app.files_dependencies File.join(teacup_platform_lib, 'core_extensions/ns_view_controller.rb') => [
+      File.join(teacup_lib, 'layout.rb'),
+      File.join(teacup_lib, 'teacup_controller.rb'),
+    ]
+    app.files_dependencies File.join(teacup_platform_lib, 'core_extensions/ns_window_controller.rb') => [
+      File.join(teacup_lib, 'layout.rb'),
+      File.join(teacup_lib, 'teacup_controller.rb'),
+    ]
+  end
 end
