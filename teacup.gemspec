@@ -4,6 +4,7 @@ require File.expand_path('../lib/teacup/version.rb', __FILE__)
 Gem::Specification.new do |gem|
   gem.name          = 'teacup'
   gem.version       = Teacup::VERSION
+  gem.licenses      = ['BSD']
 
   gem.authors  = ['the rubymotion community']
 
