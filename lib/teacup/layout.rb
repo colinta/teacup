@@ -256,7 +256,7 @@ module Teacup
     def auto(layout_view=top_level_view, layout_subviews={}, &layout_block)
       raise "gem install 'motion-layout'" unless defined? Motion::Layout
 
-      styled_subviews = top_level_view.subviews.select { |v| v.stylename }
+      styled_subviews = layout_view.subviews.select { |v| v.stylename }
       styled_subviews.each do |view|
         if ! layout_subviews[view.stylename.to_s]
           layout_subviews[view.stylename.to_s] = view
