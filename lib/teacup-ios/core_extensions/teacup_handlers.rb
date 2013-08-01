@@ -141,7 +141,11 @@ end
 ##|  UIButton
 ##|
 Teacup.handler UIButton, :title do |target, title|
-  target.setTitle(title, forState: UIControlStateNormal)
+  if title.is_a?(NSAttributedString)
+    target.setAttributedTitle(title, forState: UIControlStateNormal)
+  else
+    target.setTitle(title.to_s, forState: UIControlStateNormal)
+  end
 end
 
 
