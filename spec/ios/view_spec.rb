@@ -18,6 +18,9 @@ describe "Teacup::View" do
     @stylesheet = Teacup::Stylesheet.new do
       style :label,
         text: "Stylesheet1 Label1"
+
+      style :new_style,
+        text: 'new style'
     end
   end
 
@@ -41,6 +44,14 @@ describe "Teacup::View" do
       @view.stylesheet = @stylesheet
       @view.apply_stylename(:label)
       @view.text.should == "Stylesheet1 Label1"
+    end
+  end
+
+  describe 'add_style_class' do
+    it "should add the new style to the view" do
+      @view.stylesheet = @stylesheet
+      @view.add_style_class :new_style
+      @view.text.should == "new style"
     end
   end
 

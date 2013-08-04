@@ -63,7 +63,7 @@ module Teacup
     end
 
     def add_style_class(stylename)
-      unless style_classes.include?
+      unless style_classes.include? stylename
         style_classes << stylename
         restyle!
       end
