@@ -308,6 +308,13 @@ module Teacup
       Teacup.apply_hash self, properties
     end
 
+    def reset_constraints
+      @teacup_constraints = nil
+      subviews.each do |subview|
+        subview.reset_constraints
+      end
+    end
+
     def add_uniq_constraints(constraint)
       @teacup_constraints ||= {}
 
