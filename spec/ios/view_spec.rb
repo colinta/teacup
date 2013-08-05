@@ -21,7 +21,32 @@ describe "Teacup::View" do
 
       style :new_style,
         text: 'new style'
+
+      style :constrained,
+        constraints: [
+          [:full]
+        ]
+
     end
+  end
+
+  describe 'reset_constraints' do
+
+    before do
+      @outer = UIView.new
+      @outer.addSubview @view
+    end
+
+    it "forgets the list of constraints that may have been set" do
+      @view.stylesheet = @stylesheet
+      @view.add_style_class :constrained
+      @view.apply_constraints
+      @view.constraints.should.not.be.empty
+      @view.reset_constraints
+      @view.apply_constraints
+      @view.constraints.should.be.empty
+    end
+
   end
 
   describe 'stylename=' do
