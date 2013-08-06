@@ -940,6 +940,11 @@ in you chuckle with glee.  In this example you could go completely with just
 frame calculation formulas and springs and struts.  Your frame code would still
 be cluttered, just cluttered in a different way.
 
+If you need to reset the list of constraints managed by Teacup, you can call
+`reset_constraints` before you add the new styles to a UIView. This can be
+useful when you need to define a new set of layout constraints for a dynamic
+set of views.
+
 This works on OS X and iOS, and you don't have to go changing the idea of "top"
 and "bottom" even though OS X uses reversed frames.
 
