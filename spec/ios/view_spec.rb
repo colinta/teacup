@@ -42,7 +42,7 @@ describe "Teacup::View" do
       @view.add_style_class :constrained
       @view.apply_constraints
       @view.constraints.should.not.be.empty
-      @view.reset_constraints
+      @outer.reset_constraints
       @view.apply_constraints
       @view.constraints.should.be.empty
     end
