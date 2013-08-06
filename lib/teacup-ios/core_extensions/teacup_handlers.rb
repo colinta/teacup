@@ -8,6 +8,11 @@ end
 ##|
 ##|  UIView.frame
 ##|
+Teacup.handler UIView, :sizeToFit do |target, truthy|
+  target.sizeToFit if truthy
+end
+
+
 Teacup.handler UIView, :left, :x do |target, x|
   f = target.frame
   f.origin.x = Teacup::calculate(target, :width, x)

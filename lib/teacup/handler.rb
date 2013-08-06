@@ -31,6 +31,7 @@ module Teacup
   Priorities = {
     frame: 2,
     size: 1,
+    sizeToFit: 1,
     width: 1,
     height: 1,
   }
