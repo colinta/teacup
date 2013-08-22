@@ -4,9 +4,7 @@ class MemoryLeakController < UIViewController
   stylesheet :memory_leak
 
   layout do
-    puts("=============== memory_leak_controller.rb line #{__LINE__} ===============")
     subview(UIView, :view) do
-      puts("=============== memory_leak_controller.rb line #{__LINE__} ===============")
       subview(UIView)
     end
   end
