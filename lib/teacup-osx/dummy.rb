@@ -15,6 +15,7 @@ class DummyTableView < NSTableView
 private
  def dummy
    setAllowSelection(value)
+   setSelectionHighlightStyle(value)
  end
 end
 
