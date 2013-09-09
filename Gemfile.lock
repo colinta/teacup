@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    teacup (2.1.9)
+    teacup (2.1.10)
 
 GEM
   remote: https://rubygems.org/

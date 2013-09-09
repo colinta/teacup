@@ -56,7 +56,7 @@ class UIViewController
   def autorotateMask
     device = UIDevice.currentDevice.userInterfaceIdiom
     if view.stylesheet and view.stylesheet.is_a?(Teacup::Stylesheet) and view.stylename
-      properties = view.stylesheet.query(view.stylename, self, orientation)
+      properties = view.stylesheet.query(view.stylename, self, nil)
 
       orientations = 0
       if properties.supports?(:portrait) or properties.supports?(:upside_up)
