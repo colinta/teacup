@@ -129,3 +129,43 @@ describe 'Using constraints in landscape' do
   end
 
 end
+
+describe 'extends merges constraints' do
+  before do
+    Teacup::Stylesheet.new(:ipad) do
+      style :button,
+        constraints: [
+          constrain_height(22),
+          constrain_top(0)
+        ]
+
+      style :tall_button, extends: :button,
+        constraints: [
+          constrain_height(44),
+        ]
+    end
+  end
+
+  it 'should not affect "base class" style' do
+    ipad_stylesheet = Teacup::Stylesheet[:ipad]
+    button_style = ipad_stylesheet.query(:button)
+    button_style[:constraints].size.should == 2
+    height_constraint = button_style[:constraints].first
+    top_constraint = button_style[:constraints].last
+    height_constraint.attribute.should == Teacup::Constraint::Attributes[:height]
+    height_constraint.constant.should == 22
+    top_constraint.attribute.should == Teacup::Constraint::Attributes[:top]
+    top_constraint.constant.should == 0
+  end
+
+  it 'should merge constraints when extending styles' do
+    ipad_stylesheet = Teacup::Stylesheet[:ipad]
+    tall_button_style = ipad_stylesheet.query(:tall_button)
+    height_constraint = tall_button_style[:constraints].first
+    height_constraint.attribute.should == Teacup::Constraint::Attributes[:height]
+    height_constraint.constant.should == 44
+    top_constraint = tall_button_style[:constraints].last
+    top_constraint.attribute.should == Teacup::Constraint::Attributes[:top]
+    top_constraint.constant.should == 0
+  end
+end
