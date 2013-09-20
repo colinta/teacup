@@ -174,6 +174,8 @@ module Teacup
           constraint.relative_to = self
         when :superview
           constraint.relative_to = self.superview
+        when :top_layout_guide
+          constraint.relative_to = self.controller.topLayoutGuide
         when Symbol, String
           # TODO: this re-checks lots of views - everytime it goes up to the
           # superview, it checks all the leaves again.
