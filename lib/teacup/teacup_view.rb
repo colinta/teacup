@@ -179,14 +179,14 @@ module Teacup
             constraint.relative_to = self.controller.topLayoutGuide
           else
             puts "topLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
-            constraint.relative_to nil
+            constraint.relative_to = nil
           end
         when :bottom_layout_guide
           if self.controller.respondsToSelector(:bottomLayoutGuide)
             constraint.relative_to = self.controller.bottomLayoutGuide
           else
             puts "bottomLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
-            constraint.relative_to nil
+            constraint.relative_to = nil
           end 
         when Symbol, String
           # TODO: this re-checks lots of views - everytime it goes up to the
