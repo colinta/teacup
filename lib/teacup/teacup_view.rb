@@ -186,14 +186,14 @@ module Teacup
         end
 
         if original_constraint.relative_to && ! constraint.relative_to
-          puts "Could not find #{original_constraint.relative_to.inspect}"
           container = self
-          tab = '  '
-          while container && constraint.relative_to.nil?
+          tab = ''
+          while container
             tab << '->'
             puts "#{tab} #{container.stylename.inspect}"
             container = container.superview
           end
+          raise "Could not find #{original_constraint.relative_to.inspect}"
         end
 
         # the return value, for the map

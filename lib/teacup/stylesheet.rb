@@ -133,7 +133,7 @@ module Teacup
     end
 
     def get_stylesheet_cache(stylename, target, orientation)
-      stylesheet_cache[stylename][target][orientation]
+      self.stylesheet_cache[stylename][target][orientation]
     end
 
     def set_stylesheet_cache(stylename, target, orientation, value)
