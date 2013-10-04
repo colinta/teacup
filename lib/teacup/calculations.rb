@@ -5,8 +5,8 @@ module Teacup
       view.instance_exec(&amount)
     elsif amount.is_a?(String) && amount.include?('%')
       location = amount.index '%'
-      offset = amount[(location+1)..-1].gsub(' ', '').to_f
-      percent = amount[0...location].to_f / 100.0
+      offset = amount.slice(location+1, amount.size).gsub(' ', '').to_f
+      percent = amount.slice(0, location).to_f / 100.0
 
       case dimension
       when :width
