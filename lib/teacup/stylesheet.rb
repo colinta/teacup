@@ -125,19 +125,23 @@ module Teacup
     # @stylesheet_cache object is manipulated directly (to invalidate entries,
     # or the entire cache)
     def stylesheet_cache
-      @stylesheet_cache ||= Hash.new do |cache,_stylename|
-        cache[_stylename] = Hash.new do |_target,_orientation|
-          _target[_orientation] = {}
-        end
-      end
+      return nil
+      # @stylesheet_cache ||= Hash.new do |by_stylename,_stylename|
+      #   by_stylename[_stylename] = Hash.new do |by_target,_target|
+      #     by_orientation = {}
+      #     by_target[_target] = by_orientation
+      #   end
+      # end
     end
 
     def get_stylesheet_cache(stylename, target, orientation)
-      self.stylesheet_cache[stylename][target][orientation]
+      return nil
+      # self.stylesheet_cache[stylename][target][orientation]
     end
 
     def set_stylesheet_cache(stylename, target, orientation, value)
-      self.stylesheet_cache[stylename][target][orientation] = value
+      return
+      # self.stylesheet_cache[stylename][target][orientation] = value
     end
 
     # Include another Stylesheet into this one, the rules defined
@@ -211,15 +215,18 @@ module Teacup
       return {} if seen[self]
       return {} unless stylename
 
-      unless get_stylesheet_cache(stylename, target, orientation)
+      cached = get_stylesheet_cache(stylename, target, orientation)
+      if cached
+        # mutable hashes could mess with our cache, so return a duplicate
+        return cached.dup
+      else
         run_block
         seen[self] = true
 
-        set_stylesheet_cache(stylename, target, orientation, styles[stylename].build(target, orientation, seen))
+        built = styles[stylename].build(target, orientation, seen)
+        set_stylesheet_cache(stylename, target, orientation, built)
+        return built.dup
       end
-
-      # mutable hashes could mess with our cache, so return a duplicate
-      get_stylesheet_cache(stylename, target, orientation).dup
     end
 
     # Add a set of properties for a given stylename or multiple stylenames.
