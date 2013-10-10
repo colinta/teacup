@@ -101,6 +101,8 @@ module Teacup
         layout(top_level_view, stylename, properties, &block)
       end
 
+      layoutDidLoad
+
       if should_restyle
         Teacup.should_restyle!
         self.top_level_view.restyle!
@@ -109,12 +111,9 @@ module Teacup
       if defined? NSLayoutConstraint
         self.top_level_view.apply_constraints
       end
-
-      layoutDidLoad
     end
 
     def layoutDidLoad
-      true
     end
 
   end
