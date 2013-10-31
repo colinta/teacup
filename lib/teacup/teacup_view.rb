@@ -175,15 +175,15 @@ module Teacup
         when :superview
           constraint.relative_to = self.superview
         when :top_layout_guide 
-          if self.controller.respondsToSelector(:topLayoutGuide)
-            constraint.relative_to = self.controller.topLayoutGuide
+          if controller.respondsToSelector(:topLayoutGuide)
+            constraint.relative_to = controller.topLayoutGuide
           else
             puts "topLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
             constraint.relative_to = nil
           end
         when :bottom_layout_guide
-          if self.controller.respondsToSelector(:bottomLayoutGuide)
-            constraint.relative_to = self.controller.bottomLayoutGuide
+          if controller.respondsToSelector(:bottomLayoutGuide)
+            constraint.relative_to = controller.bottomLayoutGuide
           else
             puts "bottomLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
             constraint.relative_to = nil
@@ -347,6 +347,16 @@ module Teacup
       end
     end
 
+    # helper method to resolve the view's controller
+    def controller
+      if nextResponder && nextResponder.is_a?(UIViewController)
+        nextResponder
+      elsif nextResponder
+        nextResponder.controller
+      else
+        nil
+      end
+    end
 
   end
 end
