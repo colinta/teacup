@@ -125,19 +125,20 @@ module Teacup
     # @stylesheet_cache object is manipulated directly (to invalidate entries,
     # or the entire cache)
     def stylesheet_cache
-      @stylesheet_cache ||= Hash.new do |cache,_stylename|
-        cache[_stylename] = Hash.new do |_target,_orientation|
-          _target[_orientation] = {}
+      @stylesheet_cache ||= Hash.new do |by_stylename,_stylename|
+        by_stylename[_stylename] = Hash.new do |by_target_class,_target_class|
+          by_orientation = {}
+          by_target_class[_target_class] = by_orientation
         end
       end
     end
 
-    def get_stylesheet_cache(stylename, target, orientation)
-      stylesheet_cache[stylename][target][orientation]
+    def get_stylesheet_cache(stylename, target_class, orientation)
+      self.stylesheet_cache[stylename][target_class][orientation]
     end
 
-    def set_stylesheet_cache(stylename, target, orientation, value)
-      self.stylesheet_cache[stylename][target][orientation] = value
+    def set_stylesheet_cache(stylename, target_class, orientation, value)
+      self.stylesheet_cache[stylename][target_class][orientation] = value
     end
 
     # Include another Stylesheet into this one, the rules defined
@@ -207,19 +208,22 @@ module Teacup
     # @example
     #   Teacup::Stylesheet[:ipadbase].query(:continue_button)
     #   # => {backgroundImage: UIImage.imageNamed("big_red_shiny_button"), title: "Continue!", top: 50}
-    def query(stylename, target=nil, orientation=nil, seen={})
+    def query(stylename, target_class=nil, orientation=nil, seen={})
       return {} if seen[self]
       return {} unless stylename
 
-      unless get_stylesheet_cache(stylename, target, orientation)
+      cached = get_stylesheet_cache(stylename, target_class, orientation)
+      if cached
+        # mutable hashes could mess with our cache, so return a duplicate
+        return cached.dup
+      else
         run_block
         seen[self] = true
 
-        set_stylesheet_cache(stylename, target, orientation, styles[stylename].build(target, orientation, seen))
+        built = styles[stylename].build(target_class, orientation, seen)
+        set_stylesheet_cache(stylename, target_class, orientation, built)
+        return built.dup
       end
-
-      # mutable hashes could mess with our cache, so return a duplicate
-      get_stylesheet_cache(stylename, target, orientation).dup
     end
 
     # Add a set of properties for a given stylename or multiple stylenames.

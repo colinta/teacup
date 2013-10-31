@@ -19,7 +19,6 @@ describe "Memory leaks" do
 
   def controller
     unless @controller
-      puts("=============== memory_leak_spec.rb line #{__LINE__} ===============")
       root = UIViewController.new
       @controller = UINavigationController.alloc.initWithRootViewController(root)
     end
@@ -31,7 +30,6 @@ describe "Memory leaks" do
     detector = LeakDetector.new
 
     memory_leak = MemoryLeakController.new
-    p memory_leak.view
 
     NSNotificationCenter.defaultCenter.addObserver(detector,
             selector: :'did_dealloc:',

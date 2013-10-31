@@ -34,7 +34,7 @@ class TableViewController < UITableViewController
     cell.backgroundView = layout(UIView, :bg)
 
     layout(cell.contentView, :root) do
-      subview(UIView, :padding) do
+      cell.padding = subview(UIView, :padding) do
         cell.title_label = subview(UILabel, :cell_title_label, :text => "title #{index_path.row}")
         cell.details_label = subview(UILabel, :cell_details_label, :text => "details #{index_path.row}")
         cell.other_label = subview(UILabel, :cell_other_label, :text => "other #{index_path.row}")
@@ -58,7 +58,7 @@ end
 
 
 class CustomCell < UITableViewCell
-  attr_accessor :title_label, :details_label, :other_label, :is_reused
+  attr_accessor :padding, :title_label, :details_label, :other_label, :is_reused
 end
 
 
@@ -76,6 +76,10 @@ Teacup::Stylesheet.new :table do
    ]
 
   style :cell_title_label,
+      layer: {
+        borderWidth: 1,
+        borderColor: UIColor.redColor.CGColor,
+      },
     font: UIFont.boldSystemFontOfSize(17),
     constraints: [
       constrain_height(20),
@@ -85,6 +89,10 @@ Teacup::Stylesheet.new :table do
     ]
 
   style :cell_details_label,
+      layer: {
+        borderWidth: 1,
+        borderColor: UIColor.redColor.CGColor,
+      },
       font: UIFont.systemFontOfSize(14),
       color: UIColor.grayColor,
       constraints: [
@@ -95,6 +103,10 @@ Teacup::Stylesheet.new :table do
       ]
 
   style :cell_other_label,
+      layer: {
+        borderWidth: 1,
+        borderColor: UIColor.redColor.CGColor,
+      },
       font: UIFont.systemFontOfSize(14),
       color: UIColor.grayColor,
       constraints: [

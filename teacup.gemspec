@@ -19,7 +19,7 @@ DESC
   gem.summary = 'A community-driven DSL for creating user interfaces on iOS.'
   gem.homepage = 'https://github.com/rubymotion/teacup'
 
-  gem.files       = `git ls-files`.split($\)
+  gem.files       = `git ls-files`.split($\).reject { |file| file =~ /^app\// }
   gem.require_paths = ['lib']
   gem.test_files  = gem.files.grep(%r{^spec/})
 end

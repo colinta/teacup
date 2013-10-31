@@ -5,7 +5,7 @@ describe "TableViewCells" do
     before do
       path = NSIndexPath.indexPathWithIndex(0).indexPathByAddingIndex(0)
       @cell = controller.view.cellForRowAtIndexPath(path)
-      @padding = @cell.contentView.subviews[0]
+      @padding = @cell.padding
     end
 
     it "should have styled padding (backgroundColor.should)" do
@@ -82,7 +82,7 @@ describe "TableViewCells" do
       path = NSIndexPath.indexPathWithIndex(0).indexPathByAddingIndex(9)
       controller.view.scrollToRowAtIndexPath(path, atScrollPosition:UITableViewScrollPositionBottom, animated:false)
       @cell = controller.view.cellForRowAtIndexPath(path)
-      @padding = @cell.contentView.subviews[0]
+      @padding = @cell.padding
     end
 
     it "should be a reused cell" do
