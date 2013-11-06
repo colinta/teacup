@@ -464,16 +464,33 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-A common style when writing stylesheets is to use instance variables to store
-settings you want to tweak.
+A common style when writing stylesheets is to use variables to store settings
+you want to re-use.
 
 ```ruby
 Teacup::Stylesheet.new :main do
-  @hi_font = UIFont.systemFontOfSize(20)
+  h1_font = UIFont.systemFontOfSize(20)
 
   style :h1,
-    font: @hi_font
+    font: h1_font
   style :main_header, extends: :h1,
+    text: "Omg, it's full of stars"
+end
+```
+
+And you're not limited to one class that you can extend, it accepts an array
+
+```ruby
+Teacup::Stylesheet.new :main do
+  h1_font = UIFont.systemFontOfSize(20)
+
+  style :h1,
+    font: h1_font
+
+  style :label,
+    textColor: UIColor.black
+
+  style :main_header, extends: [:h1, :label],
     text: "Omg, it's full of stars"
 end
 ```
