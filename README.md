@@ -562,17 +562,17 @@ But, it does come in handy sometimes... so here it is!
 ```ruby
 Teacup::Appearance.new do
 
-  # UINavigationBar.appearance.setTintColor(UIColor.blackColor)
+  # UINavigationBar.appearance.setBarTintColor(UIColor.blackColor)
   style UINavigationBar,
-    tintColor: UIColor.blackColor
+    barTintColor: UIColor.blackColor
 
-  # UINavigationBar.appearanceWhenContainedIn(UINavigationBar, nil).setTintColor(UIColor.blackColor)
+  # UINavigationBar.appearanceWhenContainedIn(UINavigationBar, nil).setColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: UINavigationBar,
-    tintColor: UIColor.blackColor
+    color: UIColor.blackColor
 
-  # UINavigationBar.appearanceWhenContainedIn(UIToolbar, UIPopoverController, nil).setTintColor(UIColor.blackColor)
+  # UINavigationBar.appearanceWhenContainedIn(UIToolbar, UIPopoverController, nil).setColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: [UIToolbar, UIPopoverController],
-    tintColor: UIColor.blackColor
+    color: UIColor.blackColor
 
 end
 ```
