@@ -568,11 +568,11 @@ Teacup::Appearance.new do
 
   # UINavigationBar.appearanceWhenContainedIn(UINavigationBar, nil).setColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: UINavigationBar,
-    color: UIColor.blackColor
+    tintColor: UIColor.blackColor
 
   # UINavigationBar.appearanceWhenContainedIn(UIToolbar, UIPopoverController, nil).setColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: [UIToolbar, UIPopoverController],
-    color: UIColor.blackColor
+    tintColor: UIColor.blackColor
 
 end
 ```
