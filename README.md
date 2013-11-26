@@ -1520,8 +1520,8 @@ If you get an error that looks like this:
 
 You probably need to add your method to [dummy.rb][].  This is a compiler issue,
 nothing we can do about it except build up a huge dummy.rb file that has just
-about every method that you would want to style.  There is a [dummy.rb file for
-iOS][], and [one for OS X][dummy.rb-osx].
+about every method that you would want to style.  There is a [dummy.rb file for iOS][],
+and [one for OS X][dummy.rb-osx].
 
 If you need to add this method to your project, please give back to the
 community by forking teacup and adding this method to the [dummy.rb][] file.
