@@ -135,8 +135,8 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
 
 ### Table of Contents
 
-* [Layouts](#layouts)
-* [Stylesheets](#stylesheets)
+* [Layouts](#layouts) — define your views
+* [Stylesheets](#stylesheets) — style your views
   * [Using and re-using styles in a Stylesheet](#using-and-re-using-styles-in-a-stylesheet)
   * [Style via Stylename](#style-via-stylename)
   * [Extending Styles](#extending-styles)
@@ -157,13 +157,13 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
     * [Autoresizing Masks](#autoresizing-masks)
     * [Device detection](#device-detection) (iOS only)
     * [Rotation helpers](#rotation-helpers) (iOS only)
-* [Showdown](#showdown)
-* [The Nitty Gritty](#the-nitty-gritty)
+* [Showdown](#showdown) — Cocoa vs Teacup
+* [The Nitty Gritty](#the-nitty-gritty) — some implementation details and gotchas
 * [Advanced Teacup Tricks](#advanced-teacup-tricks)
   * [Including `Teacup::Layout` on arbitrary classes](#including-teacup-layout-on-arbitrary-classes)
   * [Sweettea](#sweettea)
 * [Misc notes](#misc-notes)
-* [The Dummy](#the-dummy)
+* [The Dummy](#the-dummy) — fixes “uncompiled selector” errors
 
 Layouts
 -------
