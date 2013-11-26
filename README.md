@@ -1520,7 +1520,31 @@ If you get an error that looks like this:
 
 You probably need to add your method to [dummy.rb][].  This is a compiler issue,
 nothing we can do about it except build up a huge dummy.rb file that has just
-about every method that you would want to style.
+about every method that you would want to style.  There is a [dummy.rb file for
+iOS][], and [one for OS X][dummy.rb-osx].
+
+If you need to add this method to your project, please give back to the
+community by forking teacup and adding this method to the [dummy.rb][] file.
+It's easy!  Create a subclass, define a method called `dummy`, and call the "not
+precompiled" message inside it.  That will trigger the compiler to include this
+method signature.
+
+For instance, lets say you are styling a `UIPickerView` and you get the error:
+
+    Objective-C stub for message `setShowsSelectionIndicator:' type ...
+
+You would open up [dummy.rb][] and add the following code:
+
+```ruby
+class DummyPickerView < UIPickerView
+private
+  def dummy
+    setShowsSelectionIndicator(nil)
+  end
+end
+```
+
+Recompile your project, and you should be good to go!
 
 # Teacup is a Community Project!
 
@@ -1532,7 +1556,8 @@ tool helps you build great apps!
 
 [advanced]: https://github.com/rubymotion/teacup/#advanced-teacup-tricks
 [calculations]: https://github.com/rubymotion/teacup/#frame-calculations
-[dummy.rb]: https://github.com/rubymotion/teacup/tree/master/lib/dummy.rb
+[dummy.rb]: https://github.com/rubymotion/teacup/tree/master/lib/teacup-ios/dummy.rb
+[dummy.rb-osx]: https://github.com/rubymotion/teacup/tree/master/lib/teacup-ios/dummy.rb
 
 [Pixate]: http://www.pixate.com
 [NUI]: https://github.com/tombenner/nui
