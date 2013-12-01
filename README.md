@@ -564,7 +564,12 @@ Teacup::Appearance.new do
 
   # UINavigationBar.appearance.setBarTintColor(UIColor.blackColor)
   style UINavigationBar,
-    barTintColor: UIColor.blackColor
+    barTintColor: UIColor.blackColor,
+    titleTextAttributes: {
+      UITextAttributeFont => UIFont.fontWithName('Trebuchet MS', size:24),
+      UITextAttributeTextShadowColor => UIColor.colorWithWhite(0.0, alpha:0.4),
+      UITextAttributeTextColor => UIColor.whiteColor
+    }
 
   # UINavigationBar.appearanceWhenContainedIn(UINavigationBar, nil).setColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: UINavigationBar,
