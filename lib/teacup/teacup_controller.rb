@@ -108,7 +108,7 @@ module Teacup
         self.top_level_view.restyle!
       end
 
-      if defined? NSLayoutConstraint
+      if defined?(NSLayoutConstraint)
         self.top_level_view.apply_constraints
       end
     end
