@@ -47,8 +47,8 @@ describe 'Layout module' do
 
   it 'should have view-creation methods' do
     @helper.create_views
-    UIView.should === @helper.container
-    UILabel.should === @helper.label
+    @helper.container.should.is_a?(UIView)
+    @helper.label.should.is_a?(UILabel)
   end
 
 end
