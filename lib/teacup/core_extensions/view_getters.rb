@@ -10,13 +10,13 @@ module Teacup
     def viewWithStylename name_or_class
       return self if self._teacup_check_stylename(name_or_class)
 
-      view = subviews.find { |view| view._teacup_check_stylename(name_or_class) }
+      view = self.teacup_subviews.find { |view| view._teacup_check_stylename(name_or_class) }
       return view if view
 
       # found_subview will get assigned to the view we want, but the subview is
       # what is returned.
       found_subview = nil
-      view = subviews.find { |subview| found_subview = subview.viewWithStylename(name_or_class) }
+      view = self.teacup_subviews.find { |subview| found_subview = subview.viewWithStylename(name_or_class) }
       return found_subview if view
 
       return nil  # couldn't find it

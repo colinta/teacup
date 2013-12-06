@@ -21,9 +21,8 @@ module Teacup
 
     # Subviews or empty collection of views to cater for issue with iOS7 dp3
     def teacup_subviews
-      subviews || []
+      self.subviews || []
     end
-
 
     # Alter the stylename of this view.
     #
@@ -311,7 +310,7 @@ module Teacup
 
     def reset_constraints
       @teacup_constraints = nil
-      subviews.each do |subview|
+      self.teacup_subviews.each do |subview|
         subview.reset_constraints
       end
     end
