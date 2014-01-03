@@ -50,9 +50,21 @@ module Teacup
     end
 
     def constrain_size(width, height)
+      if width.is_a? Numeric
+        width_attr = nil
+      else
+        width_attr = :width
+      end
+
+      if height.is_a? Numeric
+        height_attr = nil
+      else
+        height_attr = :height
+      end
+
       [
-        Teacup::Constraint.new(:self, :width).equals(width),
-        Teacup::Constraint.new(:self, :height).equals(height),
+        Teacup::Constraint.new(:self, :width).equals(width, width_attr),
+        Teacup::Constraint.new(:self, :height).equals(height, height_attr),
       ]
     end
 

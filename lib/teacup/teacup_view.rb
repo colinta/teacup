@@ -201,6 +201,7 @@ module Teacup
 
         if original_constraint.relative_to && ! constraint.relative_to
           container = self
+          puts "Searching for #{original_constraint.relative_to.inspect} in the tree:"
           tab = ''
           while container
             tab << '->'

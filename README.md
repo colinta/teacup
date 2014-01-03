@@ -135,8 +135,8 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
 
 ### Table of Contents
 
-* [Layouts](#layouts)
-* [Stylesheets](#stylesheets)
+* [Layouts](#layouts) — define your views
+* [Stylesheets](#stylesheets) — style your views
   * [Using and re-using styles in a Stylesheet](#using-and-re-using-styles-in-a-stylesheet)
   * [Style via Stylename](#style-via-stylename)
   * [Extending Styles](#extending-styles)
@@ -157,13 +157,13 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
     * [Autoresizing Masks](#autoresizing-masks)
     * [Device detection](#device-detection) (iOS only)
     * [Rotation helpers](#rotation-helpers) (iOS only)
-* [Showdown](#showdown)
-* [The Nitty Gritty](#the-nitty-gritty)
+* [Showdown](#showdown) — Cocoa vs Teacup
+* [The Nitty Gritty](#the-nitty-gritty) — some implementation details and gotchas
 * [Advanced Teacup Tricks](#advanced-teacup-tricks)
   * [Including `Teacup::Layout` on arbitrary classes](#including-teacup-layout-on-arbitrary-classes)
   * [Sweettea](#sweettea)
 * [Misc notes](#misc-notes)
-* [The Dummy](#the-dummy)
+* [The Dummy](#the-dummy) — fixes “uncompiled selector” errors
 
 Layouts
 -------
@@ -464,16 +464,33 @@ Teacup::Stylesheet.new :main do
 end
 ```
 
-A common style when writing stylesheets is to use instance variables to store
-settings you want to tweak.
+A common style when writing stylesheets is to use variables to store settings
+you want to re-use.
 
 ```ruby
 Teacup::Stylesheet.new :main do
-  @hi_font = UIFont.systemFontOfSize(20)
+  h1_font = UIFont.systemFontOfSize(20)
 
   style :h1,
-    font: @hi_font
+    font: h1_font
   style :main_header, extends: :h1,
+    text: "Omg, it's full of stars"
+end
+```
+
+And you're not limited to one class that you can extend, it accepts an array
+
+```ruby
+Teacup::Stylesheet.new :main do
+  h1_font = UIFont.systemFontOfSize(20)
+
+  style :h1,
+    font: h1_font
+
+  style :label,
+    textColor: UIColor.black
+
+  style :main_header, extends: [:h1, :label],
     text: "Omg, it's full of stars"
 end
 ```
@@ -545,15 +562,20 @@ But, it does come in handy sometimes... so here it is!
 ```ruby
 Teacup::Appearance.new do
 
-  # UINavigationBar.appearance.setTintColor(UIColor.blackColor)
+  # UINavigationBar.appearance.setBarTintColor(UIColor.blackColor)
   style UINavigationBar,
-    tintColor: UIColor.blackColor
+    barTintColor: UIColor.blackColor,
+    titleTextAttributes: {
+      UITextAttributeFont => UIFont.fontWithName('Trebuchet MS', size:24),
+      UITextAttributeTextShadowColor => UIColor.colorWithWhite(0.0, alpha:0.4),
+      UITextAttributeTextColor => UIColor.whiteColor
+    }
 
-  # UINavigationBar.appearanceWhenContainedIn(UINavigationBar, nil).setTintColor(UIColor.blackColor)
+  # UINavigationBar.appearanceWhenContainedIn(UINavigationBar, nil).setColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: UINavigationBar,
     tintColor: UIColor.blackColor
 
-  # UINavigationBar.appearanceWhenContainedIn(UIToolbar, UIPopoverController, nil).setTintColor(UIColor.blackColor)
+  # UINavigationBar.appearanceWhenContainedIn(UIToolbar, UIPopoverController, nil).setColor(UIColor.blackColor)
   style UIBarButtonItem, when_contained_in: [UIToolbar, UIPopoverController],
     tintColor: UIColor.blackColor
 
@@ -1503,7 +1525,31 @@ If you get an error that looks like this:
 
 You probably need to add your method to [dummy.rb][].  This is a compiler issue,
 nothing we can do about it except build up a huge dummy.rb file that has just
-about every method that you would want to style.
+about every method that you would want to style.  There is a [dummy.rb file for iOS][],
+and [one for OS X][dummy.rb-osx].
+
+If you need to add this method to your project, please give back to the
+community by forking teacup and adding this method to the [dummy.rb][] file.
+It's easy!  Create a subclass, define a method called `dummy`, and call the "not
+precompiled" message inside it.  That will trigger the compiler to include this
+method signature.
+
+For instance, lets say you are styling a `UIPickerView` and you get the error:
+
+    Objective-C stub for message `setShowsSelectionIndicator:' type ...
+
+You would open up [dummy.rb][] and add the following code:
+
+```ruby
+class DummyPickerView < UIPickerView
+private
+  def dummy
+    setShowsSelectionIndicator(nil)
+  end
+end
+```
+
+Recompile your project, and you should be good to go!
 
 # Teacup is a Community Project!
 
@@ -1515,7 +1561,8 @@ tool helps you build great apps!
 
 [advanced]: https://github.com/rubymotion/teacup/#advanced-teacup-tricks
 [calculations]: https://github.com/rubymotion/teacup/#frame-calculations
-[dummy.rb]: https://github.com/rubymotion/teacup/tree/master/lib/dummy.rb
+[dummy.rb]: https://github.com/rubymotion/teacup/tree/master/lib/teacup-ios/dummy.rb
+[dummy.rb-osx]: https://github.com/rubymotion/teacup/tree/master/lib/teacup-ios/dummy.rb
 
 [Pixate]: http://www.pixate.com
 [NUI]: https://github.com/tombenner/nui
