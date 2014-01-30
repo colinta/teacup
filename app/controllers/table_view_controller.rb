@@ -26,7 +26,7 @@ class TableViewController < UITableViewController
     if cell.is_reused.nil?
       cell.is_reused = false
     else
-      cell.is_reused ||= true
+      cell.is_reused = true
     end
 
     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton
