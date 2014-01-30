@@ -10,9 +10,9 @@ module Teacup
 
       case dimension
       when :width
-        view.superview.bounds.size.width * percent + offset
+        view.superview.frame.size.width * percent + offset
       when :height
-        view.superview.bounds.size.height * percent + offset
+        view.superview.frame.size.height * percent + offset
       else
         raise "Unknown dimension #{dimension}"
       end

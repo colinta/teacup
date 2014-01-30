@@ -9,17 +9,17 @@ Gem::Specification.new do |gem|
   gem.authors  = ['the rubymotion community']
 
   gem.description = <<-DESC
-Teacup is a community-driven DSL for making CSS-like styling, and layouts for
-complex and simple iOS apps with RubyMotion.
+Teacup is a community-driven DSL for RubyMotion.  It has CSS-like styling, and
+helps create complex and simple layouts in iOS and OS X apps.
 
-By aiming at making RubyMotion less tedious, Teacup makes RubyMotion feel like
-interface builder, and work like a CSS stylesheet.
+Teacup aims at making UI develpoment in RubyMotion less tedious.  It's like
+Interface Builder for RubyMotion!
 DESC
 
-  gem.summary = 'A community-driven DSL for creating user interfaces on iOS.'
+  gem.summary = 'A community-driven DSL for creating user interfaces on iOS and OS X.'
   gem.homepage = 'https://github.com/rubymotion/teacup'
 
-  gem.files       = `git ls-files`.split($\).reject { |file| file =~ /^app\// }
+  gem.files       = Dir.glob('lib/**/*.rb')
   gem.require_paths = ['lib']
-  gem.test_files  = gem.files.grep(%r{^spec/})
+  gem.test_files  = Dir.glob('spec/**/*.rb')
 end

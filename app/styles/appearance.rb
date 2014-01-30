@@ -4,6 +4,8 @@ end
 class CustomAppearanceContainer < UIView
 end
 
+# we want to be sure that the UIAppearance methods can also take advantage
+# of our style handlers
 Teacup.handler UIView, :redHerring do |view, alpha|
   view.alpha = alpha
 end

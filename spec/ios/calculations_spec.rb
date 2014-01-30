@@ -4,7 +4,11 @@ class Viewish
   end
 
   def bounds
-    CGRect.new([0, 0,], [100, 44])
+    CGRect.new([0, 0], [100, 44])
+  end
+
+  def frame
+    CGRect.new([10, 10], [100, 44])
   end
 end
 
