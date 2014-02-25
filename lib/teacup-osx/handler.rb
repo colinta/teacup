@@ -3,7 +3,7 @@ module Teacup
 
   def apply_method(target, assign, setter, value)
     if assign and target.respond_to?(assign)
-      NSLog "Setting #{key} = #{value.inspect}" if target.respond_to? :debug and target.debug
+      NSLog "Setting #{setter} = #{value.inspect}" if target.respond_to? :debug and target.debug
       target.send(assign, value)
     elsif target.respondsToSelector(setter)
       NSLog "Calling target.#{setter}(#{value.inspect})" if target.respond_to? :debug and target.debug
