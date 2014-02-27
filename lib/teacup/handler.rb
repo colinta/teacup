@@ -26,16 +26,17 @@ module Teacup
   module_function
 
   # Some properties need to be assigned before others (size in particular, so
-  # that `:center_x` can work properly).  This hash makes sure higher priority
-  # style names before lower-numbers.
+  # that `:center_x` can work properly).  This hash makes sure the lower
+  # priority styles (default priority is 0) get applied before higher ones.
   Priorities = {
-    frame: 2,
-    size: 1,
-    sizeToFit: 1,
-    width: 1,
-    height: 1,
+    frame: 1,
+    sizeToFit: 2,
+    size: 2,
+    width: 2,
+    height: 2,
+    center: 3,  # set the center last; this is the main reason for all this priority nonsense
   }
-  Priorities.default = -1
+  Priorities.default = 0
 
   # applies a Hash of styles, and converts the frame styles (origin, size, top,
   # left, width, height) into one frame property.
@@ -46,7 +47,7 @@ module Teacup
     properties.sort do |a, b|
       priority_a = Priorities[a[0]]
       priority_b = Priorities[b[0]]
-      priority_b <=> priority_a
+      priority_a <=> priority_b
     end.each do |key, value|
       Teacup.apply target, key, value, klass
     end
