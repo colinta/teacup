@@ -35,6 +35,8 @@ module Teacup
     width: 2,
     height: 2,
     center: 3,  # set the center last; this is the main reason for all this priority nonsense
+    center_x: 3,
+    center_y: 3,
   }
   Priorities.default = 0
 
