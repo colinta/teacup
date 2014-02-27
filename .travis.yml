@@ -1,3 +1,5 @@
 language: objective-c
-before_install: rvm use ruby-1.9.3-p392
-before_script: sudo chown -R travis ~/Library/RubyMotion
+before_install:
+    - (ruby --version)
+    - mkdir -p ~/Library/RubyMotion/build
+    - sudo motion update
