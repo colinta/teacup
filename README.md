@@ -286,8 +286,10 @@ module Teacup::Layout
 
 end
 ```
+
 ###### example use of the helper methods
-```
+
+```ruby
 class MyController < UIViewController
 
   layout do
