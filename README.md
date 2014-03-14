@@ -12,12 +12,12 @@ interfaces programmatically.
 **Check out some sample apps!**
 
 * iOS
-  * “[Hai][Hai]”
-  * “[AutoLayout][AutoLayout]”
-  * “[Sweettea Example][sweettea-example]”
+  * [Hai][Hai]
+  * [AutoLayout][AutoLayout]
+  * [Sweettea Example][sweettea-example]
 * OS X
-  * “[Tweets][Tweets]” - ported from [RubyMotionSamples][]
-  * “[simple][]”
+  * [Tweets][Tweets] - ported from [RubyMotionSamples][]
+  * [simple][]
 
 [Hai]: https://github.com/rubymotion/teacup/tree/master/samples/ios/Hai
 [AutoLayout]: https://github.com/rubymotion/teacup/tree/master/samples/ios/AutoLayout
