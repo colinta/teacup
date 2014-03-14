@@ -1472,7 +1472,7 @@ reapplied (during rotation or in `restyle!`).
 ------
 
 Stylesheets should not be modified once they are created - they cache styles by
-name (per orientation).
+name (it is a per orientation cache).
 
 ------
 
