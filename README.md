@@ -619,6 +619,11 @@ You have enough information *right now* to go play with Teacup.  Check out the
 example apps, write your own, whatever.  But read on to hear about why Teacup is
 more than just writing `layouts` and applying styles.
 
+You should also be sure to read the [Misc notes](#misc-notes) section at the
+bottom.  These aren't very well organized, but the information is important. You
+can learn about features any time, but learning about the "gotcha"s sooner
+rather than later could save you a lot of time!
+
 Teacup as a utility
 -------------------
 
