@@ -1394,6 +1394,30 @@ class TableHelper
 end
 ```
 
+### Calculating values using `lambda`
+
+All styles can accept a proc, and before the style is applied the proc is called
+and you can calculate a value at runtime.  There are times when this is simply
+convenient, and there are times when it is *necessary*.
+
+Convenient: when a value is based on some other view's value
+
+```ruby
+# calculate 'backgroundColor' based on another view
+style :some_view,
+  backgroundColor: ->(view) { view.backgroundColor = view.superview.someOtherColor }
+```
+
+Required: when you need to instantiate an object, like a view
+
+```ruby
+# calculate 'backgroundColor' based on another view
+style :some_view,
+  # there's no "only run once" idiom in teacup, so we need to make sure not to
+  # create this view *every* time :some_view is restyled.
+  leftView: ->(view) { view.leftView || UILabel.alloc.initWithFrame(...) }
+```
+
 ### [Sweettea][]
 
 *SugarCube + Teacup = Sweettea*
