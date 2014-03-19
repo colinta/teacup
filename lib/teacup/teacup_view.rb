@@ -148,6 +148,17 @@ module Teacup
 
         view_class = self.class
 
+        controller = nil
+        target = self
+        while target && controller.nil?
+          if target.nextResponder.is_a?(UIViewController)
+            controller = target.nextResponder
+            target = nil
+          else
+            target = target.nextResponder
+          end
+        end
+
         case original_constraint.target
         when view_class
           constraint.target = original_constraint.target
@@ -173,20 +184,24 @@ module Teacup
           constraint.relative_to = self
         when :superview
           constraint.relative_to = self.superview
-        when :top_layout_guide 
+        when :top_layout_guide
           if controller.respondsToSelector(:topLayoutGuide)
             constraint.relative_to = controller.topLayoutGuide
           else
-            puts "topLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
+            if controller
+              NSLog("topLayoutGuide is only supported in >= iOS 7. Reverting to nil bound")
+            end
             constraint.relative_to = nil
           end
         when :bottom_layout_guide
           if controller.respondsToSelector(:bottomLayoutGuide)
             constraint.relative_to = controller.bottomLayoutGuide
           else
-            puts "bottomLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
+            if controller
+              NSLog("bottomLayoutGuide is only supported in >= iOS 7. Reverting to nil bound")
+            end
             constraint.relative_to = nil
-          end 
+          end
         when Symbol, String
           # TODO: this re-checks lots of views - everytime it goes up to the
           # superview, it checks all the leaves again.
@@ -344,17 +359,6 @@ module Teacup
         @teacup_constraints[constraint] = true
       else
         raise "Unsupported constraint: #{constraint.inspect}"
-      end
-    end
-
-    # helper method to resolve the view's controller
-    def controller
-      if nextResponder && nextResponder.is_a?(UIViewController)
-        nextResponder
-      elsif nextResponder
-        nextResponder.controller
-      else
-        nil
       end
     end
 
