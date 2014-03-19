@@ -45,12 +45,22 @@ class MainController < TeacupWindowController
     text = @text_search.stringValue
     if text.length > 0
       query = text.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
-      url = "http://search.twitter.com/search.json?q=#{query}"
+      url = "https://api.twitter.com/1.1/search/tweets.json?q=#{query}"
 
       Dispatch::Queue.concurrent.async do
         json = nil
         begin
-          json = JSONParser.parse_from_url(url)
+          json = {'results' => [
+            {
+              'from_user_name' => '@colinta',
+              'profile_image_url' => 'http://media.colinta.com/minime.png',
+              'text' => 'boo, twitter disabled it\'s public search API!',
+            },
+            {
+              'from_user_name' => '@watson1978',
+              'text' => 'iknowrite?!',
+            },
+          ]}
         rescue RuntimeError => e
           presentError e.message
         end
@@ -60,12 +70,14 @@ class MainController < TeacupWindowController
           tweet = Tweet.new(dict)
           @search_result << tweet
 
-          Dispatch::Queue.concurrent.async do
-            profile_image_data = NSData.alloc.initWithContentsOfURL(NSURL.URLWithString(tweet.profile_image_url))
-            if profile_image_data
-              tweet.profile_image = NSImage.alloc.initWithData(profile_image_data)
-              Dispatch::Queue.main.sync do
-                @table_view.reloadData
+          if tweet.profile_image_url
+            Dispatch::Queue.concurrent.async do
+              profile_image_data = NSData.alloc.initWithContentsOfURL(NSURL.URLWithString(tweet.profile_image_url))
+              if profile_image_data
+                tweet.profile_image = NSImage.alloc.initWithData(profile_image_data)
+                Dispatch::Queue.main.sync do
+                  @table_view.reloadData
+                end
               end
             end
           end

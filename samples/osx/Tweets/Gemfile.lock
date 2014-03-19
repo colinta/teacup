@@ -1,5 +1,5 @@
 PATH
-  remote: ../..
+  remote: ../../..
   specs:
     teacup (2.2.1)
 
