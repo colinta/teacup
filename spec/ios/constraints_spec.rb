@@ -146,26 +146,33 @@ end
 
 describe 'extends merges constraints' do
   before do
-    Teacup::Stylesheet.new(:ipad) do
+    Teacup::Stylesheet.stylesheets[:merge_constraints] = nil
+    Teacup::Stylesheet.new(:merge_constraints) do
       style :button,
         constraints: [
+          :full_width,
           constrain_height(22),
           constrain_top(0)
         ]
 
       style :tall_button, extends: :button,
         constraints: [
+          constrain_width(100),
           constrain_height(44),
         ]
     end
   end
 
   it 'should not affect "base class" style' do
-    ipad_stylesheet = Teacup::Stylesheet[:ipad]
-    button_style = ipad_stylesheet.query(:button)
-    button_style[:constraints].size.should == 2
-    height_constraint = button_style[:constraints].first
-    top_constraint = button_style[:constraints].last
+    merge_constraints_stylesheet = Teacup::Stylesheet[:merge_constraints]
+    button_style = merge_constraints_stylesheet.query(:button)
+    button_style[:constraints].size.should == 3
+
+    full_constraint = button_style[:constraints][0]
+    height_constraint = button_style[:constraints][1]
+    top_constraint = button_style[:constraints][2]
+
+    full_constraint.should == :full_width
     height_constraint.attribute.should == Teacup::Constraint::Attributes[:height]
     height_constraint.constant.should == 22
     top_constraint.attribute.should == Teacup::Constraint::Attributes[:top]
@@ -173,12 +180,25 @@ describe 'extends merges constraints' do
   end
 
   it 'should merge constraints when extending styles' do
-    ipad_stylesheet = Teacup::Stylesheet[:ipad]
-    tall_button_style = ipad_stylesheet.query(:tall_button)
-    height_constraint = tall_button_style[:constraints].first
+    merge_constraints_stylesheet = Teacup::Stylesheet[:merge_constraints]
+    tall_button_style = merge_constraints_stylesheet.query(:tall_button)
+    tall_button_style[:constraints].size.should == 4
+
+    width_constraint = tall_button_style[:constraints][0]
+    height_constraint = tall_button_style[:constraints][1]
+    center_x_constraint = tall_button_style[:constraints][2]
+    top_constraint = tall_button_style[:constraints][3]
+
+    width_constraint.attribute.should == Teacup::Constraint::Attributes[:width]
+    width_constraint.constant.should == 100
     height_constraint.attribute.should == Teacup::Constraint::Attributes[:height]
     height_constraint.constant.should == 44
-    top_constraint = tall_button_style[:constraints].last
+    center_x_constraint.attribute.should == Teacup::Constraint::Attributes[:center_x]
+    center_x_constraint.attribute2.should == Teacup::Constraint::Attributes[:center_x]
+    rel_to = center_x_constraint.relative_to
+    # nil is a valid value for :superview
+    rel_to ||= :superview
+    rel_to.should == :superview
     top_constraint.attribute.should == Teacup::Constraint::Attributes[:top]
     top_constraint.constant.should == 0
   end

@@ -39,17 +39,38 @@ module Teacup
   # constraints are a special case because when we merge an array of constraints
   # we need to make sure not to add more than one constraint for a given attribute
   def merge_constraints(left, right)
+    left = left.map do |constraint|
+      convert_constraints(constraint)
+    end.flatten
+    right = right.map do |constraint|
+      convert_constraints(constraint)
+    end.flatten
+
     constrained_attributes = left.map do |constraint|
-      if constraint.respond_to? :attribute
-        constraint.attribute
-      else
-        constraint
-      end
+      constraint.attribute
     end
     additional_constraints = right.reject do |constraint|
-      constraint.respond_to?(:attribute) && constrained_attributes.include?(constraint.attribute)
+      constrained_attributes.include?(constraint.attribute)
     end
     left + additional_constraints
+  end
+
+  def convert_constraints(constraints)
+    if constraints.is_a? Array
+      constraints.map do |constraint|
+        convert_constraints(constraint)
+      end
+    elsif constraints.is_a? Hash
+      constraints.map do |sym, relative_to|
+        convert_constraints(Teacup::Constraint.from_sym(sym, relative_to))
+      end
+    elsif constraints.is_a?(Symbol)
+      Teacup::Constraint.from_sym(constraints)
+    elsif constraints.is_a?(Teacup::Constraint)
+      constraints
+    else
+      raise "Unsupported constraint: #{constraints.inspect}"
+    end
   end
 
   # modifies left by passing it in as the `target`.
