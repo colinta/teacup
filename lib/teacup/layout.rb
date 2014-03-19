@@ -58,32 +58,16 @@ module Teacup
       @stylesheet = val
     end
 
-    # Returns a stylesheet to use to style the contents of this controller's
-    # view.  You can also assign a stylesheet to {stylesheet=}, which will in
-    # turn call {restyle!}.
-    #
-    # This method will be queried each time {restyle!} is called, and also
-    # implicitly whenever Teacup needs to draw your layout (currently only at
-    # view load time).
+    # Returns the stylesheet. If the stylesheet was assigned by name, the
+    # stylesheet object with this name is returned.
     #
     # @return Teacup::Stylesheet
-    #
-    # @example
-    #
-    #  def stylesheet
-    #    if [UIInterfaceOrientationLandscapeLeft,
-    #        UIInterfaceOrientationLandscapeRight].include?(UIInterface.currentDevice.orientation)
-    #      Teacup::Stylesheet[:ipad]
-    #    else
-    #      Teacup::Stylesheet[:ipadvertical]
-    #    end
-    #  end
     def stylesheet
       if @stylesheet.is_a? Symbol
         @stylesheet = Teacup::Stylesheet[@stylesheet]
       end
 
-      @stylesheet || self.class.stylesheet
+      return @stylesheet || self.class.stylesheet
     end
 
     # Alter the layout of a view
@@ -162,8 +146,10 @@ module Teacup
       end
 
       # assign the 'teacup_next_responder', which is queried for a stylesheet if
-      # one is not explicitly assigned to the view
-      if view.is_a? Layout
+      # one is not explicitly assigned to the view. If the view already has a
+      # teacup_next_responder assigned, it's because another object is already
+      # responsible for managing the view's stylesheet.
+      if view.teacup_next_responder.nil? && view.is_a?(Layout)
         view.teacup_next_responder = WeakRef.new(self)
       end
 
