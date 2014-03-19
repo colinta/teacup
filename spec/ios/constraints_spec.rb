@@ -22,6 +22,20 @@ describe 'Using constraints in portrait' do
     end
   end
 
+  it 'should have a top_layout_view' do
+    @controller.top_layout_view.frame.tap do |f|
+      f.origin.x.should == 0
+      f.origin.y.should == @controller.topLayoutGuide.length
+    end
+  end
+
+  it 'should have a bottom_layout_view' do
+    @controller.bottom_layout_view.frame.tap do |f|
+      f.origin.x.should == 0
+      f.origin.y.should == @controller.container.frame.size.height - @controller.bottomLayoutGuide.length - 10
+    end
+  end
+
   it 'should have a center view' do
     @controller.center_view.frame.tap do |f|
       f.origin.x.should == 8
