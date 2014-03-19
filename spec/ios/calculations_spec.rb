@@ -1,6 +1,6 @@
 class Viewish
   def superview
-    @superview ||= Viewish.new
+    @superview ||= self.class.new
   end
 
   def bounds
@@ -9,6 +9,12 @@ class Viewish
 
   def frame
     CGRect.new([10, 10], [100, 44])
+  end
+end
+
+class IrregularBounds < Viewish
+  def bounds
+    CGRect.new([0, 0], [101, 43])
   end
 end
 
@@ -33,6 +39,11 @@ describe 'Teacup.calculate' do
 
   it 'should return percents with :height' do
     Teacup.calculate(Viewish.new, :height, '50%').should == 22
+  end
+
+  it "should round to the nearest point" do
+    Teacup.calculate(IrregularBounds.new, :height, '25%').should == 11
+    Teacup.calculate(IrregularBounds.new, :width, '25%').should == 25
   end
 
   describe 'should return percents with offset' do
