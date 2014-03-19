@@ -9,9 +9,7 @@ class MotionLayoutController < UIViewController
     @label2 = subview(UILabel, :label2, text: 'label2')
     @label3 = subview(UILabel, :label3, text: 'label3')
     @container = subview(CustomContainer, :container)
-  end
 
-  def layoutDidLoad
     auto do
       metrics "margin" => 20, "top" => 100
       horizontal '|-margin-[label1]-margin-[label2(==label1)]-margin-|'
