@@ -2,6 +2,8 @@ class ConstraintsController < UIViewController
   attr :container,
        :header_view,
        :footer_view,
+       :top_layout_view,
+       :bottom_layout_view,
        :center_view,
        :left_view,
        :top_right_view,
@@ -12,7 +14,9 @@ class ConstraintsController < UIViewController
   layout :root do
     @container = subview(UIView, :container) do
       @header_view = subview(UIView, :header)
+      @top_layout_view = subview(UIView, :top_layout)
       @footer_view = subview(UIView, :footer)
+      @bottom_layout_view = subview(UIView, :bottom_layout)
       @center_view = subview(UIView, :center) do
         @left_view = subview(UIView, :left)
         @top_right_view = subview(UIView, :top_right)
@@ -51,6 +55,21 @@ Teacup::Stylesheet.new :constraints do
       :full_width,
       :bottom,
       constrain(:height).equals(:header, :height),
+    ]
+
+  style :top_layout,
+    backgroundColor: UIColor.orangeColor,
+    constraints: [
+      :full_width,
+      constrain_below(:top_layout_guide)      
+    ]
+
+  style :bottom_layout,
+    backgroundColor: UIColor.yellowColor,
+    constraints: [
+      :full_width,
+      constrain_above(:bottom_layout_guide),
+      constrain(:height).equals(10)
     ]
 
   style :center,

@@ -173,6 +173,20 @@ module Teacup
           constraint.relative_to = self
         when :superview
           constraint.relative_to = self.superview
+        when :top_layout_guide 
+          if controller.respondsToSelector(:topLayoutGuide)
+            constraint.relative_to = controller.topLayoutGuide
+          else
+            puts "topLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
+            constraint.relative_to = nil
+          end
+        when :bottom_layout_guide
+          if controller.respondsToSelector(:bottomLayoutGuide)
+            constraint.relative_to = controller.bottomLayoutGuide
+          else
+            puts "bottomLayoutGuide is only supported in >= iOS 7. Reverting to nil bound"
+            constraint.relative_to = nil
+          end 
         when Symbol, String
           # TODO: this re-checks lots of views - everytime it goes up to the
           # superview, it checks all the leaves again.
@@ -333,6 +347,16 @@ module Teacup
       end
     end
 
+    # helper method to resolve the view's controller
+    def controller
+      if nextResponder && nextResponder.is_a?(UIViewController)
+        nextResponder
+      elsif nextResponder
+        nextResponder.controller
+      else
+        nil
+      end
+    end
 
   end
 end
