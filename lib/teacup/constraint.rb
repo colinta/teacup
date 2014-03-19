@@ -8,6 +8,7 @@ module Teacup
     attr_accessor :multiplier
     attr_accessor :constant
     attr_accessor :priority
+    attr_accessor :identifier
 
     if defined? NSLayoutRelationEqual
       Priorities = {
@@ -187,6 +188,13 @@ module Teacup
       self
     end
 
+    def identifier(identifier=nil)
+      return @identifier if identifier.nil?
+
+      self.identifier = identifier
+      self
+    end
+
     def copy
       copy = self.class.new(self.target, self.attribute)
       copy.relationship = self.relationship
@@ -195,6 +203,7 @@ module Teacup
       copy.multiplier = self.multiplier
       copy.constant = self.constant
       copy.priority = self.priority
+      copy.identifier = self.identifier
       copy
     end
 
@@ -220,6 +229,7 @@ module Teacup
                                    constant: self.constant
                                            )
       nsconstraint.priority = priority_lookup(self.priority)
+      nsconstraint.setIdentifier(self.identifier) if self.identifier
       return nsconstraint
     end
 
