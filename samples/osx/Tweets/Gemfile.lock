@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    teacup (2.2.1)
+    teacup (2.2.2)
 
 GEM
   specs:
