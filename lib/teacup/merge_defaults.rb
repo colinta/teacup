@@ -39,6 +39,9 @@ module Teacup
   # constraints are a special case because when we merge an array of constraints
   # we need to make sure not to add more than one constraint for a given attribute
   def merge_constraints(left, right)
+    # Return early if there are no constraints to merge.
+    return right unless left
+
     left = left.map do |constraint|
       convert_constraints(constraint)
     end.flatten
