@@ -1,11 +1,14 @@
 $:.unshift('/Library/RubyMotion/lib')
-if ENV.fetch('platform', 'ios') == 'ios'
+
+platform = ENV.fetch('platform', 'ios')
+if platform == 'ios'
   require 'motion/project/template/ios'
-elsif ENV['platform'] == 'osx'
+elsif platform == 'osx'
   require 'motion/project/template/osx'
 else
   raise "Unsupported platform #{ENV['platform']}"
 end
+
 require 'bundler'
 Bundler.require
 
