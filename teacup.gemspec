@@ -20,6 +20,7 @@ DESC
   gem.homepage = 'https://github.com/rubymotion/teacup'
 
   gem.files       = Dir.glob('lib/**/*.rb')
+  gem.files      << 'README.md'
   gem.require_paths = ['lib']
   gem.test_files  = Dir.glob('spec/**/*.rb')
 end
