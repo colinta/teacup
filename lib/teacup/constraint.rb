@@ -122,6 +122,8 @@ module Teacup
       self.priority = :high  # this is the xcode default
     end
 
+    # c.equals(100)
+    # c.equals(:superview, :width)
     def equals(relative_to, attribute2=nil)
       self.set_relationship(NSLayoutRelationEqual, relative_to, attribute2)
     end
@@ -169,6 +171,13 @@ module Teacup
       times 1.0/multiplier
     end
 
+    # If no relationship has been set, the "use case" here is:
+    #
+    #     c.plus(10).equals(:view, :x)
+    #
+    # Which is the same as
+    #
+    #     c.equals(:view, :x).minus(10)
     def plus(constant)
       if not self.relationship
         constant = -constant
