@@ -9,6 +9,10 @@ Using Teacup, you can create and style layouts and keeping your code dry.  The
 goal is to offer a rubyesque (well, actually a rubymotion-esque) way to create
 interfaces programmatically.
 
+**Note:** read [a letter](https://github.com/rubymotion/motion-kit#goodbye-teacup)
+from Colin T.A. Gray regarding the future of Teacup and introducing
+[MotionKit](https://github.com/rubymotion/motion-kit), its successor.
+
 **Check out some sample apps!**
 
 * iOS
