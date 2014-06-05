@@ -149,8 +149,7 @@ constraints.  Teacup can also integrate with the [motion-layout][] gem!
   * [Style via View Class](#style-via-view-class)
   * [Importing stylesheets](#importing-stylesheets)
   * [Style via UIAppearance](#style-via-uiappearance) (iOS only)
-* [UITableViews](#uitableviews) - This is important if you are using styles and
-  constraints in a `UITableViewDelegate`.
+* [UITableViews](#uitableviews) - This is important if you are using styles and constraints in a `UITableViewDelegate`.
 * [More Teacup features](#more-teacup-features)
   * [Styling View Properties](#styling-view-properties)
   * [Orientation Styles](#orientation-styles) (iOS only)
