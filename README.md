@@ -382,6 +382,23 @@ Any method that accepts a single value can be assigned in a stylesheet.  Please
 don't abuse this by hiding application logic in your stylesheets - these are
 meant for *design*, not behavior.
 
+### Limelight syntax
+
+If you want to use a shorter syntax, you can use the "Limelight" inspired
+syntax:
+
+```ruby
+Teacup::Stylesheet.new :main_menu do
+  ready_to_play_button do
+    backgroundColor UIColor.blackColor
+    frame [[20, 300], [50, 20]]
+  end
+end
+```
+
+This creates the same style hashes as `style :ready_to_play_button`, so you have
+access to all the features that are available in the "traditional" syntax.
+
 ### Using and re-using styles in a Stylesheet
 
 - Styles are be applied via stylename (`style :label`) or class (`style UILabel`)
