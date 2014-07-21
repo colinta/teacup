@@ -96,7 +96,11 @@ module Teacup
         # if we know the class of the target, we can apply styles via class
         # inheritance.
         if target_class
-          target_class.class.ancestors.each do |ancestor|
+          unless target_class.is_a?(Class)
+            target_class = target_class.class
+          end
+
+          target_class.ancestors.each do |ancestor|
             extended_properties = stylesheet.query(ancestor, nil, rotation_orientation)
             Teacup::merge_defaults!(properties, extended_properties)
           end

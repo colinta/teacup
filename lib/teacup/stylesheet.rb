@@ -127,12 +127,15 @@ module Teacup
     # @stylesheet_cache object is manipulated directly (to invalidate entries,
     # or the entire cache)
     def stylesheet_cache
-      @stylesheet_cache ||= Hash.new do |by_stylename,_stylename|
-        by_stylename[_stylename] = Hash.new do |by_target_class,_target_class|
-          by_orientation = {}
-          by_target_class[_target_class] = by_orientation
-        end
-      end
+      @stylesheet_cache ||= Hash.new(&lambda do |by_stylename,_stylename|
+        by_stylename[_stylename] = Hash.new(&lambda do |by_target_class,_target_class|
+          if _target_class && ! _target_class.is_a?(Class)
+            _target_class = _target_class.class
+          end
+
+          by_target_class[_target_class] = {}
+        end.weak!)
+      end.weak!)
     end
 
     def get_stylesheet_cache(stylename, target_class, orientation)

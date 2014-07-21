@@ -10,7 +10,7 @@ module Teacup
     # orientation is completely ignored on OS X, but the Teacup code was written
     # to support them, and it was easier to ignore the orientation system than
     # refactor it out of the shared code base.
-    def build(target=nil, rotation_orientation=nil, seen={})
+    def build(target_class=nil, rotation_orientation=nil, seen={})
       properties = Style.new
       properties.stylename = self.stylename
       properties.stylesheet = self.stylesheet
@@ -24,7 +24,7 @@ module Teacup
       # local style
       if stylesheet && stylesheet.is_a?(Teacup::Stylesheet)
         stylesheet.imported_stylesheets.reverse.each do |stylesheet|
-          imported_properties = stylesheet.query(self.stylename, target, rotation_orientation, seen)
+          imported_properties = stylesheet.query(self.stylename, target_class, rotation_orientation, seen)
           delete_keys.each do |key|
             imported_properties.delete(key)
           end
@@ -37,7 +37,7 @@ module Teacup
           # turn style names into Hashes by querying them on the stylesheet
           # (this does not pass `seen`, because this is a new query)
           also_includes.each do |also_include|
-            extended_properties = stylesheet.query(also_include, target, rotation_orientation)
+            extended_properties = stylesheet.query(also_include, target_class, rotation_orientation)
             delete_keys.each do |key|
               extended_properties.delete(key)
             end
@@ -46,10 +46,14 @@ module Teacup
         end
         properties.delete(:extends)
 
-        # if we know the class of the target, we can apply styles via class
-        # inheritance.  We do not pass `target` in this case.
-        if target
-          target.class.ancestors.each do |ancestor|
+        # if we know the class of the target_class, we can apply styles via class
+        # inheritance.  We do not pass `target_class` in this case.
+        if target_class
+          unless target_class.is_a?(Class)
+            target_class = target_class.class
+          end
+
+          target_class.ancestors.each do |ancestor|
             extended_properties = stylesheet.query(ancestor, nil, rotation_orientation)
             Teacup::merge_defaults!(properties, extended_properties)
           end
