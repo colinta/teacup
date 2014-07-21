@@ -1,7 +1,7 @@
 class MainController < TeacupWindowController
   stylesheet :main_window
 
-  layout do
+  def teacup_layout
     @text_search = subview(NSTextField, :text_search,
       stringValue: 'xcode crash'
       )

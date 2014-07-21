@@ -35,7 +35,7 @@ end
 class MyController < UIViewController
   stylesheet :teacup
 
-  layout do
+  def teacup_layout
     @label = subview(UILabel, :label, text: 'nifty?')
     @button = subview(UIButton.rounded, :button)
   end

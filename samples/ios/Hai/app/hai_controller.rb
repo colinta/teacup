@@ -1,7 +1,8 @@
 class HaiViewController < UIViewController
   stylesheet :iphone
 
-  layout :hai do
+  def teacup_layout
+    root :hai
     @a = subview(UILabel, :label)
     @b = subview(UILabel, :footer)
   end

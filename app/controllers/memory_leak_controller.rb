@@ -3,7 +3,7 @@ class MemoryLeakController < UIViewController
 
   stylesheet :memory_leak
 
-  layout do
+  def teacup_layout
     subview(UIView, :view) do
       subview(UIView)
     end

@@ -4,7 +4,8 @@ class MainController < UIViewController
 
   stylesheet :main
 
-  layout :root do
+  def teacup_layout
+    root :root
     subview(CustomView, :background) do
       @welcome = subview(UILabel, :welcome)
       subview(UILabel, :footer)

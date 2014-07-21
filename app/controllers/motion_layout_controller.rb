@@ -4,7 +4,8 @@ class MotionLayoutController < UIViewController
   attr :label3
   attr :container
 
-  layout :root do
+  def teacup_layout
+    root :root
     @label1 = subview(UILabel, :label1, text: 'label1')
     @label2 = subview(UILabel, :label2, text: 'label2')
     @label3 = subview(UILabel, :label3, text: 'label3')

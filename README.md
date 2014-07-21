@@ -63,7 +63,7 @@ require 'teacup'
     class MyController < UIViewController
       stylesheet :main_screen
 
-      layout do
+      def teacup_layout
         subview(UIButton, :hi_button)
       end
     end
@@ -103,7 +103,7 @@ other GUI system ever*. :-|
     class MyController < TeacupWindowController
       stylesheet :main_window
 
-      layout do
+      def teacup_layout
         subview(NSButton, :hi_button)
       end
     end
@@ -138,6 +138,36 @@ Teacup is composed of two systems:
 Teacup supports [Pixate][] and [NUI][], too, so you can use those systems for
 styling and Teacup to manage your view hierarchy and apply auto-layout
 constraints.  Teacup can also integrate with the [motion-layout][] gem!
+
+### Changes in 3.0
+
+There is one significant change in version 3.0.  In every version of Teacup
+prior (from 0.2.0 to 2.3.0) the controller layout was usually created by calling
+a class method called `layout`.  It was discovered, embarrassingly late, that
+this system is causing memory leaks.  To fix it we had to remove this feature
+altogether.  So if you are looking at old Teacup examples, you will see this
+block syntax that is no longer offered.  It is easy to update to 3.0, though:
+
+```ruby
+# <= 2.3.0
+class MyController < UIViewController
+  layout(:root_stylename) do  # <= this block is what caused the memory leak!
+    # teacup code goes here
+  end
+end
+
+# 3.0
+class MyController < UIViewController
+  def teacup_layout  # in 3.0 we just changed it to be a method
+    # introduced in 3.0, this is how you assign a stylename to the root view
+    root(:root_stylename, { background: UIColor.blueColor })
+    # teacup code goes here - no other code changes necessary
+  end
+  # actually, this method still works as long as you don't pass a block.  It's
+  # the same as calling `root(stylename, {})`
+  layout(:root_stylename, {})
+end
+```
 
 ### Table of Contents
 
@@ -178,17 +208,18 @@ iOS, and `NSWindowController`, `NSViewController`, and `NSView` on OS X. These
 classes can take advantage of the view-hierarchy DSL.
 
 You saw an example in the primer, using the
-`UIViewController`/`NSWindowController` class method `layout`.  This is a helper
-function that stores the layout code.  A more direct example might look like
-this:
+`UIViewController`/`NSWindowController` class method `layout` and the
+`teacup_layout` method.  You could just as easily use Teacup's DSL to create
+your views from a `loadView` method, for instance you might want to use a
+custom view subclass as your root view.  An example might look like this:
 
 ```ruby
 # controller example
 class MyController < UIViewController
 
-  def viewDidLoad
-    # we will modify the controller's `view`, assigning it the stylename `:root`
-    layout(self.view, :root) do
+  def loadView
+    # we will create the controller's view, assigning it the stylename :root
+    self.view = layout(FancyView, :root) do
       # these subviews will be added to `self.view`
       subview(UIToolbar, :toolbar)
       subview(UIButton, :hi_button)
@@ -243,9 +274,11 @@ The reason it is so easy to define view hierarchies in Teacup is because the
 ```ruby
 subview(UIView, :container) do  # create a UIView instance and give it the stylename :container
   subview(UIView, :inputs) do  # create another container
+    # these views will be added to the :inputs view
     @email_input = subview(UITextField, :email_input)
     @password_input = subview(UITextField, :password_input)
   end
+  # this view will be added to :container
   subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :submit_button)
 end
 ```
@@ -255,7 +288,7 @@ to add your *own view helpers*!  I refer to this as a "partials" system, but
 really it's just Ruby code (and isn't that the best system?).
 
 ```ruby
-# the methods you add here will be available in UIView/NSview,
+# the methods you add here will be available in UIView/NSView,
 # UIViewController/NSViewController/NSWindowController, and any of your own
 # classes that `include Teacup::Layout`
 module Teacup::Layout
@@ -297,7 +330,7 @@ end
 ```ruby
 class MyController < UIViewController
 
-  layout do
+  def teacup_layout
     @button1 = button()
     @button2 = button(:blue_button)
     @button3 = button_with_icon(UIImage.imageNamed('email_icon'), 'Email')
@@ -306,31 +339,14 @@ class MyController < UIViewController
 end
 ```
 
-The `Controller##layout` method that has been used so far is going to be
-the first or second thing you add to a controller when you are building an app
-with Teacup.  It's method signature is
-
-```ruby
-# defined in teacup/teacup_controller.rb as Teacup::Controller module
-UIViewController.layout(stylename=nil, styles={}, &block)
-NSViewController.layout(stylename=nil, styles={}, &block)
-NSWindowController.layout(stylename=nil, styles={}, &block)
-```
-
-* `stylename` is the stylename you want applied to your controller's `self.view`
-  object.
-* `styles` are *rarely* applied here, but one common use case is when you assign
-  a custom view in `loadView`, and you want to apply settings to it.  I find it
-  cleaner to move this code into the body of the `layout` block, though.
-* `&block` is the most important - it is the layout code that will be called
-  during `viewDidLoad`.
+The `Controller#teacup_layout` method is going to be the first or second thing
+you add to a controller when you are building an app with Teacup.  Inside you
+will add subviews using `subview` *or* you can create a view using the `layout`
+method (`subview` delegates most of its work to `layout`)
 
 After the views have been added and styles have been applied Teacup calls the
 `layoutDidLoad` method.  If you need to perform some additional initialization
-on your views, you should do it in this method.  If you use the `layout` block
-the styles have not yet been applied.  Frames will not be set, text and titles
-will be empty, and images will not have images.  This all happens at the *end*
-of the `layout` block.
+on your views, you can do it in this method.
 
 Stylesheets
 -----------
@@ -418,7 +434,7 @@ class MainController < UIViewController
 
   stylesheet :main  # <= assigns the stylesheet named :main to this controller
 
-  layout do
+  def teacup_layout
     subview(UILabel, :h1)  # <= :h1 is the stylename
   end
 
@@ -442,7 +458,7 @@ We can tackle this a couple ways.  You can apply "last-minute" styles in the
 `layout` and `subview` methods:
 
 ```ruby
-layout do
+def teacup_layout
   subview(UILabel, :h1,
     # the `subview` and `layout` methods can apply styles
     text: "Omg, it's full of stars"
@@ -473,7 +489,7 @@ not all our labels say "OMG", but we want to use our font from the `:h1` style.
 We can tell the `:main_header` style that it `extends` the `:h1` style:
 
 ```ruby
-layout do
+def teacup_layout
   subview(UILabel, :main_header)
 end
 
@@ -936,7 +952,7 @@ springs and struts.  And honestly, I recommend you try using the
 
 But at the end of the day, once you really understand the auto-layout system
 that Apple released in iOS 6, you can build your UIs to be responsive to
-different devices, orientations, and sizes. UIs built with auto-layout do not
+different devices, orientations, and sizes. UIs built with auto-layout not
 usually need to adjust anything during a rotation.  The constraints take *care*
 of it all.  It's impressive.
 
@@ -1007,7 +1023,7 @@ Teacup stylenames assigned to your views will be used in the dictionary that the
 ASCII-based system relies on.
 
 ```ruby
-layout do
+def teacup_layout
   subview(UIView, :view_a)
   subview(UIView, :view_b)
   subview(UIView, :view_c)
@@ -1214,7 +1230,8 @@ class SomeController < UIViewController
 
   stylesheet :some_view
 
-  layout :root do
+  def teacup_layout
+    root(:root)
     subview(UITextField, :field)
     @search = subview(UITextField, :search)
   end
@@ -1298,7 +1315,7 @@ okay, because we have a chance to add these styles in the `subview` and `layout`
 methods.
 
 ```ruby
-layout do
+def teacup_layout
   subview(UITableView, delegate: self)
 end
 ```
@@ -1309,7 +1326,7 @@ stylesheet is not necessarily applied immediately, these styles could be
 overwritten before they take effect.
 
 ```ruby
-layout do
+def teacup_layout
   table_view = subview(UITableView, :tableview, delegate: self,
     font: UIFont.boldSystemFontOfSize(10)  # the stylesheet could override this during rotation
     )
@@ -1328,7 +1345,7 @@ More examples!
 ```ruby
 class MyController < UIViewController
   stylesheet :my_sheet
-  layout do
+  def teacup_layout
     subview(UILabel, :label, text: 'overrides')
   end
 end
@@ -1387,7 +1404,7 @@ appear on many screens in an app.  You should not shy away from adding teacup's
 
 If you are using your controller as your table view dataSource, the `subview`
 and `layout` methods continue to work as you expect them to.  This is for the
-case when you are using a helper class.
+case when you are using a helper class as the dataSource and/or delegate.
 
 ```ruby
 class TableHelper

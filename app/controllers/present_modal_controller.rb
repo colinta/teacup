@@ -3,7 +3,8 @@ class PresentModalController < UIViewController
 
   stylesheet :present_modal
 
-  layout :root do
+  def teacup_layout
+    root :root
     @button = subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :open_modal_button)
     @button.addTarget(self, action: :open_modal_button, forControlEvents:UIControlEventTouchUpInside)
   end

@@ -27,7 +27,8 @@ module Teacup
     #
     # @example
     #   class MyViewController < UIViewController
-    #     layout :my_view do
+    #     def teacup_layout
+    #       root :my_view
     #       subview UILabel, title: "Test"
     #       subview UITextField, {
     #         frame: [[200, 200], [100, 100]]
@@ -39,8 +40,25 @@ module Teacup
     #     end
     #   end
     #
-    def layout(stylename=nil, properties={}, &block)
-      @layout_definition = [stylename, properties, block]
+    def layout(stylename=nil, properties={})
+      if block_given?
+        msg = <<-MSG
+Time to update your syntax!
+
+It was discovered that passing a block to the Controller##layout was causing
+irreparable memory leaks.  The only recourse is to use a new syntax and remove
+the old functionality.
+
+If you need to assign a stylename to the root view, you can still do this using
+`layout :stylename`, but you cannot pass a block to this class method any
+longer.
+
+Instead, define a method called `teacup_layout` and create your views there.  No
+other changes are required.
+MSG
+        raise msg
+      end
+      @layout_definition = [stylename, properties]
     end
 
   end
@@ -61,12 +79,25 @@ module Teacup
     #
     # @example
     #
-    #   stylesheet = Teacup::Stylesheet[:ipadhorizontal]
-    #   stylesheet = :ipadhorizontal
+    #   stylesheet = Teacup::Stylesheet[:main]
+    #   stylesheet = :main
     def stylesheet=(new_stylesheet)
       super
       if self.viewLoaded?
         self.view.restyle!
+      end
+    end
+
+    def root(stylename=nil, properties={})
+      if stylename.is_a?(NSDictionary)
+        properties = stylename
+        stylename = nil
+      end
+
+      if stylename || properties
+        layout(top_level_view, stylename, properties)
+      else
+        top_level_view
       end
     end
 
@@ -97,8 +128,12 @@ module Teacup
       end
 
       if layout_definition
-        stylename, properties, block = layout_definition
-        layout(top_level_view, stylename, properties, &block)
+        stylename, properties = layout_definition
+        layout(top_level_view, stylename, properties)
+      end
+
+      if respond_to?(:teacup_layout)
+        teacup_layout
       end
 
       layoutDidLoad

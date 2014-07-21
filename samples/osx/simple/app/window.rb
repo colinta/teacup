@@ -1,6 +1,6 @@
 class MainWindowController < TeacupWindowController
 
-  layout do |view|
+  def teacup_layout
     @table_view_controller = MainTableController.new
 
     subview(@table_view_controller.view,

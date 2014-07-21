@@ -1,6 +1,6 @@
 class MainTableController < NSViewController
 
-  layout do |root|
+  def teacup_layout
     subview(NSImageView,
       frame: root.bounds,
       image: NSImage.imageNamed('teacup'),

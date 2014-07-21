@@ -11,7 +11,8 @@ class ConstraintsController < UIViewController
 
   stylesheet :constraints
 
-  layout :root do
+  def teacup_layout
+    root :root
     @container = subview(UIView, :container) do
       @header_view = subview(UIView, :header)
       @top_layout_view = subview(UIView, :top_layout)
@@ -61,7 +62,7 @@ Teacup::Stylesheet.new :constraints do
     backgroundColor: UIColor.orangeColor,
     constraints: [
       :full_width,
-      constrain_below(:top_layout_guide)      
+      constrain_below(:top_layout_guide)
     ]
 
   style :bottom_layout,

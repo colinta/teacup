@@ -1,11 +1,12 @@
 class RootController < UIViewController
   stylesheet :root
 
-  layout :root do
+  def teacup_layout
+    root :root
     @label = subview(UILabel, :label)
     @button = subview(UIButton.buttonWithType(UIButtonTypeRoundedRect), :button)
     @switch = subview(UISwitch, :switch)
-  end  
+  end
 
   def viewDidLoad
   	super

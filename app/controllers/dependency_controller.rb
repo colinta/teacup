@@ -3,7 +3,7 @@ class DependencyController < UIViewController
 
   stylesheet :dependency
 
-  layout do
+  def teacup_layout
     @button = subview(UILabel, :my_button)
   end
 

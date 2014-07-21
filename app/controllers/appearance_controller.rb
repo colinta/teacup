@@ -3,7 +3,7 @@ class CustomAppearanceController < UIViewController
   attr :container
   attr :label_2
 
-  layout do
+  def teacup_layout
     @label_1 = subview(CustomAppearanceLabel)
     @container = subview(CustomAppearanceContainer) do
       @label_2 = subview(CustomAppearanceLabel)
