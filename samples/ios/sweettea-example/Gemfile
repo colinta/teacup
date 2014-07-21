@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
 gem 'teacup', :path => '../../..'
-gem 'sugarcube'
+gem 'sugarcube', require: [
+  'sugarcube-uikit',
+  'sugarcube-color',
+  'sugarcube-repl',
+  'sugarcube-factories',
+]
 gem 'sweettea'

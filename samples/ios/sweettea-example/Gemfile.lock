@@ -1,14 +1,14 @@
 PATH
-  remote: ../..
+  remote: ../../..
   specs:
-    teacup (2.3.0)
+    teacup (3.0.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    rake (10.0.4)
-    sugarcube (0.20.18)
-    sweettea (0.5.6)
+    rake (10.3.2)
+    sugarcube (2.0.0)
+    sweettea (0.6.0)
       rake
       sugarcube
       teacup
@@ -17,7 +17,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rake
   sugarcube
   sweettea
   teacup!
