@@ -7,6 +7,7 @@ Gem::Specification.new do |gem|
   gem.licenses      = ['BSD']
 
   gem.authors  = ['the rubymotion community']
+  gem.email = 'colin@hipbyte.com'
 
   gem.description = <<-DESC
 Teacup is a community-driven DSL for RubyMotion.  It has CSS-like styling, and
