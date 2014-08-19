@@ -150,7 +150,7 @@ module Teacup
       # teacup_next_responder assigned, it's because another object is already
       # responsible for managing the view's stylesheet.
       if view.teacup_next_responder.nil? && view.is_a?(Layout)
-        view.teacup_next_responder = WeakRef.new(self)
+        view.teacup_next_responder = self
       end
 
       if block_given?

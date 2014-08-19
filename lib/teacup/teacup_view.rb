@@ -24,6 +24,17 @@ module Teacup
       self.subviews || []
     end
 
+    def teacup_next_responder=(layout)
+      @_has_next_responder = true
+      @teacup_next_responder = WeakRef.new(layout)
+    end
+
+    def teacup_next_responder
+      if @_has_next_responder && @teacup_next_responder.weakref_alive?
+        @teacup_next_responder
+      end
+    end
+
     # Alter the stylename of this view.
     #
     # This will cause new styles to be applied from the stylesheet.
@@ -107,8 +118,8 @@ module Teacup
       # any views created there to the custom class (could be a controller, could
       # be any class that includes Teacup::Layout).  That responder is checked
       # next, but only if it wouldn't result in a circular loop.
-      if ! retval && @teacup_next_responder && teacup_next_responder != self
-        retval = @teacup_next_responder.stylesheet
+      if ! retval && teacup_next_responder && teacup_next_responder != self
+        retval = teacup_next_responder.stylesheet
       end
 
       # lastly, go up the chain; either a controller or superview
