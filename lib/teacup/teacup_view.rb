@@ -230,7 +230,6 @@ module Teacup
           tab = ''
           while container
             tab << '->'
-            puts "#{tab} #{container.stylename.inspect}"
             container = container.superview
           end
           raise "Could not find #{original_constraint.relative_to.inspect}"
